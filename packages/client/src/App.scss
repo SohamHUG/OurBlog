@@ -1,0 +1,141 @@
+@use 'variables' as vars;
+
+html {
+    max-width: 100%;
+    // width: 100%;
+
+    body {
+        margin: 0;
+        height: 100%;
+        max-width: 100%;
+        // width: 100%;
+        font-family: vars.$primary-font;
+        display: flex;
+        flex-direction: column;
+
+        h2 {
+            font-weight: 800;
+            font-size: 1.6em;
+        }
+
+        a {
+            text-decoration: none;
+            color: vars.$primary-black;
+        }
+
+        .logo {
+            font-size: vars.$logo-size;
+            font-family: vars.$logo-font;
+            font-weight: vars.$logo-weight;
+            height: fit-content;
+        }
+
+        button {
+            font-family: vars.$primary-font;
+            font-weight: 700;
+            font-size: 13px;
+            background-color: vars.$main-color;
+            border: none;
+            color: vars.$primary-white;
+            padding: .8em;
+            border-radius: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all .3s ease;
+
+            // width: 8em;
+            span {
+                margin-right: 5px;
+            }
+
+            &:hover {
+                background-color: #001ea3;
+            }
+        }
+
+        .link {
+            color: vars.$main-color;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            // height: 100%;
+
+            input {
+                height: 2rem;
+                border-radius: 10px;
+                border: none;
+                margin: 1em 0;
+                padding: .5em;
+                font-size: 1.1em;
+            }
+        }
+
+        &.block {
+            overflow: hidden;
+        }
+
+        &.dark {
+            background-color: vars.$dark-bck-color;
+            color: vars.$primary-white;
+
+            .logo {
+                color: vars.$primary-white;
+            }
+
+            .main-nav {
+                border-bottom: 2px solid vars.$primary-white;
+                background-color: vars.$dark-bck-color;
+            }
+
+            .menu {
+                background-color: vars.$dark-secondary-bck-color;
+
+                .menu-link {
+                    p, svg {
+                        color: vars.$primary-white;
+                    }
+                    .logout {
+                        color: red;
+                    }
+                }
+
+            }
+
+            .side-list-container {
+                background-color: vars.$dark-secondary-bck-color;
+
+                .see-more-button {
+
+                    &:hover {
+                        background-color: vars.$dark-bck-color;
+                    }
+                }
+            }
+
+            .modal-content {
+                background-color: vars.$dark-secondary-bck-color;
+            }
+
+            .post {
+                border-top: 2px solid vars.$primary-white;
+            }
+
+            .footer {
+                border-top: 2px solid vars.$primary-white;
+
+                .footer-nav {
+                    ul {
+                        li {
+                            color: vars.$primary-white;
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+}

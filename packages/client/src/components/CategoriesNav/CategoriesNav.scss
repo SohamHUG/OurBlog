@@ -1,0 +1,31 @@
+@use '../../variables' as vars;
+
+.categories-nav {
+    display: none;
+
+    @media screen and (min-width: 768px) {
+        display: flex;
+
+        justify-content: space-around;
+        width: 100%;
+        margin: 1.5em 0;
+
+        .category {
+            border: 1px solid vars.$primary-black;
+            border-radius: 5px;
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+            width: fit-content;
+            text-align: center;
+            padding: 1em;
+            font-size: 15px;
+            font-weight: 600;
+
+            @media screen and (min-width: 1024px) {
+                width: 13%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+        }
+    }
+}

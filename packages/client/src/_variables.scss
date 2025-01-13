@@ -1,0 +1,21 @@
+// COLORS 
+$primary-black : #000;
+$primary-white : #fff;
+$secondary-bckground : #ECECEE;
+$main-color : #235AF3;
+// DARKMODE COLORS
+$dark-bck-color : #181C1F;
+$dark-secondary-bck-color : #313338;
+
+// LOGO 
+$logo-font : pridi;
+$logo-weight : 300;
+$logo-size : 33px;
+
+@media screen and (min-width: 400px) {
+    $logo-size:35px;
+}
+
+// FONT 
+$primary-font : roboto;
+// $primary-font-weight : 300;

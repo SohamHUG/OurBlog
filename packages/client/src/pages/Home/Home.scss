@@ -1,0 +1,102 @@
+@use '../../variables' as vars;
+
+
+.home-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .home-page-content {
+        display: flex;
+        max-width: 100%;
+
+        @media screen and (min-width: 1024px) {
+            justify-content: space-evenly;
+        }
+
+        .left {
+
+            // width: 70%;
+            @media screen and (min-width: 1024px) {
+                width: 60%;
+            }
+
+            @media screen and (min-width: 1440px) {
+                width: 50%;
+            }
+
+            .filter-articles-home {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: .5em;
+
+                @media screen and (min-width: 600px) {
+                    width: 70%;
+                    margin: 0 auto;
+                }
+
+                @media screen and (min-width: 1024px) {
+                    width: 90%;
+                    margin: 0 1em;
+                }
+
+
+                h3 {
+                    margin: 0;
+                    font-size: 23px;
+                    font-family: vars.$primary-font;
+                    font-weight: 500;
+                }
+
+                select {
+                    // width: 122px;
+                    border-radius: 5px;
+                    height: 24px;
+                }
+
+                .create-article-btn {
+                    display: none;
+
+                    @media screen and (min-width: 768px) {
+                        display: flex;
+                    }
+                }
+
+            }
+        }
+
+        .right {
+            width: 30%;
+            display: none;
+
+            @media screen and (min-width: 1024px) {
+                display: initial;
+            }
+
+            @media screen and (min-width: 1440px) {
+                width: 23%;
+            }
+
+            .popular-authors {
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                font-size: 17px;
+
+                svg {
+                    margin-right: 10px;
+                }
+            }
+
+        }
+
+        .to-top-btn {
+            // background-color: red;
+            position: fixed;
+            padding: .6em;
+            bottom: 2%;
+            right: 2%;
+        }
+    }
+}

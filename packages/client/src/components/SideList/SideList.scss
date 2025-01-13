@@ -1,0 +1,37 @@
+@use '../../variables' as vars;
+
+.side-list-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: vars.$secondary-bckground;
+    margin: .8em;
+    position: sticky;
+    top: 6.3em;
+    z-index: 0;
+
+    h3 {
+        font-size: 1em;
+        margin: .5em;
+    }
+
+    .list-item {
+        width: 80%;
+        padding: .5em;
+    }
+
+    .see-more-button {
+        background: none;
+        border: none;
+        color: vars.$main-color;
+        text-decoration: underline;
+        font-weight: 400;
+        padding: 1em;
+        margin-bottom: 1em;
+        transition: all .3s ease;
+
+        &:hover {
+            background-color: vars.$primary-white;
+        }
+    }
+}
