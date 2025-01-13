@@ -35,7 +35,7 @@ cp .env.example .env
 pnpm install
 ```
 
-5. **Lancer l'application**
+4. **Lancer l'application**
 ```bash
 pnpm run dev
 ```
