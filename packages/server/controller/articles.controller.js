@@ -4,7 +4,7 @@ import { saveArticle } from "../models/articles.model.js";
 export const createArticle = async (req, res) => {
     try {
         const { title, category, content } = req.body
-        const user = req.user.id;
+        const user = req.user.user_id;
 
         const article = await saveArticle(user, category, title, content);
 

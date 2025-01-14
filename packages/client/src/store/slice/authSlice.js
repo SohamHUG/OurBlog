@@ -60,34 +60,10 @@ export const getUser = createAsyncThunk('auth/getUser', async (_, { rejectWithVa
     }
 });
 
-export const refreshToken = createAsyncThunk(
-    'auth/refreshToken',
-    async (_, { rejectWithValue }) => {
-        try {
-            const response = await fetch('http://localhost:3000/auth/refresh', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                return rejectWithValue(errorData.message);
-            }
-
-            const data = await response.json();
-            console.log("Token refreshed successfully:", data);
-            return data;
-        } catch (error) {
-            return rejectWithValue(error.message);
-        }
-    }
-);
-
 export const logoutUser = createAsyncThunk('auth/logout', async (_, { rejectWithValue }) => {
     try {
         const response = await fetch('http://localhost:3000/auth/logout', {
-            method: 'POST',
+            method: 'GET',
             credentials: 'include', // Pour inclure les cookies
         });
 
@@ -111,10 +87,6 @@ const authSlice = createSlice({
         error: null,
     },
     reducers: {
-        // logoutUser: (state) => {
-        //     state.user = null;
-        //     localStorage.removeItem('user');
-        // },
     },
     extraReducers: (builder) => {
         builder
@@ -153,16 +125,11 @@ const authSlice = createSlice({
             })
             .addCase(getUser.rejected, (state, action) => {
                 state.status = 'failed';
-                state.error = action.error.message;
-            })
-            .addCase(refreshToken.rejected, (state, action) => {
-                state.user = null;
-                state.userConnected = null;
-                localStorage.removeItem('user');
-                state.error = action.payload || action.error.message;
+                state.error = "Session expiré, reconnectez-vous";
             })
             .addCase(logoutUser.fulfilled, (state) => {
                 state.user = null;
+                state.userConnected = null;
                 localStorage.removeItem('user');
             })
             .addCase(logoutUser.rejected, (state, action) => {
@@ -171,6 +138,4 @@ const authSlice = createSlice({
     },
 });
 
-
-// export const { logoutUser } = authSlice.actions;
 export default authSlice.reducer;

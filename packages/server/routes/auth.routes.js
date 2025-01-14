@@ -1,16 +1,15 @@
 import {Router} from 'express';
-import { createUser, loginUser, getUserData, refreshToken, logOutUser, confirmEmail } from '../controller/auth.controller.js';
+import { register, loginUser, getUserById, logOutUser, confirmEmail } from '../controller/auth.controller.js';
 import { validateSchema } from '../middlewares/validationSchemas.js';
 import { userValidation } from '../validations/users.validation.js';
-import { verifyToken } from '../middlewares/auth.middleware.js';
+import { authMiddleware } from '../middlewares/auth.middleware.js';
 
 const router = Router();
 
-router.post('/register',[validateSchema(userValidation)], createUser);
+router.post('/register',[validateSchema(userValidation)], register);
 router.post('/login', loginUser);
-router.get('/me', [verifyToken], getUserData);
-router.post('/refresh', [verifyToken], refreshToken);
-router.post('/logout', logOutUser);
+router.get('/me', [authMiddleware], getUserById);
+router.get('/logout', [authMiddleware], logOutUser);
 
 router.get('/confirm/:token', confirmEmail)
 

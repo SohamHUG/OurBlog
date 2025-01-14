@@ -14,7 +14,6 @@ import RegisterPage from './pages/RegisterPage/Register.page';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 import AdminDashboard from './pages/AdminDashboard/AdminDashboard';
 import { getUser } from './store/slice/authSlice';
-import useRefreshToken from './hooks/useRefreshToken';
 import ConfirmEmail from './pages/ConfirmEmail/ConfirmEmail';
 import CreateArticle from './pages/Author/CreateArticle/CreateArticle';
 
@@ -23,12 +22,9 @@ function App() {
     const dispatch = useDispatch();
     const user = useSelector((state) => state.auth.userConnected);
 
-    useRefreshToken();
-
     React.useEffect(() => {
         if (user) {
             dispatch(getUser());
-
         }
     }, [dispatch, user]);
 
@@ -43,6 +39,7 @@ function App() {
                     <Route path={'/privacy-policy'} element={<PrivacyPolicy />} />
                     <Route path={'/register'} element={<RegisterPage />} />
                     <Route path={'/confirm/:token'} element={<ConfirmEmail />} />
+                    {/* <Route path={'/admin'} element={<AdminDashboard />} /> */}
                     <Route
                         path="/admin"
                         element={

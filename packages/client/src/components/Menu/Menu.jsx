@@ -36,14 +36,14 @@ const Menu = ({ menuActive, menuRef, user, openModalLogin, handleLogout, darkMod
                 </p>
             </span>
 
-            {user && user.role_id === 'admin' && (
+            {user && user.role_name === 'admin' && (
                 <NavLink to={'/admin'} className="menu-link">
                     <DashboardIcon className="icon" />
                     <p>Dashboard Admin</p>
                 </NavLink>
             )}
 
-            {(user && (user.role_id === 'author' || user.role_id === 'admin')) && (
+            {(user && (user.role_name === 'author' || user.role_name === 'admin')) && (
                 <NavLink to={'/article/create'} className="menu-link">
                     <ArticleIcon className="icon" />
                     <p>Publier un article</p>

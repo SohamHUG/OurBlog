@@ -1,18 +1,39 @@
-import { getRoleById, getUserById, getUserLogin, saveUser, verifyUser } from "../models/user.model.js";
+import { findUserById, findByCredentials, saveUser, updateUserById } from "../models/user.model.js";
 import jwt from "jsonwebtoken";
+import bcrypt from 'bcrypt';
 import { sendConfirmationEmail } from "../utils/index.js";
+import dotenv from 'dotenv';
 
-export const createUser = async (req, res) => {
+dotenv.config();
+
+export const register = async (req, res) => {
     try {
 
-        const { firstName, lastName, pseudo, email, password } = req.body;
-        const data = await saveUser(firstName, lastName, pseudo, email, password);
+        let { firstName, lastName, pseudo, email, password } = req.body;
+        let roleId = 1; //User
 
-        const confirmationToken = jwt.sign({ id: data.id, }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRATION });
+        const emailAlreadyExist = await findByCredentials(email);
+
+        if (emailAlreadyExist && emailAlreadyExist.length > 0) {
+            return res.status(400).json({ message: "Cet email est déja utilisé", });
+        }
+
+        if (firstName.length <= 0 && lastName.length <= 0) {
+            firstName = null;
+            lastName = null;
+        } else {
+            roleId = 3; //Author
+        }
+
+        const hash = bcrypt.hashSync(password, 10);
+
+        const newUser = await saveUser(firstName, lastName, pseudo, email, roleId, hash);
+
+        const confirmationToken = jwt.sign({ id: newUser.user_id, }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRATION });
 
         await sendConfirmationEmail(email, confirmationToken);
 
-        return res.status(201).json({ message: "User created", data, confirmationToken });
+        return res.status(201).json({ message: "User created", newUser });
     } catch (err) {
         console.error(err)
         return res.status(500).json({ message: err });
@@ -24,8 +45,9 @@ export const confirmEmail = async (req, res) => {
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decoded.id;
+        console.log(decoded)
 
-        await verifyUser(userId);
+        await updateUserById(userId, { is_verified: 1 });
         res.status(200).json({ message: 'Votre email a été confirmé avec succès !' });
 
     } catch (err) {
@@ -36,21 +58,40 @@ export const confirmEmail = async (req, res) => {
 
 export const loginUser = async (req, res) => {
     try {
-
-        // console.log(req.session)
         const { email, password } = req.body;
-        const data = await getUserLogin(email, password);
+        const user = await findByCredentials(email, password);
 
-        const token = jwt.sign({ id: data.id, }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRATION });
+        if (!user || user.length <= 0) {
+            return res.status(401).json({ message: "Email ou mot de passe incorrect", });
+        }
+        // console.log(user);
 
-        res.cookie('authToken', token, {
+        const verifyPassword = bcrypt.compareSync(password, user[0].password);
+
+        if (!verifyPassword) {
+            return res.status(401).json({ message: "Email ou mot de passe incorrect", });
+
+        }
+        const accessToken = jwt.sign({ id: user[0].id, }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRATION });
+
+        const refreshToken = jwt.sign({ id: user[0].id, }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: process.env.REFRESH_TOKEN_EXPIRATION });
+
+        await updateUserById(user[0].id, { refresh_token: refreshToken })
+
+        res.cookie('accessToken', accessToken, {
             httpOnly: true,
             secure: false, // à modifier à true car pas https pour l'instant
             sameSite: 'strict', // Limite les cookies aux mêmes origines
-            maxAge: 3600000, // 1 heure
+            // maxAge: 3600000, // 1 heure
         });
 
-        return res.status(201).json({ message: "User connected", data });
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+            secure: false, // à modifier à true car pas https pour l'instant
+            sameSite: 'strict', // Limite les cookies aux mêmes origines
+        });
+
+        return res.status(200).json({ message: "Connexion réussi !" });
 
     } catch (err) {
         console.error(err)
@@ -58,15 +99,9 @@ export const loginUser = async (req, res) => {
     }
 }
 
-export const getUserData = async (req, res) => {
+export const getUserById = async (req, res) => {
     try {
-
         const user = req.user;
-
-        // const user = await getUserById(userId);
-        const role = await getRoleById(user.role_id);
-
-        if (role) user.role_id = role.name;
 
         return res.status(201).json({ user });
     } catch (err) {
@@ -75,32 +110,10 @@ export const getUserData = async (req, res) => {
     }
 }
 
-export const refreshToken = async (req, res) => {
-    try {
-        const user = req.user
-
-        const token = jwt.sign({ id: user.id, }, process.env.JWT_SECRET, { expiresIn: '1h' });
-
-        res.cookie('authToken', token, {
-            httpOnly: true,
-            secure: false, // à modifier à true car pas https pour l'instant
-            sameSite: 'strict', // Limite les cookies aux mêmes origines
-            maxAge: 3600000, // 1 heure
-        });
-
-        return res.status(201).json({ message: 'Token refresh' });
-    } catch (err) {
-        console.error(err)
-        return res.status(500).json({ message: err });
-    }
-}
 
 export const logOutUser = async (req, res) => {
-    res.clearCookie('authToken', {
-        httpOnly: true,
-        secure: false, // à modifier à true car pas https pour l'instant
-        sameSite: 'strict',
-    })
-
+    res.clearCookie('accessToken')
+    res.clearCookie('refreshToken');
+    // await updateUserById(req.user.user_id, { refresh_token: null });
     res.status(200).json({ message: 'Logout successfull' });
 }

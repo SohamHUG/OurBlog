@@ -14,7 +14,7 @@ const transporter = nodemailer.createTransport({
 
 // Fonction utilitaire pour envoyer un email
 export const sendConfirmationEmail = async (email, token) => {
-    const confirmationUrl = `http://localhost:5173/confirm/${token}`;
+    const confirmationUrl = `${process.env.FRONTEND_URL}/confirm/${token}`;
     await transporter.sendMail({
         from: '"OurBlog" <noreply@ourblog.com>', // Nom et adresse d'envoi
         to: email, // Destinataire

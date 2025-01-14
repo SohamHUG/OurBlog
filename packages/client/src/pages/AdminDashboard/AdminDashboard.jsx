@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as Redux from 'react-redux';
+import { Navigate } from 'react-router-dom';
 import { selectCategories, selectCategoriesStatus, selectCategoriesError } from '../../store/selectors';
 import { fetchCategories, createCategory, deleteCategory } from '../../store/slice/categoriesSlice';
 
@@ -11,6 +12,11 @@ const AdminDashboard = () => {
     const error = Redux.useSelector(selectCategoriesError);
     const [newCategory, setNewCategory] = React.useState('')
 
+    // const user = Redux.useSelector((state) => state.auth.user);
+
+    // if (!user || user.role_name !== 'admin') {
+    //     return <Navigate to="/not-allowed" />;
+    // }
     React.useEffect(() => {
         if (status === 'idle') {
             dispatch(fetchCategories());
