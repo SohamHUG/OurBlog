@@ -126,6 +126,8 @@ const authSlice = createSlice({
             .addCase(getUser.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = "Session expirée, reconnectez-vous";
+                state.userConnected = null;
+                localStorage.removeItem('user');
             })
             .addCase(logoutUser.fulfilled, (state) => {
                 state.user = null;
