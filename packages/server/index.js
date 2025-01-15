@@ -8,24 +8,25 @@ import { refreshTokenMiddleware } from './middlewares/refreshToken.middleware.js
 
 dotenv.config();
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT;
 
 const app = express();
-
-app.use(cookieParser());
 
 // console.log(process.env.FRONTEND_URL)
 app.use(cors({
     // origin: process.env.FRONTEND_URL.trim(), // Origine autorisée (frontend)
     origin: 'http://localhost:5173', // Origine autorisée (frontend)
-    methods: ['GET', 'POST', 'PATCH', 'DELETE'], // Méthodes autorisées
+    methods: ['GET', 'POST', 'PATCH', 'DELETE', 'PUT'], // Méthodes autorisées
     allowedHeaders: ['Content-Type'], // En-têtes autorisés
     credentials: true // Autoriser l'envoi de cookie (JWT par exemple)
 }));
 
-app.use(express.json());
-app.use(express.urlencoded({extended: true})); // lire le body lorsque le payload sera de type form-data-urlencoded (formulaire)
 
+app.use(cookieParser());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true })); // lire le body lorsque le payload sera de type form-data-urlencoded (formulaire)
+
+app.use('/uploads', express.static('uploads'));
 
 app.use(refreshTokenMiddleware);
 app.use(routes);

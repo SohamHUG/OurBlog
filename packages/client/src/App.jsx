@@ -13,20 +13,24 @@ import './App.scss'
 import RegisterPage from './pages/RegisterPage/Register.page';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 import AdminDashboard from './pages/AdminDashboard/AdminDashboard';
-import { getUser } from './store/slice/authSlice';
+import { getUser, logoutUser } from './store/slice/userSlice';
 import ConfirmEmail from './pages/ConfirmEmail/ConfirmEmail';
 import CreateArticle from './pages/Author/CreateArticle/CreateArticle';
+import ProfilPage from './pages/Profil/Profil';
+// import { logOutUser } from '../../server/controller/auth.controller';
 
 function App() {
 
     const dispatch = useDispatch();
-    const user = useSelector((state) => state.auth.userConnected);
+    const userConnected = useSelector((state) => state.auth.userConnected);
 
     React.useEffect(() => {
-        if (user) {
+        if (userConnected) {
             dispatch(getUser());
+        } else {
+            dispatch(logoutUser())
         }
-    }, [dispatch, user]);
+    }, [dispatch, userConnected]);
 
     return (
         <>
@@ -39,6 +43,7 @@ function App() {
                     <Route path={'/privacy-policy'} element={<PrivacyPolicy />} />
                     <Route path={'/register'} element={<RegisterPage />} />
                     <Route path={'/confirm/:token'} element={<ConfirmEmail />} />
+                    <Route path={'/profil'} element={<ProfilPage />} />
                     {/* <Route path={'/admin'} element={<AdminDashboard />} /> */}
                     <Route
                         path="/admin"

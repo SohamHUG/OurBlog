@@ -1,7 +1,8 @@
 import db from '../config/db.js';
 import bcrypt from 'bcrypt';
 
-export const saveUser = async (firstName, lastName, pseudo, email, roleId, hash) => {
+export const saveUser = async (userData) => {
+    const { firstName, lastName, pseudo, email, roleId, hash } = userData;
 
     return new Promise((resolve, reject) => {
         const sql = 'INSERT INTO user (first_name, last_name, pseudo, email, role_id, password) VALUES (?, ?, ?, ?, ?, ?)';
@@ -26,6 +27,7 @@ export const findUserById = async (id) => {
                 user.pseudo, 
                 user.email, 
                 user.refresh_token, 
+                is_verified,
                 role.name AS role_name
             FROM user 
             LEFT JOIN role ON user.role_id = role.id

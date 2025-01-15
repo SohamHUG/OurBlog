@@ -14,21 +14,21 @@ const Footer = () => {
                 <nav className="footer-nav">
                     <div className="nav-left">
                         <ul>
-                            <li>A propos</li>
-                            <li>Politique de confidentialité</li>
-                            <li>Conditions d'utilisation</li>
-                            <li>FAQ</li>
-                            <li>Cookies</li>
+                            <li className="link">A propos</li>
+                            <li className="link">Politique de confidentialité</li>
+                            <li className="link">Conditions d'utilisation</li>
+                            <li className="link">FAQ</li>
+                            <li className="link">Cookies</li>
                         </ul>
                     </div>
 
                     <div className="nav-right">
                         <ul>
-                            <li>Accueil</li>
-                            <li>Catégories</li>
-                            <li>Connexion</li>
-                            <li>Inscription</li>
-                            <li>Paramètres</li>
+                            <li className="link">Accueil</li>
+                            <li className="link">Catégories</li>
+                            <li className="link">Connexion</li>
+                            <li className="link">Inscription</li>
+                            <li className="link">Paramètres</li>
                         </ul>
 
                     </div>

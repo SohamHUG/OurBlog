@@ -8,7 +8,6 @@ dotenv.config();
 
 export const register = async (req, res) => {
     try {
-
         let { firstName, lastName, pseudo, email, password } = req.body;
         let roleId = 1; //User
 
@@ -18,7 +17,7 @@ export const register = async (req, res) => {
             return res.status(400).json({ message: "Cet email est déja utilisé", });
         }
 
-        if (firstName.length <= 0 && lastName.length <= 0) {
+        if (firstName.length <= 0 || lastName.length <= 0) {
             firstName = null;
             lastName = null;
         } else {
@@ -27,7 +26,14 @@ export const register = async (req, res) => {
 
         const hash = bcrypt.hashSync(password, 10);
 
-        const newUser = await saveUser(firstName, lastName, pseudo, email, roleId, hash);
+        const newUser = await saveUser({
+            firstName,
+            lastName,
+            pseudo,
+            email,
+            roleId,
+            hash
+        });
 
         const confirmationToken = jwt.sign({ id: newUser.user_id, }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRATION });
 
@@ -45,7 +51,7 @@ export const confirmEmail = async (req, res) => {
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decoded.id;
-        console.log(decoded)
+        // console.log(decoded)
 
         await updateUserById(userId, { is_verified: 1 });
         res.status(200).json({ message: 'Votre email a été confirmé avec succès !' });
@@ -59,7 +65,7 @@ export const confirmEmail = async (req, res) => {
 export const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
-        const user = await findByCredentials(email, password);
+        const user = await findByCredentials(email);
 
         if (!user || user.length <= 0) {
             return res.status(401).json({ message: "Email ou mot de passe incorrect", });
@@ -98,18 +104,6 @@ export const loginUser = async (req, res) => {
         return res.status(500).json({ message: err });
     }
 }
-
-export const getUserById = async (req, res) => {
-    try {
-        const user = req.user;
-
-        return res.status(201).json({ user });
-    } catch (err) {
-        console.error(err)
-        return res.status(500).json({ message: err });
-    }
-}
-
 
 export const logOutUser = async (req, res) => {
     res.clearCookie('accessToken')

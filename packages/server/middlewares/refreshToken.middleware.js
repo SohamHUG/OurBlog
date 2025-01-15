@@ -27,7 +27,7 @@ export const refreshTokenMiddleware = async (req, res, next) => {
                 res.clearCookie('accessToken');
                 res.clearCookie('refreshToken');
                 return res.status(401).send({ message: 'Token invalide' })
-            }
+            } 
 
             const user = await findUserById(verifyRefreshToken.id)
             // console.log(user)
@@ -40,7 +40,7 @@ export const refreshTokenMiddleware = async (req, res, next) => {
             // Générer un nouveau token d'accès et un nouveau Refresh Token
             const newAccessToken = jwt.sign({ id: user.user_id, }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRATION });
 
-            const newRefreshToken = jwt.sign({ id: user.user_.id, }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: process.env.REFRESH_TOKEN_EXPIRATION });
+            const newRefreshToken = jwt.sign({ id: user.user_id, }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: process.env.REFRESH_TOKEN_EXPIRATION });
 
             await updateUserById(user.user_id, { refresh_token: newRefreshToken });
 
@@ -63,7 +63,7 @@ export const refreshTokenMiddleware = async (req, res, next) => {
             console.error('Erreur avec le RefreshToken :', refreshError);
             res.clearCookie('accessToken');
             res.clearCookie('refreshToken');
-            return res.status(401).json({ message: 'Authentification échouée, veuillez vous reconnecter' });
+            // return res.status(401).json({ message: 'Authentification échouée, veuillez vous reconnecter' });
         }
     }
 

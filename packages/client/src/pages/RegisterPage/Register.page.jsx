@@ -6,9 +6,9 @@ import { useNavigate } from 'react-router-dom';
 const RegisterPage = () => {
     const dispatch = Redux.useDispatch();
     const navigate = useNavigate()
-    const { status, error } = Redux.useSelector((state) => state.auth);
+    const { status, errorRegister } = Redux.useSelector((state) => state.auth);
 
-    const [formData, setFormData] = React.useState({
+    const [formUser, setFormUser] = React.useState({
         firstName: '',
         lastName: '',
         pseudo: '',
@@ -17,48 +17,44 @@ const RegisterPage = () => {
     });
 
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        setFormUser({ ...formUser, [e.target.name]: e.target.value });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const result = await dispatch(registerUser(formData));
+        const result = await dispatch(registerUser(formUser));
 
-        // Si l'inscription réussit, on tente de se connecter
         if (registerUser.fulfilled.match(result)) {
-            // dispatch(loginUser({ email: formData.email, password: formData.password }));
+            // console.log(result.payload.newUser.user_id);
+            dispatch(loginUser({ email: formUser.email, password: formUser.password }));
             alert('Un email de confirmation a été envoyé. Vérifiez votre boîte mail.');
             navigate('/');
-            
         } 
-        // else {
-        //     console.error("Registration failed:", result.payload || result.error.message);
-        // }
     };
 
     return (
         <form onSubmit={handleSubmit}>
             <h2>S'inscrire</h2>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+            {errorRegister && <p style={{ color: 'red' }}>{errorRegister}</p>}
             <label>
                 Prénom:
-                <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} />
+                <input type="text" name="firstName" value={formUser.firstName} onChange={handleChange} />
             </label>
             <label>
                 Nom:
-                <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} />
+                <input type="text" name="lastName" value={formUser.lastName} onChange={handleChange} />
             </label>
             <label>
                 Pseudo*:
-                <input type="text" name="pseudo" value={formData.pseudo} onChange={handleChange} required />
+                <input type="text" name="pseudo" value={formUser.pseudo} onChange={handleChange} required />
             </label>
             <label>
                 Email*:
-                <input type="email" name="email" value={formData.email} onChange={handleChange} required />
+                <input type="email" name="email" value={formUser.email} onChange={handleChange} required />
             </label>
             <label>
                 Mot de passe *:
-                <input type="password" name="password" value={formData.password} onChange={handleChange} required />
+                <input type="password" name="password" value={formUser.password} onChange={handleChange} required />
             </label>
             <button type="submit" disabled={status === 'loading'}>
                 S'incrire

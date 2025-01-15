@@ -58,6 +58,9 @@ html {
         .link {
             color: vars.$main-color;
         }
+        .link:hover {
+            cursor: pointer;
+        }
 
         form {
             display: flex;

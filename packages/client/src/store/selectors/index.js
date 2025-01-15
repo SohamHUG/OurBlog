@@ -6,7 +6,7 @@ export const selectPostsStatus = (state) => state.posts.status;
 export const selectPostsError = (state) => state.posts.error;
 
 //Users
-export const selectUsers = (state) => state.users.items;
+export const selectUsers = (state) => state.users.users;
 export const selectUsersStatus = (state) => state.users.status;
 export const selectUsersError = (state) => state.users.error;
 

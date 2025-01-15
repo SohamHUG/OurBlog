@@ -5,7 +5,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Modal from "../Modal/Modal";
 import LoginForm from "../LoginForm/LoginForm";
-import { logoutUser } from "../../store/slice/authSlice";
+import { logout } from "../../store/slice/authSlice";
 import { toggleDarkMode } from "../../store/slice/themeSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { selectDarkMode } from "../../store/selectors";
@@ -21,7 +21,7 @@ const NavBar = () => {
     const searchRef = React.useRef(null);
     const menuRef = React.useRef(null);
     const [openLogin, setOpenLogin] = React.useState(false);
-    const user = useSelector((state) => state.auth.user);
+    const user = useSelector((state) => state.users.user);
     const navigate = useNavigate();
 
     const handleToggleDarkMode = () => {
@@ -48,7 +48,7 @@ const NavBar = () => {
     };
 
     const handleLogout = () => {
-        dispatch(logoutUser());
+        dispatch(logout());
         navigate('/');
     };
 
@@ -106,7 +106,9 @@ const NavBar = () => {
                     {!user ? (
                         <button onClick={openModalLogin}>Se&nbsp;connecter</button>
                     ) : (
-                        <AccountCircleIcon fontSize="large" />
+                        <NavLink to={'/profil'}>
+                            <AccountCircleIcon fontSize="large" />
+                        </NavLink>
                     )}
 
                     <div className="menu-icon" onClick={toggleMenu}>

@@ -7,8 +7,7 @@ const LoginForm = ({ closeModal }) => {
     const navigate = useNavigate();
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
-    const { status, error } = useSelector((state) => state.auth);
-    const token = useSelector((state) => state.auth.token);
+    const { status, errorLogin } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
 
     const handleRegisterClick = () => {
@@ -23,7 +22,6 @@ const LoginForm = ({ closeModal }) => {
         const resultAction = await dispatch(loginUser({ email, password }));
         if (loginUser.fulfilled.match(resultAction)) {
             closeModal();
-            // console.log('ok', token)
         }
     };
 
@@ -67,7 +65,7 @@ const LoginForm = ({ closeModal }) => {
 
                 <form onSubmit={handleSubmit} >
                     <div style={flexColumn}>
-                        {error && <p style={{ color: 'red' }}>{error}</p>}
+                        {errorLogin && <p style={{ color: 'red' }}>{errorLogin}</p>}
                         <input
                             type="email"
                             placeholder="Adresse Email"

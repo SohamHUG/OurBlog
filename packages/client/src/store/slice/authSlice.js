@@ -38,29 +38,8 @@ export const loginUser = createAsyncThunk('auth/loginUser', async (credentials) 
     return data.data;
 });
 
-export const getUser = createAsyncThunk('auth/getUser', async (_, { rejectWithValue }) => {
-    try {
-        const url = `http://localhost:3000/auth/me`;
 
-        const response = await fetch(url, {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
-        });
-
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.message);
-        }
-
-        const data = await response.json();
-        return data.user;
-    } catch (error) {
-        return rejectWithValue(error.message);
-    }
-});
-
-export const logoutUser = createAsyncThunk('auth/logout', async (_, { rejectWithValue }) => {
+export const logout = createAsyncThunk('auth/logout', async (_, { rejectWithValue }) => {
     try {
         const response = await fetch('http://localhost:3000/auth/logout', {
             method: 'GET',
@@ -82,9 +61,10 @@ const authSlice = createSlice({
     name: 'auth',
     initialState: {
         userConnected: localStorage.getItem('user') || null,
-        user: null,
         status: 'idle',
-        error: null,
+        errorLogin: null,
+        errorRegister: null,
+        errorLogout: null,
     },
     reducers: {
     },
@@ -92,19 +72,19 @@ const authSlice = createSlice({
         builder
             .addCase(registerUser.pending, (state) => {
                 state.status = 'loading';
-                state.error = null;
+                state.errorRegister = null;
             })
             .addCase(registerUser.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                state.user = action.payload.data;
+                // state.user = action.payload.data;
             })
             .addCase(registerUser.rejected, (state, action) => {
                 state.status = 'failed';
-                state.error = action.payload || action.error.message;
+                state.errorRegister = action.payload || action.error.message;
             })
             .addCase(loginUser.pending, (state) => {
                 state.status = 'loading';
-                state.error = null;
+                state.errorLogin = null;
             })
             .addCase(loginUser.fulfilled, (state, action) => {
                 state.status = 'succeeded';
@@ -113,29 +93,14 @@ const authSlice = createSlice({
             })
             .addCase(loginUser.rejected, (state, action) => {
                 state.status = 'failed';
-                state.error = action.error.message;
+                state.errorLogin = action.error.message;
             })
-            .addCase(getUser.pending, (state) => {
-                state.status = 'loading';
-                state.error = null;
-            })
-            .addCase(getUser.fulfilled, (state, action) => {
-                state.status = 'succeeded';
-                state.user = action.payload;
-            })
-            .addCase(getUser.rejected, (state, action) => {
-                state.status = 'failed';
-                state.error = "Session expirée, reconnectez-vous";
+            .addCase(logout.fulfilled, (state) => {
                 state.userConnected = null;
                 localStorage.removeItem('user');
             })
-            .addCase(logoutUser.fulfilled, (state) => {
-                state.user = null;
-                state.userConnected = null;
-                localStorage.removeItem('user');
-            })
-            .addCase(logoutUser.rejected, (state, action) => {
-                state.error = action.payload || 'Logout failed';
+            .addCase(logout.rejected, (state, action) => {
+                state.errorLogout = action.payload || 'Logout failed';
             });
     },
 });
