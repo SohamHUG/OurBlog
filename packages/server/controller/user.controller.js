@@ -1,4 +1,4 @@
-import { findByCredentials, findUserById, updateUserById } from "../models/user.model.js";
+import { deleteUserById, findByCredentials, findUserById, updateUserById } from "../models/user.model.js";
 import bcrypt from 'bcrypt';
 
 
@@ -18,17 +18,24 @@ export const updateUser = async (req, res) => {
     const userId = req.user.user_id;
     let { firstName, lastName, pseudo, email, oldPassword, newPassword } = req.body;
 
+    
+
     if (parseInt(id) !== userId && req.user.role_name !== "admin") {
         return res.status(403).json({ message: "Vous n'êtes pas autorisé" });
     }
 
-    const user = await findByCredentials(email);
+    const userLog = await findByCredentials(email);
+    // console.log(userLog)
 
-    if (!user) {
+    if (!userLog || userLog.length <= 0) {
         return res.status(404).json({ message: "Utilisateur introuvable" });
     }
 
-    if (oldPassword.length > 0 && newPassword.length > 0) {
+    const user = await findUserById(id);
+
+
+    if (oldPassword && newPassword) {
+        // console.log(req.body)
         if (oldPassword.length < 6 || newPassword.length < 6) {
             return res.status(400).json({ message: "Les mots de passe doivent contenir au moins 6 caractères." });
         }
@@ -38,17 +45,17 @@ export const updateUser = async (req, res) => {
             return res.status(401).json({ message: "L'ancien mot de passe est incorrect." });
         }
 
-        // Hachage du nouveau mot de passe
         const hashedPassword = bcrypt.hashSync(newPassword, 10);
-        user[0].password = hashedPassword; // Prépare la mise à jour
+        userLog[0].password = hashedPassword; // Prépare la mise à jour
     }
 
     const updatedUser = {
-        first_name: firstName || user[0].firstName,
-        last_name: lastName || user[0].lastName,
-        pseudo: pseudo || user[0].pseudo,
-        email: email || user[0].email,
-        password: user[0].password, // Utilise le mot de passe actuel ou mis à jour
+        first_name: firstName || user.first_name,
+        last_name: lastName || user.last_name,
+        pseudo: pseudo || user.pseudo,
+        email: email || user.email,
+        // profil_picture: user.profil_picture,
+        password: userLog[0].password, // Utilise le mot de passe actuel ou mis à jour
     };
 
     await updateUserById(id, updatedUser);
@@ -56,9 +63,20 @@ export const updateUser = async (req, res) => {
     const newUser = await findUserById(userId)
 
     return res.status(200).json({ message: "Informations mises à jour avec succès.", user: newUser });
-
 }
 
-export const uploadProfilPic = async (req, res) => {
+export const deleteUser = async (req, res) => {
+    const { id } = req.params;
+    const user = req.user;
 
+    if (parseInt(id) !== user.user_id && req.user.role_name !== "admin") {
+        return res.status(403).json({ message: "Vous n'êtes pas autorisé" });
+    }
+
+    await deleteUserById(id);
+
+    res.clearCookie('accessToken');
+    res.clearCookie('refreshToken');
+
+    return res.status(200).json({ message: "Utilisateur supprimé" });
 }

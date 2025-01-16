@@ -19,6 +19,9 @@ export const authMiddleware = (req, res, next) => {
         if (!user) {
             return res.status(401).send({ message: 'Token invalide' })
         }
+        // if (user.is_verified !== 1) {
+        //     return res.status(401).send({ message: "Votre compte n'est pas vérifié" })
+        // }
         req.user = user
         next();
     })

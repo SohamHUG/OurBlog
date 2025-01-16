@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import routes from './routes/index.routes.js';
 import dotenv from 'dotenv';
 import { refreshTokenMiddleware } from './middlewares/refreshToken.middleware.js';
+import uploadRoutes from './routes/upload.routes.js';
 
 dotenv.config();
 
@@ -12,7 +13,6 @@ const port = process.env.PORT;
 
 const app = express();
 
-// console.log(process.env.FRONTEND_URL)
 app.use(cors({
     // origin: process.env.FRONTEND_URL.trim(), // Origine autorisée (frontend)
     origin: 'http://localhost:5173', // Origine autorisée (frontend)
@@ -21,14 +21,16 @@ app.use(cors({
     credentials: true // Autoriser l'envoi de cookie (JWT par exemple)
 }));
 
-
 app.use(cookieParser());
+
+app.use(refreshTokenMiddleware);
+app.use('/upload', uploadRoutes)
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // lire le body lorsque le payload sera de type form-data-urlencoded (formulaire)
 
 app.use('/uploads', express.static('uploads'));
 
-app.use(refreshTokenMiddleware);
 app.use(routes);
 
 app.listen(port, () => {

@@ -30,9 +30,9 @@ export const getUser = createAsyncThunk('user/getUser', async (_, { rejectWithVa
 });
 
 export const updateUser = createAsyncThunk(
-    'user/updateUser', 
-    async ({ id, userData }, { rejectWithValue }) => {
-    try {
+    'user/updateUser',
+    async ({ id, userData }) => {
+
         const url = `http://localhost:3000/users/update/${id}`;
 
         const response = await fetch(url, {
@@ -46,13 +46,55 @@ export const updateUser = createAsyncThunk(
             const error = await response.json();
             throw new Error(error.message);
         }
+        const data = await response.json();
+        return data.user;
+
+    }
+);
+
+export const deleteUser = createAsyncThunk(
+    'user/deleteUser',
+    async (id) => {
+
+        const url = `http://localhost:3000/users/${id}`;
+
+        const response = await fetch(url, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.message);
+        }
+        const data = await response.json();
+        return data.user;
+
+    }
+);
+
+export const uploadProfilPic = createAsyncThunk(
+    'user/uploadProfilPic',
+    async (file,) => {
+
+        const url = `http://localhost:3000/upload/profil-picture`;
+
+        const response = await fetch(url, {
+            method: 'POST',
+            body: file,
+            credentials: 'include',
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.message);
+        }
 
         const data = await response.json();
         return data.user;
-    } catch (error) {
-        return rejectWithValue(error.message);
-    }
-});
+
+    });
 
 const usersSlice = createSlice({
     name: 'users',
@@ -62,6 +104,7 @@ const usersSlice = createSlice({
         status: 'idle',
         error: null,
         errorUpdate: null,
+        errorDelete: null,
     },
     reducers: {
         logoutUser: (state) => {
@@ -108,7 +151,22 @@ const usersSlice = createSlice({
             })
             .addCase(updateUser.rejected, (state, action) => {
                 state.status = 'failed';
+                // console.log(action.error)
                 state.errorUpdate = action.error.message;
+            })
+            .addCase(deleteUser.pending, (state) => {
+                state.status = 'loading';
+                state.errorDelete = null;
+            })
+            .addCase(deleteUser.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.user = null;
+                localStorage.removeItem('user');
+            })
+            .addCase(deleteUser.rejected, (state, action) => {
+                state.status = 'failed';
+                console.log(action.error)
+                state.errorDelete = action.error.message;
             })
     },
 });

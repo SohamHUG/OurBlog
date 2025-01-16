@@ -17,7 +17,6 @@ import { getUser, logoutUser } from './store/slice/userSlice';
 import ConfirmEmail from './pages/ConfirmEmail/ConfirmEmail';
 import CreateArticle from './pages/Author/CreateArticle/CreateArticle';
 import ProfilPage from './pages/Profil/Profil';
-// import { logOutUser } from '../../server/controller/auth.controller';
 
 function App() {
 

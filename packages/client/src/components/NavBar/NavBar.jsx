@@ -132,7 +132,7 @@ const NavBar = () => {
                     title="Se connecter"
                     content={<LoginForm closeModal={closeModalLogin} />}
                     open={openLogin}
-                    close={closeModalLogin}
+                    cancel={closeModalLogin}
                 />
             )}
         </>

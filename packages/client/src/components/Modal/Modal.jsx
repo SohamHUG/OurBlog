@@ -18,10 +18,10 @@ const Modal = (props) => {
 
     return (
 
-        <div className='modal-container' onClick={props.close}>
+        <div className='modal-container' onClick={props.cancel}>
             <div className='modal-content' onClick={(e) => { e.stopPropagation() }}>
                 <div className='modal-header'>
-                    <span className='close-modal-btn' onClick={props.close}>
+                    <span className='close-modal-btn' onClick={props.cancel}>
                         <CloseOutlinedIcon />
                     </span>
 
@@ -31,14 +31,21 @@ const Modal = (props) => {
                     <h2>{props.title}</h2>
                     {props.content}
                 </div>
-
-                {props.buttonTitle &&
-                    <div className='modal-footer'>
-                        <button>
-                            {props.buttonTitle}
+                <div className='modal-footer'>
+                    {
+                        props.validButton &&
+                        <button onClick={props.valid}>
+                            {props.validButton}
                         </button>
-                    </div>
-                }
+                    }
+
+                    {
+                        props.cancelButton &&
+                        <button onClick={props.cancel}>
+                            {props.cancelButton}
+                        </button>
+                    }
+                </div>
             </div>
         </div>
 
