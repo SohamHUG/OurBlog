@@ -16,12 +16,13 @@ import AdminDashboard from './pages/AdminDashboard/AdminDashboard';
 import { getUser, logoutUser } from './store/slice/userSlice';
 import ConfirmEmail from './pages/ConfirmEmail/ConfirmEmail';
 import CreateArticle from './pages/Author/CreateArticle/CreateArticle';
-import ProfilPage from './pages/Profil/Profil';
+import ProfilPage from './pages/Profil/Profil.page';
 
 function App() {
 
     const dispatch = useDispatch();
     const userConnected = useSelector((state) => state.auth.userConnected);
+    const user = useSelector((state) => state.users.user);
 
     React.useEffect(() => {
         if (userConnected) {
@@ -43,7 +44,6 @@ function App() {
                     <Route path={'/register'} element={<RegisterPage />} />
                     <Route path={'/confirm/:token'} element={<ConfirmEmail />} />
                     <Route path={'/profil'} element={<ProfilPage />} />
-                    {/* <Route path={'/admin'} element={<AdminDashboard />} /> */}
                     <Route
                         path="/admin"
                         element={

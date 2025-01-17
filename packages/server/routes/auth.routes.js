@@ -10,7 +10,7 @@ router.post('/register', [validateSchema(userValidation),], register);
 
 router.post('/login', loginUser);
 
-router.get('/logout', [authMiddleware], logOutUser);
+router.get('/logout', logOutUser);
 
 router.get('/confirm/:token', confirmEmail)
 

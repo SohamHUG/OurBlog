@@ -3,6 +3,7 @@ import * as Redux from 'react-redux';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { updateUser, uploadProfilPic, deleteUser } from '../../store/slice/userSlice';
 import Modal from '../../components/Modal/Modal';
+import UserForm from '../../components/UserForm/UserForm';
 
 const ProfilPage = () => {
     const { user } = Redux.useSelector((state) => state.users);
@@ -19,8 +20,8 @@ const ProfilPage = () => {
 
 
     const [formUser, setFormUser] = React.useState({
-        firstName: user.first_name,
-        lastName: user.last_name,
+        firstName: user.first_name || '',
+        lastName: user.last_name || '',
         pseudo: user.pseudo,
         email: user.email,
         oldPassword: '',
@@ -28,11 +29,10 @@ const ProfilPage = () => {
     });
 
     const [profilPicture, setProfilPicture] = React.useState(null);
-    // console.log(profilPicture)
 
     const handleChange = (e) => {
         if (e.target.name === 'profilPicture') {
-            setProfilPicture(e.target.files[0]); // Gère le fichier séparément
+            setProfilPicture(e.target.files[0]);
         } else {
             setFormUser({ ...formUser, [e.target.name]: e.target.value });
         }
@@ -50,6 +50,9 @@ const ProfilPage = () => {
 
         if (updateUser.fulfilled.match(data)) {
             setOpenModalInfo(true)
+            setUpdatePassword(false)
+            formUser.oldPassword = '';
+            formUser.newPassword = '';
         }
 
     };
@@ -74,71 +77,18 @@ const ProfilPage = () => {
     }
 
     return (
-        <>
-            <form onSubmit={handleSubmit}>
-                <h2>Votre profil</h2>
-                {errorUpdate && <p style={{ color: 'red' }}>{errorUpdate}</p>}
-                {user.is_verified === 0 && <p style={{ color: 'red' }}>Si vous souhaitez modifier votre profil, merci de verifier votre adresse email</p>}
-                <label>
-                    Photo de profil:
-                    <input
-                        type="file"
-                        name="profilPicture"
-                        accept="image/png, image/jpeg"
-                        onChange={handleChange}
-                        disabled={user.is_verified === 0}
-                    />
-                </label>
-                <label>
-                    Prénom:
-                    <input type="text" name="firstName" value={formUser.firstName} onChange={handleChange} disabled={user.is_verified === 0} />
-                </label>
-                <label>
-                    Nom:
-                    <input type="text" name="lastName" value={formUser.lastName} onChange={handleChange} disabled={user.is_verified === 0} />
-                </label>
-                <label>
-                    Pseudo:
-                    <input type="text" name="pseudo" value={formUser.pseudo} onChange={handleChange} required disabled={user.is_verified === 0} />
-                </label>
-                <label>
-                    Email:
-                    <input type="email" name="email" value={formUser.email} disabled />
-                </label>
-                {!updatePassword ?
-                    <p
-                        className='link'
-                        onClick={
-                            user.is_verified !== 0 ?
-                                toggleUpdatePassword : null
-                        }
-                    >
-                        Modifier votre mot de passe
-                    </p>
-                    :
-                    <div>
-                        <label>
-                            Mot de passe actuel:
-                            <input type="password" name="oldPassword" value={formUser.oldPassword} onChange={handleChange} />
-
-                        </label>
-                        <label>
-                            Nouveau mot de passe :
-                            <input type="password" name="newPassword" value={formUser.newPassword} onChange={handleChange} />
-
-                        </label>
-                        <button onClick={toggleUpdatePassword}>Annuler</button>
-                    </div>
-                }
-                <button type="submit" disabled={user.is_verified === 0}>
-                    Enregistrer
-                </button>
-
-            </form>
-            <br></br>
-            <button onClick={toggleModalConfirm}>
-                Supprimer le compte
-            </button>
+        <section>
+            <UserForm 
+                user={user}
+                formUser={formUser}
+                handleSubmit={handleSubmit}
+                handleChange={handleChange}
+                errorMessage={errorUpdate}
+                toggleUpdatePassword={toggleUpdatePassword}
+                updatePassword={updatePassword}
+                toggleModalConfirm={toggleModalConfirm}
+                
+            />
             {
                 openModalInfo &&
                 <Modal
@@ -169,7 +119,7 @@ const ProfilPage = () => {
                     valid={confirmDeleteUser}
                 />
             }
-        </>
+        </section>
     );
 }
 

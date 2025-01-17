@@ -55,6 +55,7 @@ export const refreshTokenMiddleware = async (req, res, next) => {
                 httpOnly: true,
                 secure: false, // à modifier à true car pas https pour l'instant
                 sameSite: 'strict', // Limite les cookies aux mêmes origines
+                // maxAge: 7 * 24 * 60 * 60 * 1000, // 7 jours
             });
 
             next();

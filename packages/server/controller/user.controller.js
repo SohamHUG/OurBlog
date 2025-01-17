@@ -18,7 +18,7 @@ export const updateUser = async (req, res) => {
     const userId = req.user.user_id;
     let { firstName, lastName, pseudo, email, oldPassword, newPassword } = req.body;
 
-    
+
 
     if (parseInt(id) !== userId && req.user.role_name !== "admin") {
         return res.status(403).json({ message: "Vous n'êtes pas autorisé" });
@@ -32,7 +32,17 @@ export const updateUser = async (req, res) => {
     }
 
     const user = await findUserById(id);
+    console.log(user)
 
+    let roleId = user.role_id
+
+    if (firstName.length <= 0 || lastName.length <= 0) {
+        firstName = null;
+        lastName = null;
+        roleId = 1; // User
+    } else {
+        roleId = 3; //Author
+    }
 
     if (oldPassword && newPassword) {
         // console.log(req.body)
@@ -40,7 +50,7 @@ export const updateUser = async (req, res) => {
             return res.status(400).json({ message: "Les mots de passe doivent contenir au moins 6 caractères." });
         }
 
-        const verifyOldPassword = bcrypt.compareSync(oldPassword, user[0].password);
+        const verifyOldPassword = bcrypt.compareSync(oldPassword, userLog[0].password);
         if (!verifyOldPassword) {
             return res.status(401).json({ message: "L'ancien mot de passe est incorrect." });
         }
@@ -50,8 +60,8 @@ export const updateUser = async (req, res) => {
     }
 
     const updatedUser = {
-        first_name: firstName || user.first_name,
-        last_name: lastName || user.last_name,
+        first_name: firstName ,
+        last_name: lastName ,
         pseudo: pseudo || user.pseudo,
         email: email || user.email,
         // profil_picture: user.profil_picture,

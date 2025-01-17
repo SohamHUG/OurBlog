@@ -29,7 +29,8 @@ export const findUserById = async (id) => {
                 user.profil_picture,
                 user.refresh_token, 
                 is_verified,
-                role.name AS role_name
+                role.name AS role_name,
+                user.role_id
             FROM user 
             LEFT JOIN role ON user.role_id = role.id
             WHERE user.id = ? 

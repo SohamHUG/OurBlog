@@ -1,0 +1,18 @@
+@use '../../variables' as vars;
+
+.user-form {
+    form {
+        h2 {
+            text-align: center;
+        }
+
+        .upload-profil-pic {
+            .input-file {
+                display: none;
+            }
+        }
+    }
+
+
+
+}
