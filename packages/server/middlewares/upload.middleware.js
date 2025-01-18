@@ -1,16 +1,31 @@
 import multer from 'multer';
 import path from 'path';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
+import cloudinary from '../config/cloudinary.js';
 
 // Configuration de stockage de Multer pour enregistrer les fichiers sur le disque
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads/'); // Dossier où les fichiers seront enregistrés
+// const storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//         cb(null, 'uploads/'); // Dossier où les fichiers seront enregistrés
+//     },
+//     filename: function (req, file, cb) {
+//         // Génère un nom de fichier unique basé sur la date actuelle
+//         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+//         cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+//     }
+// });
+
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: 'profil-pictures', // Dossier dans Cloudinary
+        allowed_formats: ['jpg', 'jpeg', 'png'], // Formats acceptés
+        public_id: (req, file) => {
+            // générer un nom unique
+            const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+            return `profil-${uniqueSuffix}`;
+        },
     },
-    filename: function (req, file, cb) {
-        // Génère un nom de fichier unique basé sur la date actuelle
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-    }
 });
 
 // Filtrer les types de fichiers acceptés
@@ -26,7 +41,7 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({
     storage: storage,
     limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
-    fileFilter: fileFilter
-  });
-  
-  export default upload;
+    // fileFilter: fileFilter
+});
+
+export default upload;

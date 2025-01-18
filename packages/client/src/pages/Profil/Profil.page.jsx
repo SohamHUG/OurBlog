@@ -1,7 +1,8 @@
 import * as React from 'react';
 import * as Redux from 'react-redux';
 import { useNavigate, Navigate } from 'react-router-dom';
-import { updateUser, uploadProfilPic, deleteUser } from '../../store/slice/userSlice';
+import { updateUser, deleteUser } from '../../store/slice/userSlice';
+import { uploadProfilPic } from '../../store/slice/photoSlice';
 import Modal from '../../components/Modal/Modal';
 import UserForm from '../../components/UserForm/UserForm';
 
@@ -18,7 +19,6 @@ const ProfilPage = () => {
     const [updatePassword, setUpdatePassword] = React.useState(false);
     const { status, errorUpdate, errorDelete } = Redux.useSelector((state) => state.users);
 
-
     const [formUser, setFormUser] = React.useState({
         firstName: user.first_name || '',
         lastName: user.last_name || '',
@@ -29,10 +29,17 @@ const ProfilPage = () => {
     });
 
     const [profilPicture, setProfilPicture] = React.useState(null);
+    const [previewImage, setPreviewImage] = React.useState(null);
 
     const handleChange = (e) => {
         if (e.target.name === 'profilPicture') {
-            setProfilPicture(e.target.files[0]);
+            const file = e.target.files[0];
+            if (file) {
+                // Génère un URL temporaire pour l'aperçu
+                const preview = URL.createObjectURL(file);
+                setPreviewImage(preview);
+            }
+            setProfilPicture(file);
         } else {
             setFormUser({ ...formUser, [e.target.name]: e.target.value });
         }
@@ -46,6 +53,7 @@ const ProfilPage = () => {
             const formData = new FormData();
             formData.append('profilPicture', profilPicture);
             dispatch(uploadProfilPic(formData));
+            // setPreviewImage(null);
         }
 
         if (updateUser.fulfilled.match(data)) {
@@ -76,9 +84,13 @@ const ProfilPage = () => {
 
     }
 
+    const deleteProfilPicture = async () => {
+
+    }
+
     return (
         <section>
-            <UserForm 
+            <UserForm
                 user={user}
                 formUser={formUser}
                 handleSubmit={handleSubmit}
@@ -87,10 +99,10 @@ const ProfilPage = () => {
                 toggleUpdatePassword={toggleUpdatePassword}
                 updatePassword={updatePassword}
                 toggleModalConfirm={toggleModalConfirm}
-                
+                previewImage={previewImage}
+
             />
-            {
-                openModalInfo &&
+            {openModalInfo &&
                 <Modal
                     title="Informations sauvegardées"
                     content={<p>Votre profil à bien été modifié :</p>}
@@ -101,8 +113,7 @@ const ProfilPage = () => {
                 />
             }
 
-            {
-                openModalConfirm &&
+            {openModalConfirm &&
                 <Modal
                     title="Êtes vous sûr ?"
                     content={

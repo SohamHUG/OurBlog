@@ -32,7 +32,7 @@ export const updateUser = async (req, res) => {
     }
 
     const user = await findUserById(id);
-    console.log(user)
+    // console.log(user)
 
     let roleId = user.role_id
 

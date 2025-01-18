@@ -7,6 +7,52 @@ export const searchPhotos = createAsyncThunk('users/searchPhotos', async () => {
   return data;
 })
 
+export const uploadProfilPic = createAsyncThunk(
+  'photo/uploadProfilPic',
+  async (file,) => {
+
+      const url = `http://localhost:3000/upload/profil-picture`;
+
+      const response = await fetch(url, {
+          method: 'POST',
+          body: file,
+          credentials: 'include',
+      });
+
+      if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.message);
+      }
+
+      const data = await response.json();
+      return data.user;
+
+  }
+);
+
+export const deleteProfilPic = createAsyncThunk(
+  'user/uploadProfilPic',
+  async (id) => {
+
+      const url = `http://localhost:3000/upload/profil-picture/${id}`;
+
+      const response = await fetch(url, {
+          method: 'DELETE',
+          // body: file,
+          credentials: 'include',
+      });
+
+      if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.message);
+      }
+
+      const data = await response.json();
+      return data.user;
+
+  }
+);
+
 
 const photosSlice = createSlice({
   name: 'photos',
@@ -30,6 +76,18 @@ const photosSlice = createSlice({
         state.items = action.payload;
       })
       .addCase(searchPhotos.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
+      })
+      .addCase(uploadProfilPic.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(uploadProfilPic.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        // console.log(action)
+      })
+      .addCase(uploadProfilPic.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
       })

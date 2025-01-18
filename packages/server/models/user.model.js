@@ -27,6 +27,7 @@ export const findUserById = async (id) => {
                 user.pseudo, 
                 user.email, 
                 user.profil_picture,
+                user.profil_picture_public_id,
                 user.refresh_token, 
                 is_verified,
                 role.name AS role_name,
@@ -75,6 +76,7 @@ export const updateUserById = async (id, user) => {
             'refresh_token',
             'is_verified',
             'profil_picture',
+            'profil_picture_public_id',
             'role_id',
             'password'
         ];
@@ -97,14 +99,16 @@ export const updateUserById = async (id, user) => {
         // console.log(`SET: ${setClause}`);
         // console.log(`sql: ${sql}`);
 
-        db.query(sql, values, (err, result) => {
+        db.query(sql, values, async (err, result) => {
             if (err) {
                 return reject(err);
             }
             if (result.affectedRows === 0) {
                 return resolve(null); // Aucun utilisateur mis à jour
             }
-            return resolve(result); // Résultat de la mise à jour
+            const newUserData = await findUserById(id)
+            // console.log(user)
+            resolve(newUserData) // Résultat de la mise à jour
         });
     });
 }

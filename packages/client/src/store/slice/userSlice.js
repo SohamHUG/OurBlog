@@ -74,28 +74,6 @@ export const deleteUser = createAsyncThunk(
     }
 );
 
-export const uploadProfilPic = createAsyncThunk(
-    'user/uploadProfilPic',
-    async (file,) => {
-
-        const url = `http://localhost:3000/upload/profil-picture`;
-
-        const response = await fetch(url, {
-            method: 'POST',
-            body: file,
-            credentials: 'include',
-        });
-
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.message);
-        }
-
-        const data = await response.json();
-        return data.user;
-
-    });
-
 const usersSlice = createSlice({
     name: 'users',
     initialState: {

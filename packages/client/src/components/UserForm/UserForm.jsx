@@ -1,18 +1,29 @@
 import * as React from 'react';
 import { useSelector } from 'react-redux';
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import './UserForm.scss'
+
 const UserForm = (props) => {
-    const { user } = useSelector((state) => state.users);
     return (
         <div className='user-form'>
             <form onSubmit={props.handleSubmit}>
                 <h2>{props.user ? 'Votre profil' : "S'inscrire"}</h2>
-                {props.errorMessage && <p style={{ color: 'red' }}>{props.errorMessage}</p>}
-                {props.user && props.user.is_verified === 0 ? <p style={{ color: 'red' }}>Si vous souhaitez modifier votre profil, merci de verifier votre adresse email</p> : ''}
+                {props.errorMessage && <p className='alert'>{props.errorMessage}</p>}
+                {props.user && props.user.is_verified === 0 ? <p className='alert'>Si vous souhaitez modifier votre profil, merci de verifier votre adresse email</p> : ''}
                 {props.user &&
                     <div className='upload-profil-pic'>
-                        <img src="" alt="" />
-                        <label htmlFor='profil-file' className='link'>Photo de profil</label>
+                        <label htmlFor='profil-file' className='link'>
+                            {props.previewImage || props.user.profil_picture ?
+                                <img
+                                    src={
+                                        props.previewImage || props.user.profil_picture
+                                    }
+                                    alt={`Photo de profil de ${props.user.pseudo}`}
+                                />
+                                : <AccountCircleIcon fontSize='large' />
+                            }
+                            Choisir une photo de profil
+                        </label>
                         <input
                             id='profil-file'
                             className='input-file'
@@ -24,84 +35,94 @@ const UserForm = (props) => {
                         />
                     </div>
                 }
-                <label>
-                    Prénom:
-                    <input type="text" name="firstName"
-                        value={props.formUser.firstName}
-                        onChange={props.handleChange}
-                        disabled={props.user && props.user.is_verified === 0 ? true : false}
-                    />
-                </label>
-                <label>
-                    Nom:
-                    <input type="text" name="lastName"
-                        value={props.formUser.lastName} onChange={props.handleChange}
-                        disabled={props.user && props.user.is_verified === 0 ? true : false}
-                    />
-                </label>
-                <label>
-                    Pseudo:
+                <div className='names-container'>
+                    <div className='input-label-container'>
+                        <label>Prénom:</label>
+                        <input type="text" name="firstName"
+                            value={props.formUser.firstName}
+                            onChange={props.handleChange}
+                            disabled={props.user && props.user.is_verified === 0 ? true : false}
+                        />
+                    </div>
+                    <div className='input-label-container'>
+                        <label>Nom:</label>
+                        <input type="text" name="lastName"
+                            value={props.formUser.lastName} onChange={props.handleChange}
+                            disabled={props.user && props.user.is_verified === 0 ? true : false}
+                        />
+                    </div>
+                </div>
+
+                <div className='input-label-container'>
+                    <label>Pseudo:</label>
                     <input type="text" name="pseudo"
                         value={props.formUser.pseudo}
-                        onChange={props.handleChange} required
+                        onChange={props.handleChange}
+                        required
                         disabled={props.user && props.user.is_verified === 0 ? true : false}
                     />
-                </label>
-                <label>
-                    Email:
+                </div>
+                <div className='input-label-container'>
+                    <label>Email:</label>
                     <input type="email" name="email"
                         onChange={props.handleChange}
                         value={props.formUser.email}
                         disabled={props.user ? true : false}
+                        required
                     />
-                </label>
+                </div>
 
                 {!props.user &&
-                    <label>
-                        Mot de passe *:
+                    <div className='input-label-container'>
+                        <label htmlFor="">Mot de passe *:</label>
                         <input type="password" name="password" value={props.formUser.password} onChange={props.handleChange} required />
-                    </label>
+                    </div>
                 }
                 {props.user ?
                     !props.updatePassword ?
                         <p
                             className='link'
-                            onClick={
-                                props.user && props.user.is_verified !== 0 ?
-                                    props.toggleUpdatePassword
-                                    : null
+                            onClick={props.user && props.user.is_verified !== 0 ?
+                                props.toggleUpdatePassword
+                                :
+                                null
                             }
                         >
                             Modifier votre mot de passe
                         </p>
                         :
                         <div>
-                            <label>
-                                Mot de passe actuel:
+                            <div className='input-label-container'>
+                                <label htmlFor="">Mot de passe actuel:</label>
                                 <input type="password" name="oldPassword" value={props.formUser.oldPassword} onChange={props.handleChange} />
 
-                            </label>
-                            <label>
-                                Nouveau mot de passe :
+                            </div>
+                            <div className='input-label-container'>
+                                <label htmlFor="">Nouveau mot de passe :</label>
                                 <input type="password" name="newPassword" value={props.formUser.newPassword} onChange={props.handleChange} />
 
-                            </label>
-                            <p className="link" style={{ color: 'red' }} onClick={props.toggleUpdatePassword}>Annuler</p>
+                            </div>
+                            <p className="link" onClick={props.toggleUpdatePassword}>Annuler</p>
                         </div>
+                        
                     : ''
                 }
+                {props.user &&
+                    <p className='alert' onClick={props.toggleModalConfirm}>
+                        Supprimer le compte
+                    </p>
+                }
 
-                <button type="submit" disabled={props.user && props.user.is_verified === 0 ? true : false}>
-                    {props.user ? 'Enregistrer' : "S'inscrire"}
-                </button>
+                <div className='form-footer'>
+                    <button type="submit" disabled={props.user && props.user.is_verified === 0 ? true : false}>
+                        {props.user ? 'Enregistrer' : "S'inscrire"}
+                    </button>
 
-
+                </div>
+                
+                
             </form>
-            {props.user &&
-                <button onClick={props.toggleModalConfirm}>
-                    Supprimer le compte
-                </button>
-            }
+
         </div>
     );
 };

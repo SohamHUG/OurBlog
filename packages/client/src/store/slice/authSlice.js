@@ -78,7 +78,8 @@ const authSlice = createSlice({
             })
             .addCase(registerUser.rejected, (state, action) => {
                 state.status = 'failed';
-                state.errorRegister = action.payload || action.error.message;
+                console.log(action)
+                state.errorRegister = action.error.message;
             })
             .addCase(loginUser.pending, (state) => {
                 state.status = 'loading';
@@ -96,6 +97,9 @@ const authSlice = createSlice({
             })
             .addCase(logout.fulfilled, (state) => {
                 state.userConnected = null;
+                state.errorLogin = null;
+                state.errorRegister = null;
+                state.errorLogout = null;
                 localStorage.removeItem('user');
             })
             .addCase(logout.rejected, (state, action) => {

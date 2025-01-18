@@ -16,6 +16,8 @@ html {
         h2 {
             font-weight: 800;
             font-size: 1.6em;
+
+
         }
 
         a {
@@ -53,11 +55,21 @@ html {
             &:hover {
                 background-color: #001ea3;
             }
+
+            &:disabled {
+                background-color: #001ea3;
+                cursor: not-allowed;
+            }
+        }
+
+        .alert {
+            color: red;
         }
 
         .link {
             color: vars.$main-color;
         }
+
         .link:hover {
             cursor: pointer;
         }
@@ -70,10 +82,18 @@ html {
             input {
                 height: 2rem;
                 border-radius: 10px;
-                border: none;
+                border: 1px solid black;
                 margin: 1em 0;
                 padding: .5em;
                 font-size: 1.1em;
+            }
+
+            input:disabled {
+                background-color: #f0f0f0;
+                color: #a0a0a0;
+                border-color: #d0d0d0;
+                cursor: not-allowed;
+
             }
         }
 
@@ -84,6 +104,14 @@ html {
         &.dark {
             background-color: vars.$dark-bck-color;
             color: vars.$primary-white;
+
+            h2 {
+                border-bottom: 2px solid vars.$primary-white;
+            }
+
+            .link {
+                color: vars.$primary-white;
+            }
 
             .logo {
                 color: vars.$primary-white;
@@ -98,9 +126,12 @@ html {
                 background-color: vars.$dark-secondary-bck-color;
 
                 .menu-link {
-                    p, svg {
+
+                    p,
+                    svg {
                         color: vars.$primary-white;
                     }
+
                     .logout {
                         color: red;
                     }
