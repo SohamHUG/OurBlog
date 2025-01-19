@@ -80,7 +80,8 @@ const usersSlice = createSlice({
         users: [],
         user: null,
         status: 'idle',
-        error: null,
+        errorUsers: null,
+        errorUser: null,
         errorUpdate: null,
         errorDelete: null,
     },
@@ -93,7 +94,7 @@ const usersSlice = createSlice({
         builder
             .addCase(searchUsers.pending, (state) => {
                 state.status = 'loading';
-                state.error = null;
+                state.errorUsers = null;
             })
             .addCase(searchUsers.fulfilled, (state, action) => {
                 state.status = 'succeeded';
@@ -102,11 +103,11 @@ const usersSlice = createSlice({
             })
             .addCase(searchUsers.rejected, (state, action) => {
                 state.status = 'failed';
-                state.error = action.error.message;
+                state.errorUsers = action.error.message;
             })
             .addCase(getUser.pending, (state) => {
                 state.status = 'loading';
-                state.error = null;
+                state.errorUser = null;
             })
             .addCase(getUser.fulfilled, (state, action) => {
                 state.status = 'succeeded';
@@ -115,7 +116,7 @@ const usersSlice = createSlice({
             })
             .addCase(getUser.rejected, (state, action) => {
                 state.status = 'failed';
-                state.error = "Session expirée, reconnectez-vous";
+                state.errorUser = "Session expirée, reconnectez-vous";
                 localStorage.removeItem('user');
             })
             .addCase(updateUser.pending, (state) => {

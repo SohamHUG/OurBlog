@@ -36,6 +36,23 @@ export const loginUser = createAsyncThunk('auth/loginUser', async (credentials) 
     return data.data;
 });
 
+export const sendEmailConfirm = createAsyncThunk('auth/sendEmailConfirm', async (_, { rejectWithValue }) => {
+    try {
+        const response = await fetch('http://localhost:3000/auth/confirm-email', {
+            method: 'GET',
+            credentials: 'include', // Pour inclure les cookies
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            return rejectWithValue(error.message);
+        }
+
+        return response.json();
+    } catch (error) {
+        return rejectWithValue(error.message);
+    }
+});
 
 export const logout = createAsyncThunk('auth/logout', async (_, { rejectWithValue }) => {
     try {
@@ -60,9 +77,11 @@ const authSlice = createSlice({
     initialState: {
         userConnected: localStorage.getItem('user') || null,
         status: 'idle',
+        statusEmailSend: 'idle',
         errorLogin: null,
         errorRegister: null,
         errorLogout: null,
+        errorEmailSend: null,
     },
     reducers: {
     },
@@ -94,6 +113,18 @@ const authSlice = createSlice({
                 state.status = 'failed';
                 // console.log(action.error)
                 state.errorLogin = action.error.message;
+            })
+            .addCase(sendEmailConfirm.pending, (state) => {
+                state.statusEmailSend = 'loading';
+                state.errorEmailSend = null;
+            })
+            .addCase(sendEmailConfirm.fulfilled, (state, action) => {
+                state.statusEmailSend = 'succeeded';
+            })
+            .addCase(sendEmailConfirm.rejected, (state, action) => {
+                state.statusEmailSend = 'failed';
+                // console.log(action.error)
+                state.errorEmailSend = action.error.message;
             })
             .addCase(logout.fulfilled, (state) => {
                 state.userConnected = null;

@@ -85,7 +85,7 @@ const LoginForm = ({ closeModal }) => {
                         />
                     </div>
                     <p>
-                        Première fois sur OurBlog ?
+                        Première fois sur OurBlog ?&nbsp;
                         <span
                             className="link"
                             onClick={handleRegisterClick}

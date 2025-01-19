@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { register, loginUser, logOutUser, confirmEmail } from '../controller/auth.controller.js';
+import { register, loginUser, logOutUser, confirmEmail, sendEmail } from '../controller/auth.controller.js';
 import { validateSchema } from '../middlewares/validationSchemas.js';
 import { userValidation } from '../validations/users.validation.js';
 import { authMiddleware } from '../middlewares/auth.middleware.js';
@@ -13,5 +13,7 @@ router.post('/login', loginUser);
 router.get('/logout', logOutUser);
 
 router.get('/confirm/:token', confirmEmail)
+
+router.get('/confirm-email',[authMiddleware], sendEmail)
 
 export default router;

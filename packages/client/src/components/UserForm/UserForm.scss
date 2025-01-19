@@ -18,7 +18,16 @@
             border-bottom: 2px solid black;
             padding-bottom: 1em;
         }
-        
+
+        .verif-email-infos {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+
+            .alert {
+                font-size: 1.2em;
+            }
+        }
 
         label {
             font-size: 1.1em;
@@ -93,15 +102,15 @@
             }
 
             @media screen and (min-width: 768px) {
-               
-                    display: flex;
-                    justify-content: flex-end;
 
-                    button {
-                        width: 30%;
-                        
-                    }
-                
+                display: flex;
+                justify-content: flex-end;
+
+                button {
+                    width: 30%;
+
+                }
+
             }
         }
     }

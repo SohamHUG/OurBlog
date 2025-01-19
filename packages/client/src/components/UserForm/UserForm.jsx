@@ -1,15 +1,49 @@
 import * as React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { sendEmailConfirm } from '../../store/slice/authSlice';
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
+import HourglassFullRoundedIcon from '@mui/icons-material/HourglassFullRounded';
 import './UserForm.scss'
 
 const UserForm = (props) => {
+
+    const { statusEmailSend, errorEmailSend } = useSelector((state) => state.auth);
+    const dispatch = useDispatch();
+    console.log(statusEmailSend)
+
+    const handleEmailConfirm = () => {
+        if (statusEmailSend === 'idle') {
+            dispatch(sendEmailConfirm());
+        }
+    }
     return (
         <div className='user-form'>
             <form onSubmit={props.handleSubmit}>
                 <h2>{props.user ? 'Votre profil' : "S'inscrire"}</h2>
                 {props.errorMessage && <p className='alert'>{props.errorMessage}</p>}
-                {props.user && props.user.is_verified === 0 ? <p className='alert'>Si vous souhaitez modifier votre profil, merci de verifier votre adresse email</p> : ''}
+                {props.user && props.user.is_verified === 0 &&
+                    <p className='verif-email-infos'>
+                        <span className='alert'>Si vous souhaitez modifier votre profil, merci de verifier votre adresse email. </span>
+                        <small style={{ textDecoration: 'underline' }} onClick={handleEmailConfirm} className='link'> Renvoyer l'email de confirmation</small>
+                        {statusEmailSend === 'loading' &&
+                            <span style={{color: 'orange'}}>
+                                <HourglassFullRoundedIcon />
+                            </span>
+                        }
+                        {statusEmailSend === 'succeeded' &&
+                            <span style={{color: 'green'}}>
+                                <CheckCircleRoundedIcon />
+                            </span>
+                        }
+                        {statusEmailSend === 'failed' &&
+                            <span className='alert'>
+                                {errorEmailSend}
+                            </span>
+                        }
+                    </p>
+
+                }
                 {props.user &&
                     <div className='upload-profil-pic'>
                         <label htmlFor='profil-file' className='link'>
@@ -80,8 +114,7 @@ const UserForm = (props) => {
                 }
                 {props.user ?
                     !props.updatePassword ?
-                        <p
-                            className='link'
+                        <p className='link'
                             onClick={props.user && props.user.is_verified !== 0 ?
                                 props.toggleUpdatePassword
                                 :
@@ -102,13 +135,13 @@ const UserForm = (props) => {
                                 <input type="password" name="newPassword" value={props.formUser.newPassword} onChange={props.handleChange} />
 
                             </div>
-                            <p className="link" onClick={props.toggleUpdatePassword}>Annuler</p>
+                            <p className="link alert" onClick={props.toggleUpdatePassword}>Annuler</p>
                         </div>
-                        
+
                     : ''
                 }
                 {props.user &&
-                    <p className='alert' onClick={props.toggleModalConfirm}>
+                    <p className='link alert' onClick={props.toggleModalConfirm}>
                         Supprimer le compte
                     </p>
                 }
@@ -119,8 +152,8 @@ const UserForm = (props) => {
                     </button>
 
                 </div>
-                
-                
+
+
             </form>
 
         </div>

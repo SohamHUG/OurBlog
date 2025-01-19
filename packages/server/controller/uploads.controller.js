@@ -48,8 +48,6 @@ export const deleteProfilPicture = async (req, res) => {
         return res.status(403).json({ message: "Vous n'êtes pas autorisé" });
     }
 
-
-
     await cloudinary.uploader.destroy(user.profil_picture_public_id);
 
     await updateUserById(user.user_id, {
@@ -58,7 +56,6 @@ export const deleteProfilPicture = async (req, res) => {
     });
 
     return res.status(200).json({
-        message: 'Photo de profil supprimé avec succès',
-        // profilePicture: imageUrl
+        message: 'Photo de profil supprimé avec succès'
     });
 }

@@ -62,12 +62,14 @@ html {
             }
         }
 
-        .alert {
-            color: red;
-        }
+
 
         .link {
             color: vars.$main-color;
+        }
+
+        .alert {
+            color: red;
         }
 
         .link:hover {
@@ -110,7 +112,11 @@ html {
             }
 
             .link {
-                color: vars.$primary-white;
+                color: #7796eb;
+            }
+
+            .alert {
+                color: red;
             }
 
             .logo {

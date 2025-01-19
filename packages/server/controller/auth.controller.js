@@ -46,6 +46,23 @@ export const register = async (req, res) => {
     }
 }
 
+export const sendEmail = async (req, res) => {
+
+    try {
+        const user = req.user
+
+        const confirmationToken = jwt.sign({ id: user.user_id, }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRATION });
+
+        await sendConfirmationEmail(user.email, confirmationToken);
+
+        return res.status(201).json({ message: "Mail envoyé" });
+    } catch (err) {
+        console.error(err)
+        return res.status(500).json({ message: err });
+    }
+
+}
+
 export const confirmEmail = async (req, res) => {
     const { token } = req.params;
     try {
