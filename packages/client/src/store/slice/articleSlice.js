@@ -19,6 +19,24 @@ export const fetchPosts = createAsyncThunk(
     }
 );
 
+export const getTags = createAsyncThunk(
+    "posts/getTags",
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await fetch(
+                `http://localhost:3000/tags`
+            );
+            if (!response.ok) {
+                throw new Error("Erreur lors du chargement des tags.");
+            }
+            // console.log(response);
+            return await response.json();
+        } catch (error) {
+            return rejectWithValue(error.message);
+        }
+    }
+);
+
 export const createPost = createAsyncThunk('posts/createPost', async (articleData, { rejectWithValue }) => {
     try {
         const response = await fetch('http://localhost:3000/article/create-article', {
@@ -43,10 +61,13 @@ const postsSlice = createSlice({
     name: "posts",
     initialState: {
         items: [],
+        tags: [],
         page: 1,
         loading: true,
         error: null,
+        errorTags: null,
         status: "first",
+        statusGetTags: "idle",
         hasMore: true, // Indique s'il reste des posts à charger
     },
     reducers: {
@@ -95,6 +116,20 @@ const postsSlice = createSlice({
             .addCase(createPost.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.error.message;
+            })
+            .addCase(getTags.pending, (state) => {
+                state.statusGetTags = 'loading';
+                state.errorTags = null;
+            })
+            .addCase(getTags.fulfilled, (state, action) => {
+                state.statusGetTags = 'succeeded';
+                // state.items.push(action.payload.data);
+                // console.log(action)
+                state.tags = action.payload.data;
+            })
+            .addCase(getTags.rejected, (state, action) => {
+                state.statusGetTags = 'failed';
+                state.errorTags = action.error.message;
             });
     },
 });

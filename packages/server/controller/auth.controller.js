@@ -55,7 +55,7 @@ export const sendEmail = async (req, res) => {
 
         await sendConfirmationEmail(user.email, confirmationToken);
 
-        return res.status(201).json({ message: "Mail envoyé" });
+        return res.status(200).json({ message: "Mail envoyé" });
     } catch (err) {
         console.error(err)
         return res.status(500).json({ message: err });

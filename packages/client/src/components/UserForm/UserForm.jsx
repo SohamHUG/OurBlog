@@ -10,7 +10,7 @@ const UserForm = (props) => {
 
     const { statusEmailSend, errorEmailSend } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
-    console.log(statusEmailSend)
+    // console.log(statusEmailSend)
 
     const handleEmailConfirm = () => {
         if (statusEmailSend === 'idle') {

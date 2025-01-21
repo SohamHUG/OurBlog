@@ -7,7 +7,7 @@ import {
     selectUsers,
     selectPhotos,
 } from "../../store/selectors";
-import { fetchPosts, incrementPage } from "../../store/slice/postSlice";
+import { fetchPosts, incrementPage } from "../../store/slice/articleSlice";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import EastIcon from "@mui/icons-material/East";
 import { searchUsers } from "../../store/slice/userSlice";

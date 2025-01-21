@@ -3,9 +3,9 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 export const fetchCategories = createAsyncThunk('categories/searchCategories', async (id) => {
     let url = 'http://localhost:3000/categories';
 
-    if (id) {
-        url += '/' + id;
-    }
+    // if (id) {
+    //     url += '/' + id;
+    // }
 
     const response = await fetch(url);
     const data = await response.json();

@@ -2,7 +2,7 @@ import db from '../config/db.js';
 
 export const fetchCategories = async () => {
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT id, name FROM category WHERE deleted_at IS NULL';
+        const sql = 'SELECT id, name FROM category';
         db.query(sql, (err, result) => {
             if (err) {
                 return reject(err)
@@ -15,7 +15,7 @@ export const fetchCategories = async () => {
 
 export const fetchCategoryById = async (id) => {
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT id, name FROM category WHERE id = ? AND deleted_at IS NULL';
+        const sql = 'SELECT id, name FROM category WHERE id = ?';
         db.query(sql,[id], (err, result) => {
             if (err) {
                 return reject(err)

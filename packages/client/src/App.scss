@@ -13,6 +13,10 @@ html {
         display: flex;
         flex-direction: column;
 
+        main {
+            min-height: 75vh;
+        }
+
         h2 {
             font-weight: 800;
             font-size: 1.6em;

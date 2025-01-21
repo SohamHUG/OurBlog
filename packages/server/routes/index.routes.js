@@ -5,11 +5,14 @@ import authRoutes from './auth.routes.js';
 import adminRoutes from './admin.routes.js';
 import articleRoutes from './articles.routes.js';
 import userRoutes from './user.routes.js';
+import tagRoutes from './tags.routes.js';
 
 
 const router= Router();
 
 router.use('/categories', categoriesRoutes);
+
+router.use('/tags', tagRoutes);
 
 router.use('/auth', authRoutes);
 

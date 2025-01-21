@@ -15,8 +15,11 @@ export const refreshTokenMiddleware = async (req, res, next) => {
     }
 
     try {
-        jwt.verify(accessToken, process.env.JWT_SECRET);
-        next();
+        const verifAccess = jwt.verify(accessToken, process.env.JWT_SECRET);
+        if (verifAccess) {
+            next();
+        }
+
     } catch (error) {
         // console.log('AccessToken expiré ou invalide, vérification du RefreshToken...');
         try {
@@ -27,7 +30,7 @@ export const refreshTokenMiddleware = async (req, res, next) => {
                 res.clearCookie('accessToken');
                 res.clearCookie('refreshToken');
                 return res.status(401).send({ message: 'Token invalide' })
-            } 
+            }
 
             const user = await findUserById(verifyRefreshToken.id)
             // console.log(user)

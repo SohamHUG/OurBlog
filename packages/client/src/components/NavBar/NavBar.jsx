@@ -105,11 +105,20 @@ const NavBar = () => {
                 <div className="menu-login">
                     {!user ? (
                         <button onClick={openModalLogin}>Se&nbsp;connecter</button>
-                    ) : (
-                        <NavLink to={'/profil'}>
-                            <AccountCircleIcon fontSize="large" />
-                        </NavLink>
-                    )}
+                    ) :
+                        user.profil_picture ?
+                            (
+                                <NavLink to={'/profil'}>
+                                    <img src={user.profil_picture} alt="" />
+                                </NavLink>
+                            )
+                            :
+                            (
+                                <NavLink to={'/profil'}>
+                                    <AccountCircleIcon fontSize="large" />
+                                </NavLink>
+                            )
+                    }
 
                     <div className="menu-icon" onClick={toggleMenu}>
                         <MenuIcon fontSize="large" />
