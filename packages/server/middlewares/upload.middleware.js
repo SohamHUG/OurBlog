@@ -18,12 +18,12 @@ import cloudinary from '../config/cloudinary.js';
 const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
-        folder: 'profil-pictures', // Dossier dans Cloudinary
+        folder: 'files', // Dossier dans Cloudinary
         allowed_formats: ['jpg', 'jpeg', 'png'], // Formats acceptés
         public_id: (req, file) => {
             // générer un nom unique
             const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-            return `profil-${uniqueSuffix}`;
+            return `${uniqueSuffix}`;
         },
     },
 });

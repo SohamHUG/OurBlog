@@ -17,7 +17,7 @@ const ProfilPage = () => {
     const [openModalInfo, setOpenModalInfo] = React.useState(false);
     const [openModalConfirm, setOpenModalConfirm] = React.useState(false);
     const [updatePassword, setUpdatePassword] = React.useState(false);
-    const { status, errorUpdate, errorDelete } = Redux.useSelector((state) => state.users);
+    const { status, error } = Redux.useSelector((state) => state.users);
 
     const [formUser, setFormUser] = React.useState({
         firstName: user.first_name || '',
@@ -95,7 +95,7 @@ const ProfilPage = () => {
                 formUser={formUser}
                 handleSubmit={handleSubmit}
                 handleChange={handleChange}
-                errorMessage={errorUpdate}
+                errorMessage={error}
                 toggleUpdatePassword={toggleUpdatePassword}
                 updatePassword={updatePassword}
                 toggleModalConfirm={toggleModalConfirm}
@@ -118,7 +118,7 @@ const ProfilPage = () => {
                     title="Êtes vous sûr ?"
                     content={
                         <div>
-                            {errorDelete && <p style={{ color: 'red' }}>{errorDelete}</p>}
+                            {error && <p style={{ color: 'red' }}>{error}</p>}
                             <p>Voulez-vous vraiment <strong style={{ color: 'red' }}>supprimer</strong> votre compte de manière <strong style={{ color: 'red' }}>définitive</strong> ?</p>
                             <strong style={{ color: 'red' }}>Cet action est irréversible !</strong>
                         </div>

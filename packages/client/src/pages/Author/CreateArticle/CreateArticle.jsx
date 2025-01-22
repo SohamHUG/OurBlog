@@ -12,8 +12,6 @@ const CreateArticle = () => {
     const { statusGetTags, tags } = Redux.useSelector((state) => state.posts)
     const error = Redux.useSelector(selectCategoriesError);
 
-    // console.log(tags, statusGetTags)
-
     React.useEffect(() => {
         if (CategoriesStatus === 'idle') {
             dispatch(fetchCategories());
@@ -33,15 +31,18 @@ const CreateArticle = () => {
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
+        // console.log(formData)
     };
 
-    const handleContentChange = (content) => {
-        setFormData({ ...formData, content });
-      };
+    const handleContentChange = React.useCallback((content) => {
+        setFormData((prevFormData) => ({ ...prevFormData, content }));
+        // console.log(formData)
+    }, [formData, setFormData]);
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // dispatch(createPost(formData));
+        dispatch(createPost(formData));
         console.log(formData)
 
     };
@@ -86,8 +87,9 @@ const CreateArticle = () => {
 
             <label>
                 Contenu :
-                <RichTextEditor onChange={handleContentChange} />
             </label>
+            <RichTextEditor value={formData.content} onChange={handleContentChange} />
+
             <button type="submit">
                 Publier
             </button>

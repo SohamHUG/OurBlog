@@ -1,140 +1,123 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-export const registerUser = createAsyncThunk(
-    'auth/registerUser',
-    async (userData) => {
+const BASE_URL = 'http://localhost:3000/auth';
 
-        const response = await fetch('http://localhost:3000/auth/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', },
-            body: JSON.stringify(userData),
-            credentials: 'include',
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message);
-        }
-
-        return await response.json();
-
+const handleResponse = async (response) => {
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message);
     }
-);
+    return response.json();
+};
+
+export const registerUser = createAsyncThunk('auth/registerUser', async (userData) => {
+    const response = await fetch(`${BASE_URL}/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData),
+        credentials: 'include',
+    });
+    return handleResponse(response);
+});
 
 export const loginUser = createAsyncThunk('auth/loginUser', async (credentials) => {
-    const response = await fetch('http://localhost:3000/auth/login', {
+    const response = await fetch(`${BASE_URL}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(credentials),
         credentials: 'include',
     });
-    if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message);
-    }
-    const data = await response.json();
+    const data = await handleResponse(response);
     return data.data;
 });
 
-export const sendEmailConfirm = createAsyncThunk('auth/sendEmailConfirm', async (_, { rejectWithValue }) => {
-    try {
-        const response = await fetch('http://localhost:3000/auth/confirm-email', {
-            method: 'GET',
-            credentials: 'include', // Pour inclure les cookies
-        });
-
-        if (!response.ok) {
-            const error = await response.json();
+export const sendEmailConfirm = createAsyncThunk(
+    'auth/sendEmailConfirm',
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await fetch(`${BASE_URL}/confirm-email`, {
+                method: 'GET',
+                credentials: 'include',
+            });
+            return handleResponse(response);
+        } catch (error) {
             return rejectWithValue(error.message);
         }
-
-        return response.json();
-    } catch (error) {
-        return rejectWithValue(error.message);
     }
-});
+);
 
-export const logout = createAsyncThunk('auth/logout', async (_, { rejectWithValue }) => {
-    try {
-        const response = await fetch('http://localhost:3000/auth/logout', {
-            method: 'GET',
-            credentials: 'include', // Pour inclure les cookies
-        });
-
-        if (!response.ok) {
-            const error = await response.json();
+export const logout = createAsyncThunk(
+    'auth/logout',
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await fetch(`${BASE_URL}/logout`, {
+                method: 'GET',
+                credentials: 'include',
+            });
+            return handleResponse(response);
+        } catch (error) {
             return rejectWithValue(error.message);
         }
-
-        return response.json();
-    } catch (error) {
-        return rejectWithValue(error.message);
     }
-});
+);
 
 const authSlice = createSlice({
     name: 'auth',
     initialState: {
-        userConnected: localStorage.getItem('user') || null,
-        status: 'idle',
-        statusEmailSend: 'idle',
-        errorLogin: null,
-        errorRegister: null,
-        errorLogout: null,
-        errorEmailSend: null,
+        user: JSON.parse(localStorage.getItem('user')) || null,
+        status: 'idle', 
+        error: null,    
     },
-    reducers: {
-    },
+    reducers: {},
     extraReducers: (builder) => {
         builder
             .addCase(registerUser.pending, (state) => {
                 state.status = 'loading';
-                state.errorRegister = null;
+                state.error = null;
             })
-            .addCase(registerUser.fulfilled, (state, action) => {
+            .addCase(registerUser.fulfilled, (state) => {
                 state.status = 'succeeded';
-                // state.user = action.payload.data;
             })
             .addCase(registerUser.rejected, (state, action) => {
                 state.status = 'failed';
-                console.log(action)
-                state.errorRegister = action.error.message;
+                state.error = action.error.message;
             })
             .addCase(loginUser.pending, (state) => {
                 state.status = 'loading';
-                state.errorLogin = null;
+                state.error = null;
             })
-            .addCase(loginUser.fulfilled, (state, action) => {
+            .addCase(loginUser.fulfilled, (state) => {
                 state.status = 'succeeded';
-                state.userConnected = true;
+                state.user = true;
                 localStorage.setItem('user', JSON.stringify(true));
             })
             .addCase(loginUser.rejected, (state, action) => {
                 state.status = 'failed';
-                // console.log(action.error)
-                state.errorLogin = action.error.message;
+                state.error = action.error.message;
             })
             .addCase(sendEmailConfirm.pending, (state) => {
-                state.statusEmailSend = 'loading';
-                state.errorEmailSend = null;
+                state.status = 'loading';
+                state.error = null;
             })
-            .addCase(sendEmailConfirm.fulfilled, (state, action) => {
-                state.statusEmailSend = 'succeeded';
+            .addCase(sendEmailConfirm.fulfilled, (state) => {
+                state.status = 'succeeded';
             })
             .addCase(sendEmailConfirm.rejected, (state, action) => {
-                state.statusEmailSend = 'failed';
-                // console.log(action.error)
-                state.errorEmailSend = action.error.message;
+                state.status = 'failed';
+                state.error = action.error.message;
+            })
+            .addCase(logout.pending, (state) => {
+                state.status = 'loading';
+                state.error = null;
             })
             .addCase(logout.fulfilled, (state) => {
-                state.userConnected = null;
-                state.errorLogin = null;
-                state.errorRegister = null;
-                state.errorLogout = null;
+                state.status = 'succeeded';
+                state.user = null;
                 localStorage.removeItem('user');
             })
             .addCase(logout.rejected, (state, action) => {
-                state.errorLogout = action.payload || 'Logout failed';
+                state.status = 'failed';
+                state.error = action.payload || 'Logout failed';
             });
     },
 });

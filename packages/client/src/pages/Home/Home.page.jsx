@@ -3,12 +3,13 @@ import * as Redux from 'react-redux';
 import PostsList from "../../components/PostsList/PostsList";
 import SideList from '../../components/SideList/SideList';
 import CategoriesNav from '../../components/CategoriesNav/CategoriesNav';
-import { selectUsersStatus, selectUsersError, selectUsers, } from '../../store/selectors';
+import { selectUsersStatus, selectUsersError, selectUsers,selectPosts } from '../../store/selectors';
 import { searchUsers, } from '../../store/slice/userSlice';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import KeyboardArrowUpRoundedIcon from '@mui/icons-material/KeyboardArrowUpRounded';
 // import PopularAuthorsList from '../../components/PopularAuthorsList/PopularAuthorsList';
 import './Home.scss';
+import { getPosts } from '../../store/slice/articleSlice';
 
 const HomePage = () => {
     const [filter, setFilter] = React.useState('recent');
@@ -16,11 +17,16 @@ const HomePage = () => {
     const status = Redux.useSelector(selectUsersStatus);
     const error = Redux.useSelector(selectUsersError);
     const users = Redux.useSelector(selectUsers);
+    const posts = Redux.useSelector(selectPosts);
     const [showToTop, setShowToTop] = React.useState(false);
 
     React.useEffect(() => {
         if (status === 'idle') {
             dispatch(searchUsers());
+        }
+
+        if (filter === 'recent') {
+            dispatch(getPosts());
         }
 
         const handleScroll = () => {
@@ -65,10 +71,12 @@ const HomePage = () => {
                             Publiez votre article !
                         </button>
                     </div>
-                    <PostsList />
+                    <PostsList 
+                        posts={posts}
+                    />
                 </div>
 
-                <div className='right'>
+                {/* <div className='right'>
                     <SideList
                         items={users}
                         status={status}
@@ -85,7 +93,7 @@ const HomePage = () => {
                     // content={<PopularAuthorsList/>}
                     />
 
-                </div>
+                </div> */}
                 {showToTop &&
                     <button className='to-top-btn' onClick={scrollToTop}>
                         <KeyboardArrowUpRoundedIcon fontSize='medium' />

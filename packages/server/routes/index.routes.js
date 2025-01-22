@@ -18,7 +18,7 @@ router.use('/auth', authRoutes);
 
 router.use('/admin', adminRoutes);
 
-router.use('/article', articleRoutes);
+router.use('/articles', articleRoutes);
 
 router.use('/users', userRoutes);
 

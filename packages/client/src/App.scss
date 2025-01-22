@@ -20,6 +20,15 @@ html {
         h2 {
             font-weight: 800;
             font-size: 1.6em;
+        }
+
+        .avatar {
+            width: 2.3em;
+            height: 2.3em;
+            border-radius: 50%;
+            object-fit: cover;
+            overflow: hidden;
+            border: 2px solid vars.$main-color;
 
 
         }

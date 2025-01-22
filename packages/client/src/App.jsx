@@ -17,12 +17,12 @@ import { getUser, logoutUser } from './store/slice/userSlice';
 import ConfirmEmail from './pages/ConfirmEmail/ConfirmEmail';
 import CreateArticle from './pages/Author/CreateArticle/CreateArticle';
 import ProfilPage from './pages/Profil/Profil.page';
+import Article from './pages/Article/Article';
 
 function App() {
 
     const dispatch = useDispatch();
-    const userConnected = useSelector((state) => state.auth.userConnected);
-    const user = useSelector((state) => state.users.user);
+    const userConnected = useSelector((state) => state.auth.user);
 
     React.useEffect(() => {
         if (userConnected) {
@@ -44,6 +44,7 @@ function App() {
                     <Route path={'/register'} element={<RegisterPage />} />
                     <Route path={'/confirm/:token'} element={<ConfirmEmail />} />
                     <Route path={'/profil'} element={<ProfilPage />} />
+                    <Route path={'/article/:id'} element={<Article />} />
                     <Route
                         path="/admin"
                         element={

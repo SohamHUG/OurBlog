@@ -1,33 +1,69 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import ReactQuill from 'react-quill-new';
-import 'react-quill-new/dist/quill.snow.css'; // Style de l'éditeur
+import 'react-quill-new/dist/quill.snow.css';
 
-const RichTextEditor = ({ onChange }) => {
-    const [value, setValue] = useState('');
+const RichTextEditor = ({ value, onChange }) => {
+    const [content, setContent] = useState(value || '');
+    const quillRef = useRef(null);
 
-    const handleChange = (content) => {
-        setValue(content);
-        if (onChange) {
-            onChange(content);
-            // console.log(content)
+    const handleChange = (content, delta, source, editor) => {
+        if (source === 'user') {
+            setContent(content);
+            if (onChange) {
+                onChange(content);
+            }
         }
     };
 
-    const modules = {
+    const handleImageUpload = () => {
+        const input = document.createElement('input');
+        input.setAttribute('type', 'file');
+        input.setAttribute('accept', 'image/*');
+        input.click();
+
+        input.onchange = async () => {
+            const file = input.files[0];
+            const formData = new FormData();
+            formData.append('file', file);
+
+            // Envoyez l'image à Cloudinary
+            const response = await fetch('http://localhost:3000/upload/article-files', {
+                method: 'POST',
+                body: formData,
+                credentials: 'include',
+            });
+
+            const data = await response.json();
+            // console.log(data)
+            const imageUrl = data.url;
+
+            const quill = quillRef.current
+            // console.log(quill)
+            // Insérez l'image dans l'éditeur
+            const range = quill.getEditor().getSelection(true);
+            // console.log(range)
+            quill.getEditor().insertEmbed(range.index, 'image', imageUrl);
+        };
+    };
+
+    const modules = useMemo(() => ({
         toolbar: {
             container: [
-                [{ header: [false] }], // Headers
-                ['bold', 'italic', 'underline'], // Text formatting
-                [{ list: 'ordered' }, { list: 'bullet' }], // Lists
-                ['link', 'image'], // Links and images
-                ['clean'], // Remove formatting
+                [{ header: [1,2, false] }],
+                ['bold', 'italic', 'underline'],
+                [{ list: 'ordered' }, { list: 'bullet' }],
+                ['link', 'image'],
             ],
+            handlers: {
+                image: handleImageUpload,
+            },
         },
-    };
+    }), []);
 
     return (
         <ReactQuill
-            value={value}
+            ref={quillRef}
+            value={content}
             onChange={handleChange}
             modules={modules}
             theme="snow"

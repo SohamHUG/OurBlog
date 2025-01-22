@@ -1,7 +1,7 @@
 export const selectDarkMode = (state) => Boolean(state.theme.darkMode);
 
 //Posts
-export const selectPosts = (state) => state.posts.items;
+export const selectPosts = (state) => state.posts.posts;
 export const selectPostsStatus = (state) => state.posts.status;
 export const selectPostsError = (state) => state.posts.error;
 

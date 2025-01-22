@@ -7,7 +7,7 @@ const LoginForm = ({ closeModal }) => {
     const navigate = useNavigate();
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
-    const { status, errorLogin } = useSelector((state) => state.auth);
+    const { status, error } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
 
     const handleRegisterClick = () => {
@@ -65,7 +65,7 @@ const LoginForm = ({ closeModal }) => {
 
                 <form onSubmit={handleSubmit} >
                     <div style={flexColumn}>
-                        {errorLogin && <p style={{ color: 'red' }}>{errorLogin}</p>}
+                        {error && <p style={{ color: 'red' }}>{error}</p>}
                         <input
                             type="email"
                             placeholder="Adresse Email"

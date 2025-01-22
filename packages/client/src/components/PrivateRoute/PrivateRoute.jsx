@@ -6,7 +6,7 @@ const PrivateRoute = ({ children, roles }) => {
     const user = useSelector((state) => state.users.user);
 
     if (!user || roles && !roles.includes(user.role_name)) {
-        return <Navigate to="/not-allowed" />;
+        return <Navigate to="/" />;
     }
 
     return children;

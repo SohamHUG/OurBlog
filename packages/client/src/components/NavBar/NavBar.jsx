@@ -24,6 +24,7 @@ const NavBar = () => {
     const user = useSelector((state) => state.users.user);
     const navigate = useNavigate();
 
+    console.log(user)
     const handleToggleDarkMode = () => {
         dispatch(toggleDarkMode());
     };
@@ -109,7 +110,7 @@ const NavBar = () => {
                         user.profil_picture ?
                             (
                                 <NavLink to={'/profil'}>
-                                    <img src={user.profil_picture} alt="" />
+                                    <img className="avatar" src={user.profil_picture} alt="" />
                                 </NavLink>
                             )
                             :

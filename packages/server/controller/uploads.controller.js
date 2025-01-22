@@ -40,6 +40,22 @@ export const uploadProfilPic = async (req, res) => {
 
 }
 
+export const uploadArticleFiles = async (req, res) => {
+
+    const user = req.user;
+    // console.log(req.file);
+    if (!req.file) {
+        return res.status(400).json({ message: 'Aucun fichier uploadé' });
+    }
+
+    // console.log (req.file)
+    return res.status(201).json({
+        message: 'Image uploadé avec succès',
+        url: req.file.path
+    });
+
+}
+
 export const deleteProfilPicture = async (req, res) => {
     const { id } = req.params;
     const user = req.user;

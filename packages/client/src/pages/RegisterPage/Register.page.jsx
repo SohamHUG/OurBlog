@@ -15,7 +15,7 @@ const RegisterPage = () => {
     const dispatch = Redux.useDispatch();
     const navigate = useNavigate();
     const [openModal, setOpenModal] = React.useState(false)
-    const { status, errorRegister } = Redux.useSelector((state) => state.auth);
+    const { status, error } = Redux.useSelector((state) => state.auth);
 
     const [formUser, setFormUser] = React.useState({
         firstName: '',
@@ -50,7 +50,7 @@ const RegisterPage = () => {
                 formUser={formUser}
                 handleSubmit={handleSubmit}
                 handleChange={handleChange}
-                errorMessage={errorRegister}
+                errorMessage={error}
             // user={null}
             />
 
