@@ -49,10 +49,13 @@ const RichTextEditor = ({ value, onChange }) => {
     const modules = useMemo(() => ({
         toolbar: {
             container: [
-                [{ header: [1,2, false] }],
-                ['bold', 'italic', 'underline'],
-                [{ list: 'ordered' }, { list: 'bullet' }],
+                [{ header: [1, 2, false] }],
+                ["bold", "italic", "underline", "strike"],
+                [{ font: [] }],
+                [{ align: ["right", "center", "justify"] }],
+                [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
                 ['link', 'image'],
+                [{ color: ["red", "#235AF3"] }],
             ],
             handlers: {
                 image: handleImageUpload,
@@ -60,12 +63,28 @@ const RichTextEditor = ({ value, onChange }) => {
         },
     }), []);
 
+    const formats = [
+        "header",
+        "bold",
+        "italic",
+        "underline",
+        "strike",
+        "list",
+        "link",
+        "color",
+        "align",
+        "font",
+        'indent',
+        "image"
+    ];
+
     return (
         <ReactQuill
             ref={quillRef}
             value={content}
             onChange={handleChange}
             modules={modules}
+            formats={formats}
             theme="snow"
             placeholder="Écrivez votre article ici..."
             style={{

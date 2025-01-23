@@ -22,7 +22,7 @@ import Article from './pages/Article/Article';
 function App() {
 
     const dispatch = useDispatch();
-    const userConnected = useSelector((state) => state.auth.user);
+    const userConnected = useSelector((state) => state.auth.userConnected);
 
     React.useEffect(() => {
         if (userConnected) {

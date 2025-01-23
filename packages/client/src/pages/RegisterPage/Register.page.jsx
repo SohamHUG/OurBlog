@@ -54,8 +54,7 @@ const RegisterPage = () => {
             // user={null}
             />
 
-            {
-                openModal &&
+            {openModal &&
                 <Modal
                     title="Profil créé"
                     content={<p>Un email de confirmation a été envoyé. Vérifiez votre boîte mail.</p>}

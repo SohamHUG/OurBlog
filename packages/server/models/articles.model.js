@@ -9,7 +9,8 @@ export const saveArticle = async (user, category, title, content) => {
                 reject(err)
             }
 
-            resolve(result);
+            // console.log(result.insertId)
+            resolve(result.insertId);
         })
     })
 }
@@ -63,8 +64,11 @@ export const findArticleById = (id) => {
             if (err) {
                 reject(err)
             }
+            if (!result[0]) {
+                return resolve(null);
+            }
 
-            resolve(result);
+            resolve(result[0]);
         })
     })
 }

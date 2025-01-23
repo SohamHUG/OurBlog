@@ -29,7 +29,7 @@ const Article = () => {
             {statusPost === 'succeeded' &&
                 <div>
                     <PostContent
-                        content={post[0].content}
+                        content={post.content}
                     />
                 </div>
             }

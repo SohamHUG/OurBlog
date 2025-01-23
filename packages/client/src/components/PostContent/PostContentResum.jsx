@@ -6,12 +6,32 @@ const PostContentResum = ({ content }) => {
     const sanitizedContent = DOMPurify.sanitize(content);
 
     // Extraction du texte brut en excluant les balises HTML
-    const plainText = sanitizedContent.replace(/<[^>]+>/g, '');
+    // const plainText = sanitizedContent.replace(/<[^>]+>/g, '');
+
+
+    let filteredContent = sanitizedContent
+        .replace(/<(?!\/?(ul|ol|li|img)\b)[^>]*>/gi, '');
+
+    // Conserver uniquement la première image
+    let imageFound = false;
+    filteredContent = filteredContent.replace(/<img [^>]*>/gi, (imgTag) => {
+        if (!imageFound) {
+            imageFound = true;
+            return imgTag; // Conserver la première image
+        }
+        return ''; // Supprimer les autres images
+    });
+
+    // si le contenu est trop long
+    const resumContent =
+        filteredContent.length > 200
+            ? `${filteredContent.substring(0, 200)}...`
+            : filteredContent;
 
     return (
-        <div>
-            {plainText.length > 150 ? `${plainText.substring(0, 140)}...` : plainText}
-        </div>
+        <div
+            dangerouslySetInnerHTML={{ __html: resumContent }}
+        />
     );
 };
 
