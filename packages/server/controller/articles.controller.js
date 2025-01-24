@@ -28,12 +28,12 @@ export const createArticle = async (req, res) => {
         for (const tagName of tags.filter(tag => tag.trim() !== '')) {
             let tagId;
 
-            if (existingTagMap.has(tagName.toLowerCase())) {
-                tagId = existingTagMap.get(tagName.toLowerCase());
+            if (existingTagMap.has(tagName.toLowerCase().trim())) {
+                tagId = existingTagMap.get(tagName.toLowerCase().trim());
             } else {
 
-                tagId = await saveTag(tagName.toLowerCase());
-                existingTagMap.set(tagName.toLowerCase(), tagId);
+                tagId = await saveTag(tagName.toLowerCase().trim());
+                existingTagMap.set(tagName.toLowerCase().trim(), tagId);
             }
 
             await linkArticleToTag(article, tagId);

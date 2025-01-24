@@ -5,6 +5,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    max-width: 100%;
+
 
     .home-page-content {
         display: flex;
@@ -17,12 +19,14 @@
         .left {
 
             // width: 70%;
+            max-width: 100%;
+
             @media screen and (min-width: 1024px) {
-                width: 60%;
+                // width: 60%;
             }
 
             @media screen and (min-width: 1440px) {
-                width: 50%;
+                // width: 50%;
             }
 
             .filter-articles-home {
@@ -30,6 +34,8 @@
                 justify-content: space-between;
                 align-items: center;
                 padding: .5em;
+                max-width: 100%;
+
 
                 @media screen and (min-width: 600px) {
                     width: 70%;
@@ -66,30 +72,30 @@
             }
         }
 
-        .right {
-            width: 30%;
-            display: none;
+        // .right {
+        //     width: 30%;
+        //     display: none;
 
-            @media screen and (min-width: 1024px) {
-                display: initial;
-            }
+        //     @media screen and (min-width: 1024px) {
+        //         display: initial;
+        //     }
 
-            @media screen and (min-width: 1440px) {
-                width: 23%;
-            }
+        //     @media screen and (min-width: 1440px) {
+        //         width: 23%;
+        //     }
 
-            .popular-authors {
-                display: flex;
-                align-items: center;
-                justify-content: flex-start;
-                font-size: 17px;
+        //     .popular-authors {
+        //         display: flex;
+        //         align-items: center;
+        //         justify-content: flex-start;
+        //         font-size: 17px;
 
-                svg {
-                    margin-right: 10px;
-                }
-            }
+        //         svg {
+        //             margin-right: 10px;
+        //         }
+        //     }
 
-        }
+        // }
 
         .to-top-btn {
             // background-color: red;

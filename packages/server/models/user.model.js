@@ -33,7 +33,7 @@ export const findUserById = async (id) => {
                 role.name AS role_name,
                 user.role_id
             FROM user 
-            LEFT JOIN role ON user.role_id = role.id
+            INNER JOIN role ON user.role_id = role.id
             WHERE user.id = ? 
         `;
 

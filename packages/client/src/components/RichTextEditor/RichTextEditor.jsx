@@ -7,12 +7,12 @@ const RichTextEditor = ({ value, onChange }) => {
     const quillRef = useRef(null);
 
     const handleChange = (content, delta, source, editor) => {
-        if (source === 'user') {
-            setContent(content);
-            if (onChange) {
-                onChange(content);
-            }
-        }
+        // if (source === 'user') {
+        setContent(content);
+        // if (onChange) {
+        onChange(content);
+        // }
+        // }
     };
 
     const handleImageUpload = () => {
@@ -43,6 +43,7 @@ const RichTextEditor = ({ value, onChange }) => {
             const range = quill.getEditor().getSelection(true);
             // console.log(range)
             quill.getEditor().insertEmbed(range.index, 'image', imageUrl);
+            handleChange(quill.value);
         };
     };
 

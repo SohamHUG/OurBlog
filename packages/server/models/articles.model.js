@@ -28,8 +28,8 @@ export const findAllArticles = () => {
             article.title, 
             article.content 
         FROM article
-        LEFT JOIN user ON article.user_id = user.id
-        LEFT JOIN category ON article.category_id = category.id
+        INNER JOIN user ON article.user_id = user.id
+        INNER JOIN category ON article.category_id = category.id
         `;
 
         db.query(sql, (err, result) => {
@@ -55,8 +55,8 @@ export const findArticleById = (id) => {
             article.title, 
             article.content 
         FROM article
-        LEFT JOIN user ON article.user_id = user.id
-        LEFT JOIN category ON article.category_id = category.id
+        INNER JOIN user ON article.user_id = user.id
+        INNER JOIN category ON article.category_id = category.id
         WHERE article.id = ?
         `;
 

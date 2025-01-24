@@ -40,7 +40,7 @@ const PostsList = ({ posts }) => {
                                         ? post.title.substring(1, 12)
                                         : post.title.slice(1))}
                             </h4>
-                            <p className="post-category">{post.category_name}</p>
+                            <p className="post-category link">{post.category_name}</p>
 
 
                         </div>
@@ -48,14 +48,15 @@ const PostsList = ({ posts }) => {
                         <div className="post-body">
                             <PostContentResum content={post.content} />
                         </div>
-                        <div>
-                            <Link to={`article/${post.id}`}>
-                                <button>
-                                    <span>Voir l'article</span>
-                                    <EastIcon fontSize="small" />
-                                </button>
-                            </Link>
-                        </div>
+
+
+                        <Link className="article-link" to={`article/${post.id}`}>
+                            <button>
+                                <span>Voir l'article</span>
+                                <EastIcon fontSize="small" />
+                            </button>
+                        </Link>
+
                     </div>
                 );
             })}

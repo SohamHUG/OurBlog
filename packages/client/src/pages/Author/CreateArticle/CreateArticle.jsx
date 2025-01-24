@@ -31,9 +31,11 @@ const CreateArticle = () => {
 
     const handleTagsChange = (e) => {
         const input = e.target.value;
-        const tagsArray = input.split(' ');
+        const tagsArray = input.split('#');
 
         setFormData({ ...formData, tags: tagsArray });
+
+        // console.log(formData.tags)
     };
 
     const handleChange = (e) => {
@@ -94,12 +96,12 @@ const CreateArticle = () => {
                 </label>
 
                 <label>
-                    Tags (séparés par un espace) :
+                    Tags (séparés par un #) :
                     <input
                         type="text"
-                        placeholder="ex: cuisine recette"
+                        placeholder="ex: cuisine#recette#dessert"
                         onChange={handleTagsChange}
-                        value={formData.tags.join(' ')}
+                        value={formData.tags.join('#')}
                     />
                 </label>
 
