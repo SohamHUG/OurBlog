@@ -35,10 +35,12 @@ const PostsList = ({ posts }) => {
                                 {post.user_pseudo}
                             </p>
                             <h4 className="post-title">
-                                {post.title.charAt(0).toUpperCase() +
-                                    (post.title.length > 15
-                                        ? post.title.substring(1, 12)
-                                        : post.title.slice(1))}
+                                {post.title.charAt(0).toUpperCase() + post.title.slice(1)
+                                    // (post.title.length > 20
+                                    //     ? post.title.substring(1, 20)
+                                    //     :
+                                    //     post.title.slice(1))
+                                }
                             </h4>
                             <p className="post-category link">{post.category_name}</p>
 

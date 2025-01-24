@@ -24,10 +24,14 @@
         margin: .8em 0;
         max-width: 100%;
 
+        // @media screen and (min-width: 1024px) {
+        //     justify-content: space-evenly;
+        // }
+
 
         .author {
             margin: 0;
-            font-size: 18px;
+            font-size: 1em;
             display: flex;
             align-items: center;
             // font-family: roboto-medium-italic;
@@ -48,15 +52,20 @@
         }
 
         .post-title {
-            margin: 0;
-            font-size: 23px;
+            margin: 0 .5em;
+            font-size: 1.6em;
             font-weight: 900;
             font-family: vars.$primary-font;
+
+            white-space: nowrap; // Empêche le texte de passer à la ligne
+            overflow: hidden; // Cache le texte qui déborde
+            text-overflow: ellipsis; // Affiche "..." à la fin si le texte est trop long
+            max-width: 80%;
         }
 
         .post-category {
             margin: 0;
-            font-size: 15px;
+            font-size: 1em;
             font-family: roboto-thin-italic;
         }
     }
@@ -88,15 +97,15 @@
             }
 
             p {
-                font-size: 16px;
+                font-size: 1em;
                 flex-grow: 1;
+                overflow: hidden;
                 word-wrap: break-word;
                 max-width: 50%;
                 margin: 0;
 
                 @media screen and (min-width: 1024px) {
                     max-width: 30%;
-                    font-size: 20px;
                 }
 
             }

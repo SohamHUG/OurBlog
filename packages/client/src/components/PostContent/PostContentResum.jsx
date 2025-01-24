@@ -5,7 +5,7 @@ const PostContentResum = ({ content }) => {
     // Nettoyage du contenu HTML
     const sanitizedContent = DOMPurify.sanitize(content);
 
-    console.log(sanitizedContent)
+    // console.log(sanitizedContent)
 
     // Extraction du texte brut en excluant les balises HTML
     const plainText = sanitizedContent.replace(/<[^>]+>/g, '');
@@ -27,7 +27,7 @@ const PostContentResum = ({ content }) => {
         return ''; // Supprimer les autres images
     });
 
-    console.log(plainText.length)
+    // console.log(plainText.length)
 
 
     // image par défaut si l'article n'en a pas 
@@ -41,7 +41,7 @@ const PostContentResum = ({ content }) => {
             ? `${image}<p>${plainText.substring(0, 150)}...</p>`
             : `${image}<p>${plainText}</p>`;
 
-    console.log(resumContent)
+    // console.log(resumContent)
     return (
         <div
             dangerouslySetInnerHTML={{ __html: resumContent }}

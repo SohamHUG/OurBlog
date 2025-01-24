@@ -28,6 +28,10 @@ const Article = () => {
 
             {statusPost === 'succeeded' &&
                 <div>
+                    <div>
+                        <h1>{post.title}</h1>
+                        {post.user_pseudo}
+                    </div>
                     <PostContent
                         content={post.content}
                     />
