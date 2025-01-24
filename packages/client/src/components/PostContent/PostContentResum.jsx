@@ -9,6 +9,7 @@ const PostContentResum = ({ content }) => {
 
     // Extraction du texte brut en excluant les balises HTML
     const plainText = sanitizedContent.replace(/<[^>]+>/g, '');
+    // const plainText = sanitizedContent.replace(/<(?!\/?(ul|ol|li)\b)[^>]*>/gi, '');
 
     // conserver les images 
     // let filteredContent = sanitizedContent.replace(/<(?!\/?(img)\b)[^>]*>/gi, '');
@@ -32,13 +33,13 @@ const PostContentResum = ({ content }) => {
 
     // image par défaut si l'article n'en a pas 
     if (!imageFound) {
-        image = `<img src="https://res.cloudinary.com/dni6ctpie/image/upload/v1737703757/files/mgdxrfu47rczvfdngkst.png" alt="Default" />`;
+        image = `<img src="https://res.cloudinary.com/dni6ctpie/image/upload/v1737720475/files/xawevym4ryigg3oufwoh.png" alt="Default" />`;
     }
 
     // réduis le contenu 
     const resumContent =
         plainText.length > 200
-            ? `${image}<p>${plainText.substring(0, 150)}...</p>`
+            ? `${image}<p>${plainText.substring(0, 200)}...</p>`
             : `${image}<p>${plainText}</p>`;
 
     // console.log(resumContent)
