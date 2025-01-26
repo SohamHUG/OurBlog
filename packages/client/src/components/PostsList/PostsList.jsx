@@ -42,7 +42,9 @@ const PostsList = ({ posts }) => {
                                     //     post.title.slice(1))
                                 }
                             </h4>
-                            <p className="post-category link">{post.category_name}</p>
+                            <Link to={`category/${post.category_id}`} className="post-category link">
+                                {post.category_name}
+                            </Link>
 
 
                         </div>

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { getPost } from '../../store/slice/articleSlice';
 import PostContent from '../../components/PostContent/PostContent';
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -48,11 +48,22 @@ const Article = () => {
                             }
                             {post.user_pseudo}
                         </p>
+                        <Link to={`../../category/${post.category_id}`} className="post-category link">
+                            {post.category_name}
+                        </Link>
                     </div>
 
                     <PostContent
                         content={post.content}
                     />
+
+                    <div className='comments-container'>
+                        <h3>Commentaires :</h3>
+                            <form action="">
+                                <label htmlFor="">Ajouter un commentaire</label>
+                                <input type="text" placeholder='...' />
+                            </form>
+                    </div>
                 </section>
             }
         </>

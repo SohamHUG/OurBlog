@@ -6,7 +6,7 @@ import { uploadProfilPic } from '../../store/slice/photoSlice';
 import Modal from '../../components/Modal/Modal';
 import UserForm from '../../components/UserForm/UserForm';
 
-const ProfilPage = () => {
+const MyProfilPage = () => {
     const { user } = Redux.useSelector((state) => state.users);
     if (!user || !user.user_id) {
         return <Navigate to="/" />;
@@ -134,4 +134,4 @@ const ProfilPage = () => {
     );
 }
 
-export default ProfilPage;
+export default MyProfilPage;

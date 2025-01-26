@@ -16,7 +16,7 @@ import AdminDashboard from './pages/AdminDashboard/AdminDashboard';
 import { getUser, logoutUser } from './store/slice/userSlice';
 import ConfirmEmail from './pages/ConfirmEmail/ConfirmEmail';
 import CreateArticle from './pages/Author/CreateArticle/CreateArticle';
-import ProfilPage from './pages/Profil/Profil.page';
+import MyProfilPage from './pages/MyProfil/MyProfil.page';
 import Article from './pages/Article/Article';
 
 function App() {
@@ -43,7 +43,7 @@ function App() {
                     <Route path={'/privacy-policy'} element={<PrivacyPolicy />} />
                     <Route path={'/register'} element={<RegisterPage />} />
                     <Route path={'/confirm/:token'} element={<ConfirmEmail />} />
-                    <Route path={'/profil'} element={<ProfilPage />} />
+                    <Route path={'/profil'} element={<MyProfilPage />} />
                     <Route path={'/article/:id'} element={<Article />} />
                     <Route
                         path="/admin"
