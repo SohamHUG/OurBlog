@@ -3,20 +3,24 @@ import * as Redux from 'react-redux';
 import PostsList from "../../components/PostsList/PostsList";
 import SideList from '../../components/SideList/SideList';
 import CategoriesNav from '../../components/CategoriesNav/CategoriesNav';
-import { selectUsersStatus, selectUsersError, selectUsers,selectPosts } from '../../store/selectors';
+import { selectUsersStatus, selectUsersError, selectUsers, selectPosts } from '../../store/selectors';
 import { searchUsers, } from '../../store/slice/userSlice';
+import { openModalLogin } from '../../store/slice/authSlice';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import KeyboardArrowUpRoundedIcon from '@mui/icons-material/KeyboardArrowUpRounded';
 // import PopularAuthorsList from '../../components/PopularAuthorsList/PopularAuthorsList';
 import './Home.scss';
 import { getPosts } from '../../store/slice/articleSlice';
+import { useNavigate } from 'react-router-dom';
 
 const HomePage = () => {
     const [filter, setFilter] = React.useState('recent');
     const dispatch = Redux.useDispatch();
+    const navigate = useNavigate()
     const status = Redux.useSelector(selectUsersStatus);
     const error = Redux.useSelector(selectUsersError);
     const users = Redux.useSelector(selectUsers);
+    const { user } = Redux.useSelector((state) => state.users);
     const posts = Redux.useSelector(selectPosts);
     const [showToTop, setShowToTop] = React.useState(false);
 
@@ -44,6 +48,17 @@ const HomePage = () => {
         setFilter(event.target.value);
     };
 
+    console.log(user)
+    const handlePublishPost = (e) => {
+        if (!user) {
+            dispatch(openModalLogin())
+        } else if (user && user.role_name !== 'author') {
+            navigate('/profil')
+        } else {
+            navigate('/article/create')
+        }
+    }
+
     const scrollToTop = () => {
         window.scrollTo({
             top: 0,
@@ -67,11 +82,11 @@ const HomePage = () => {
                             <option value="recent">Les plus récents</option>
                             <option value="famous">Les plus populaires</option>
                         </select>
-                        <button className='create-article-btn'>
+                        <button onClick={handlePublishPost} className='create-article-btn'>
                             Publiez votre article !
                         </button>
                     </div>
-                    <PostsList 
+                    <PostsList
                         posts={posts}
                     />
                 </div>

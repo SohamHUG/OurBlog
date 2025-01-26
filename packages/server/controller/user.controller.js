@@ -65,6 +65,7 @@ export const updateUser = async (req, res) => {
         pseudo: pseudo || user.pseudo,
         email: email || user.email,
         // profil_picture: user.profil_picture,
+        role_id: roleId,
         password: userLog[0].password, // Utilise le mot de passe actuel ou mis à jour
     };
 
