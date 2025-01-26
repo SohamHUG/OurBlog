@@ -6,7 +6,7 @@ const PostContent = ({ content }) => {
     const sanitizedContent = DOMPurify.sanitize(content);
 
     return (
-        <div dangerouslySetInnerHTML={{ __html: sanitizedContent }} />
+        <div className="post-content" dangerouslySetInnerHTML={{ __html: sanitizedContent }} />
     );
 };
 

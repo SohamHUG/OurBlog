@@ -121,7 +121,7 @@ html {
             background-color: vars.$dark-bck-color;
             color: vars.$primary-white;
 
-            h2 {
+            .user-title, .article-page .post-head {
                 border-bottom: 2px solid vars.$primary-white;
             }
 

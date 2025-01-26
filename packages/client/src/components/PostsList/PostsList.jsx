@@ -28,7 +28,7 @@ const PostsList = ({ posts }) => {
                         <div className="post-head">
                             <p className="author">
                                 {!post.user_picture ?
-                                    <AccountCircleIcon fontSize="large" />
+                                    <AccountCircleIcon className='default-avatar' fontSize="large" />
                                     :
                                     <img className="avatar" src={post.user_picture} alt={`Photo de profil de ${post.user_pseudo}`} />
                                 }

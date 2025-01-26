@@ -20,7 +20,7 @@ const UserForm = (props) => {
     return (
         <div className='user-form'>
             <form onSubmit={props.handleSubmit}>
-                <h2>{props.user ? 'Votre profil' : "S'inscrire"}</h2>
+                <h2 className='user-title'>{props.user ? 'Votre profil' : "S'inscrire"}</h2>
                 {props.errorMessage && <p className='alert'>{props.errorMessage}</p>}
                 {props.user && props.user.is_verified === 0 &&
                     <p className='verif-email-infos'>

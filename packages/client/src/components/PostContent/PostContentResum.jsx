@@ -8,8 +8,8 @@ const PostContentResum = ({ content }) => {
     // console.log(sanitizedContent)
 
     // Extraction du texte brut en excluant les balises HTML
-    const plainText = sanitizedContent.replace(/<[^>]+>/g, '');
-    // const plainText = sanitizedContent.replace(/<(?!\/?(ul|ol|li)\b)[^>]*>/gi, '');
+    // const plainText = sanitizedContent.replace(/<[^>]+>/g, '');
+    const plainText = sanitizedContent.replace(/<(?!\/?(ul|ol|li)\b)[^>]*>/gi, '');
 
     // conserver les images 
     // let filteredContent = sanitizedContent.replace(/<(?!\/?(img)\b)[^>]*>/gi, '');
@@ -38,8 +38,8 @@ const PostContentResum = ({ content }) => {
 
     // réduis le contenu 
     const resumContent =
-        plainText.length > 200
-            ? `${image}<p>${plainText.substring(0, 200)}...</p>`
+        plainText.length > 150
+            ? `${image}<p>${plainText.substring(0, 150)}...</p>`
             : `${image}<p>${plainText}</p>`;
 
     // console.log(resumContent)
