@@ -66,7 +66,7 @@ export const findByCredentials = async (email) => {
 
 export const updateUserById = async (id, user) => {
     return new Promise((resolve, reject) => {
-        // Exclure l'email des mises à jour
+        // exclu l'email des mises à jour
         const { email, ...allowedUpdates } = user;
 
         const validColumns = [
@@ -81,18 +81,22 @@ export const updateUserById = async (id, user) => {
             'password'
         ];
 
-        // Extraire les colonnes à mettre à jour
+        // extraie les colonnes à mettre à jour
         const columns = Object.keys(allowedUpdates).filter(column => validColumns.includes(column));
         if (columns.length === 0) {
             return reject(new Error("Aucune donnée valide à mettre à jour."));
         }
 
-        // Construire dynamiquement la requête SQL
+        // modifier la colonne updated_at 
+        columns.push('updated_at');
+        allowedUpdates['updated_at'] = new Date();
+
+        // construire dynamiquement la requête SQL
         const setClause = columns.map(column => `${column} = ?`).join(", ");
         const values = columns.map(column => allowedUpdates[column]);
 
         const sql = `UPDATE user SET ${setClause} WHERE id = ?`;
-        values.push(id); // Ajouter l'id à la fin pour la condition WHERE
+        values.push(id); // ajout de l'id à la fin pour la condition WHERE
 
         // console.log(`SQL Query: ${sql}`);
         // console.log(`Values: ${values}`);
@@ -108,7 +112,7 @@ export const updateUserById = async (id, user) => {
             }
             const newUserData = await findUserById(id)
             // console.log(user)
-            resolve(newUserData) // Résultat de la mise à jour
+            resolve(newUserData) // Résultat 
         });
     });
 }

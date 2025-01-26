@@ -48,7 +48,6 @@ const HomePage = () => {
         setFilter(event.target.value);
     };
 
-    console.log(user)
     const handlePublishPost = (e) => {
         if (!user) {
             dispatch(openModalLogin())

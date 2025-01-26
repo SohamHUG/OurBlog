@@ -8,8 +8,8 @@ const PostContentResum = ({ content }) => {
     // console.log(sanitizedContent)
 
     // Extraction du texte brut en excluant les balises HTML
-    // const plainText = sanitizedContent.replace(/<[^>]+>/g, '');
-    const plainText = sanitizedContent.replace(/<(?!\/?(ul|ol|li)\b)[^>]*>/gi, '');
+    const plainText = sanitizedContent.replace(/<[^>]+>/g, ' ');
+    // const plainText = sanitizedContent.replace(/<(?!\/?(ul|ol|li)\b)[^>]*>/gi, '');
 
     // conserver les images 
     // let filteredContent = sanitizedContent.replace(/<(?!\/?(img)\b)[^>]*>/gi, '');
@@ -28,7 +28,7 @@ const PostContentResum = ({ content }) => {
         return ''; // Supprimer les autres images
     });
 
-    // console.log(plainText.length)
+    console.log(plainText)
 
 
     // image par défaut si l'article n'en a pas 
@@ -38,11 +38,11 @@ const PostContentResum = ({ content }) => {
 
     // réduis le contenu 
     const resumContent =
-        plainText.length > 150
-            ? `${image}<p>${plainText.substring(0, 150)}...</p>`
-            : `${image}<p>${plainText}</p>`;
+        plainText.length > 200
+            ? `${image}<p>${plainText.trim().substring(0, 200)}...</p>`
+            : `${image}<p>${plainText.trim()}</p>`;
 
-    // console.log(resumContent)
+    console.log(resumContent)
     return (
         <div
             dangerouslySetInnerHTML={{ __html: resumContent }}

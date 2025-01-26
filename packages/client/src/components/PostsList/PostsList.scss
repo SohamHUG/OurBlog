@@ -1,151 +1,155 @@
 @use '../../variables' as vars;
 
-.post {
 
-    // font-size: 14px;
-    padding: .7em;
-    border-top: 2px solid vars.$primary-black;
+.posts-list-container {
     max-width: 90%;
     margin: 0 auto;
 
-    @media screen and (min-width: 600px) {
-        max-width: 90%;
-    }
+    .post {
 
-    @media screen and (min-width: 1024px) {
-        // max-width: 100%;
-        // margin: 0 1em;
-    }
-
-    .post-head {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin: .8em 0;
-        max-width: 100%;
-
-        // @media screen and (min-width: 1024px) {
-        //     justify-content: space-evenly;
-        // }
+        // font-size: 14px;
+        padding: .7em;
+        border-top: 2px solid vars.$primary-black;
 
 
-        .author {
-            margin: 0;
-            font-size: 1em;
+        @media screen and (min-width: 600px) {
+            // max-width: 90%;
+        }
+
+        @media screen and (min-width: 1024px) {
+            // max-width: 100%;
+            // margin: 0 1em;
+        }
+
+        .post-head {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            // font-family: roboto-medium-italic;
-            font-weight: 500;
-
-            .avatar {
-                max-width: 50%;
-                // height: 2.2em;
-                margin-right: .5em;
-            }
-
-            .default-avatar {
-                width: 1.2em;
-                height: 1.2em;
-                // margin-right: .2em;
-            }
-
-        }
-
-        .post-title {
-            margin: 0 .5em;
-            font-size: 1.6em;
-            font-weight: 900;
-            font-family: vars.$primary-font;
-
-            white-space: nowrap; // Empêche le texte de passer à la ligne
-            overflow: hidden; // Cache le texte qui déborde
-            text-overflow: ellipsis; // Affiche "..." à la fin si le texte est trop long
-            max-width: 80%;
-        }
-
-        .post-category {
-            margin: 0;
-            font-size: 1em;
-            font-family: roboto-thin-italic;
-        }
-    }
-
-    .post-body {
-        max-width: 100%;
-
-        div {
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            // justify-content: flex-end;
-            margin-bottom: 1.5em;
+            margin: .8em 0;
             max-width: 100%;
 
-            @media screen and (min-width: 900px) {
-                justify-content: space-between;
+            // @media screen and (min-width: 1024px) {
+            //     justify-content: space-evenly;
+            // }
+
+
+            .author {
+                margin: 0;
+                font-size: 1em;
+                display: flex;
+                align-items: center;
+                // font-family: roboto-medium-italic;
+                font-weight: 500;
+
+                .avatar {
+                    max-width: 50%;
+                    // height: 2.2em;
+                    margin-right: .5em;
+                }
+
+                .default-avatar {
+                    width: 1.2em;
+                    height: 1.2em;
+                    // margin-right: .2em;
+                }
+
             }
 
-            img {
-                max-width: 40%;
-                flex-shrink: 0; // Empêche l'image de rétrécir
-                // display: none;
-                margin-right: 1em;
+            .post-title {
+                margin: 0 .5em;
+                font-size: 1.6em;
+                font-weight: 900;
+                font-family: vars.$primary-font;
+
+                white-space: nowrap; // Empêche le texte de passer à la ligne
+                overflow: hidden; // Cache le texte qui déborde
+                text-overflow: ellipsis; // Affiche "..." à la fin si le texte est trop long
+                max-width: 80%;
+            }
+
+            .post-category {
+                margin: 0;
+                font-size: 1em;
+                font-family: roboto-thin-italic;
+            }
+        }
+
+        .post-body {
+            max-width: 100%;
+
+            div {
+                display: flex;
+                align-items: center;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                margin-bottom: 1.5em;
+                max-width: 100%;
 
                 @media screen and (min-width: 900px) {
-                    max-width: 25%;
+                    justify-content: space-evenly;
                 }
+
+                img {
+                    max-width: 40%;
+                    flex-shrink: 0; // Empêche l'image de rétrécir
+                    // display: none;
+                    margin-right: 1em;
+
+                    @media screen and (min-width: 900px) {
+                        max-width: 25%;
+                    }
+
+                }
+
+                p {
+                    font-size: 1.2em;
+                    flex-grow: 1;
+                    overflow: hidden;
+                    // word-wrap: break-word;
+                    max-width: 50%;
+                    max-height: 6em;
+                    margin: 0;
+
+                    @media screen and (min-width: 1024px) {
+                        max-width: 30%;
+                    }
+
+                }
+
+                // ol {
+                //     list-style: none;
+                //     padding: 0;
+                //     width: 30%;
+
+                //     // @media screen and (min-width: 900px) {
+                //     //     width: initial;
+                //     // }
+                // }
 
             }
 
-            p {
-                font-size: 1.2em;
-                flex-grow: 1;
-                overflow: hidden;
-                word-wrap: break-word;
-                text-overflow: ellipsis;
-                max-width: 50%;
-                max-height: 6em;
-                margin: 0;
+        }
+
+        .article-link {
+            max-width: 100%;
+            display: flex;
+            justify-content: flex-end;
+
+            // @media screen and (min-width: 1024px) {
+            //     display: flex;
+            //     justify-content: flex-end;
+            // }
+
+            button {
+                width: 100%;
+                height: 2.5em;
 
                 @media screen and (min-width: 1024px) {
-                    max-width: 30%;
+                    width: 30%;
                 }
-
-            }
-
-            ol {
-                list-style: none;
-                padding: 0;
-                width: 30%;
-
-                // @media screen and (min-width: 900px) {
-                //     width: initial;
-                // }
-            }
-
-        }
-
-    }
-
-    .article-link {
-        max-width: 100%;
-        display: flex;
-        justify-content: flex-end;
-
-        // @media screen and (min-width: 1024px) {
-        //     display: flex;
-        //     justify-content: flex-end;
-        // }
-
-        button {
-            width: 100%;
-            height: 2.5em;
-
-            @media screen and (min-width: 1024px) {
-                width: 30%;
             }
         }
+
+
     }
-
-
 }

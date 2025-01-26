@@ -18,6 +18,10 @@ html {
             max-width: 100%;
         }
 
+        section {
+            max-width: 100%;
+        }
+
         h2 {
             font-weight: 800;
             font-size: 1.6em;
@@ -121,7 +125,8 @@ html {
             background-color: vars.$dark-bck-color;
             color: vars.$primary-white;
 
-            .user-title, .article-page .post-head {
+            .user-title,
+            .article-page .post-head {
                 border-bottom: 2px solid vars.$primary-white;
             }
 

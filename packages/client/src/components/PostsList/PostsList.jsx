@@ -21,7 +21,7 @@ const PostsList = ({ posts }) => {
 
     // console.log(posts)
     return (
-        <div>
+        <div className="posts-list-container">
             {posts.map((post, index) => {
                 return (
                     <div key={post.id} className="post">
