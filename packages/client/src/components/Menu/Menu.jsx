@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import CategoryIcon from "@mui/icons-material/Category";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LoginIcon from "@mui/icons-material/Login";
@@ -8,8 +8,30 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import ArticleIcon from '@mui/icons-material/Article';
 import Switch from "@mui/material/Switch";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import { useDispatch, useSelector } from "react-redux";
+import { selectDarkMode } from "../../store/selectors";
+import { toggleDarkMode } from "../../store/slice/themeSlice";
+import { openModalLogin, logout } from "../../store/slice/authSlice";
 
-const Menu = ({ menuActive, menuRef, user, openModalLogin, handleLogout, darkMode, handleToggleDarkMode }) => {
+const Menu = ({ menuActive, menuRef }) => {
+
+    const dispatch = useDispatch();
+    const navigate = useNavigate()
+    const darkMode = useSelector(selectDarkMode);
+    const user = useSelector((state) => state.users.user);
+
+    const handleToggleDarkMode = () => {
+        dispatch(toggleDarkMode());
+    };
+
+    const openLogin = () => {
+        dispatch(openModalLogin());
+    };
+
+    const handleLogout = () => {
+            dispatch(logout());
+            navigate('/');
+        };
 
     return (
         <div className={`menu ${menuActive ? "open" : ""}`} ref={menuRef}>
@@ -51,7 +73,7 @@ const Menu = ({ menuActive, menuRef, user, openModalLogin, handleLogout, darkMod
             )}
 
             {!user ? (
-                <span onClick={openModalLogin} className="menu-link">
+                <span onClick={openLogin} className="menu-link">
                     <LoginIcon className="icon" />
                     <p>Se connecter/S'inscrire</p>
                 </span>

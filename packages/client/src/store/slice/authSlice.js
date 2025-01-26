@@ -67,8 +67,16 @@ const authSlice = createSlice({
         userConnected: JSON.parse(localStorage.getItem('user')) || null,
         status: 'idle', 
         error: null,    
+        modalLogin: false,
     },
-    reducers: {},
+    reducers: {
+        openModalLogin: (state) => {
+            state.modalLogin = true;
+        },
+        closeModalLogin: (state) => {
+            state.modalLogin = false;
+        },
+    },
     extraReducers: (builder) => {
         builder
             .addCase(registerUser.pending, (state) => {
@@ -122,4 +130,5 @@ const authSlice = createSlice({
     },
 });
 
+export const { openModalLogin, closeModalLogin } = authSlice.actions;
 export default authSlice.reducer;

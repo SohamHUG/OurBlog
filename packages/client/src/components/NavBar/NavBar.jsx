@@ -5,7 +5,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Modal from "../Modal/Modal";
 import LoginForm from "../LoginForm/LoginForm";
-import { logout } from "../../store/slice/authSlice";
+import { logout, openModalLogin, closeModalLogin } from "../../store/slice/authSlice";
 import { toggleDarkMode } from "../../store/slice/themeSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { selectDarkMode } from "../../store/selectors";
@@ -15,19 +15,13 @@ import "./NavBar.scss";
 
 const NavBar = () => {
     const dispatch = useDispatch();
-    const darkMode = useSelector(selectDarkMode);
     const [searchActive, setSearchActive] = React.useState(false);
     const [menuActive, setMenuActive] = React.useState(false);
     const searchRef = React.useRef(null);
     const menuRef = React.useRef(null);
-    const [openLogin, setOpenLogin] = React.useState(false);
     const user = useSelector((state) => state.users.user);
+    const { modalLogin } = useSelector((state) => state.auth);
     const navigate = useNavigate();
-
-    // console.log(user)
-    const handleToggleDarkMode = () => {
-        dispatch(toggleDarkMode());
-    };
 
     const toggleSearch = () => {
         setSearchActive(!searchActive);
@@ -40,17 +34,12 @@ const NavBar = () => {
         setMenuActive(!menuActive);
     };
 
-    const openModalLogin = () => {
-        setOpenLogin(true);
+    const openLogin = () => {
+        dispatch(openModalLogin());
     };
 
-    const closeModalLogin = () => {
-        setOpenLogin(false);
-    };
-
-    const handleLogout = () => {
-        dispatch(logout());
-        navigate('/');
+    const closeLogin = () => {
+        dispatch(closeModalLogin());
     };
 
     React.useEffect(() => {
@@ -105,7 +94,7 @@ const NavBar = () => {
 
                 <div className="menu-login">
                     {!user ? (
-                        <button onClick={openModalLogin}>Se&nbsp;connecter</button>
+                        <button onClick={openLogin}>Se&nbsp;connecter</button>
                     ) :
                         user.profil_picture ?
                             (
@@ -130,19 +119,14 @@ const NavBar = () => {
             <Menu
                 menuActive={menuActive}
                 menuRef={menuRef}
-                user={user}
-                openModalLogin={openModalLogin}
-                handleLogout={handleLogout}
-                darkMode={darkMode}
-                handleToggleDarkMode={handleToggleDarkMode}
             />
 
-            {openLogin && (
+            {modalLogin && (
                 <Modal
                     title="Se connecter"
-                    content={<LoginForm closeModal={closeModalLogin} />}
+                    content={<LoginForm closeModal={closeLogin} />}
                     open={openLogin}
-                    cancel={closeModalLogin}
+                    cancel={closeLogin}
                 />
             )}
         </>
