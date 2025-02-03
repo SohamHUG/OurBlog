@@ -28,7 +28,7 @@ const PostContentResum = ({ content }) => {
         return ''; // Supprimer les autres images
     });
 
-    console.log(plainText)
+    // console.log(plainText)
 
 
     // image par défaut si l'article n'en a pas 
@@ -42,7 +42,7 @@ const PostContentResum = ({ content }) => {
             ? `${image}<p>${plainText.trim().substring(0, 200)}...</p>`
             : `${image}<p>${plainText.trim()}</p>`;
 
-    console.log(resumContent)
+    // console.log(resumContent)
     return (
         <div
             dangerouslySetInnerHTML={{ __html: resumContent }}

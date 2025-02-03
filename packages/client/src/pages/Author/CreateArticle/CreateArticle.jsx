@@ -6,6 +6,7 @@ import { createPost } from '../../../store/slice/articleSlice';
 import RichTextEditor from '../../../components/RichTextEditor/RichTextEditor';
 import Modal from '../../../components/Modal/Modal';
 import { useNavigate, Navigate } from 'react-router-dom';
+import ArticleForm from '../../../components/ArticleForm/ArticleForm.jsx';
 
 const CreateArticle = () => {
     const dispatch = Redux.useDispatch();
@@ -73,9 +74,15 @@ const CreateArticle = () => {
 
     return (
         <>
-            <form onSubmit={handleSubmit}>
+            <ArticleForm 
+                formData={formData}
+                handleChange={handleChange}
+                handleContentChange={handleContentChange}
+                handleTagsChange={handleTagsChange}
+                handleSubmit={handleSubmit}
+            />
+            {/* <form onSubmit={handleSubmit}>
                 <h2>Créez votre article</h2>
-                {/* {error && <p style={{ color: 'red' }}>{error}</p>} */}
                 <label>
                     Titre :
                     <input type="text" name="title" value={formData.title} onChange={handleChange} required />
@@ -113,7 +120,7 @@ const CreateArticle = () => {
                 <button type="submit">
                     Publier
                 </button>
-            </form>
+            </form> */}
 
             {openModal &&
                 <Modal

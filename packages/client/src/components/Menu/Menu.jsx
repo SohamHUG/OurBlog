@@ -6,6 +6,7 @@ import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import ArticleIcon from '@mui/icons-material/Article';
+import DescriptionIcon from '@mui/icons-material/Description';
 import Switch from "@mui/material/Switch";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { useDispatch, useSelector } from "react-redux";
@@ -29,9 +30,9 @@ const Menu = ({ menuActive, menuRef }) => {
     };
 
     const handleLogout = () => {
-            dispatch(logout());
-            navigate('/');
-        };
+        dispatch(logout());
+        navigate('/');
+    };
 
     return (
         <div className={`menu ${menuActive ? "open" : ""}`} ref={menuRef}>
@@ -39,6 +40,29 @@ const Menu = ({ menuActive, menuRef }) => {
                 <CategoryIcon className="icon" />
                 <p>Les catégories</p>
             </NavLink>
+
+
+
+            {user && user.role_name === 'admin' && (
+                <NavLink to={'/admin'} className="menu-link">
+                    <DashboardIcon className="icon" />
+                    <p>Dashboard Admin</p>
+                </NavLink>
+            )}
+
+            {(user && (user.role_name === 'author' || user.role_name === 'admin')) && (
+                <>
+                    <NavLink to={'/article/create'} className="menu-link">
+                        <ArticleIcon className="icon" />
+                        <p>Publier un article</p>
+                    </NavLink>
+
+                    <NavLink to={'/author'} className="menu-link">
+                        <DescriptionIcon className="icon" />
+                        <p>Gérer vos articles</p>
+                    </NavLink>
+                </>
+            )}
 
             <span className="menu-link">
                 <DarkModeIcon />
@@ -57,20 +81,6 @@ const Menu = ({ menuActive, menuRef }) => {
                     />
                 </p>
             </span>
-
-            {user && user.role_name === 'admin' && (
-                <NavLink to={'/admin'} className="menu-link">
-                    <DashboardIcon className="icon" />
-                    <p>Dashboard Admin</p>
-                </NavLink>
-            )}
-
-            {(user && (user.role_name === 'author' || user.role_name === 'admin')) && (
-                <NavLink to={'/article/create'} className="menu-link">
-                    <ArticleIcon className="icon" />
-                    <p>Publier un article</p>
-                </NavLink>
-            )}
 
             {!user ? (
                 <span onClick={openLogin} className="menu-link">

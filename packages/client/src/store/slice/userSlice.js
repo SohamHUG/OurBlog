@@ -86,6 +86,8 @@ const usersSlice = createSlice({
             .addCase(getUser.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = 'Session expirée, reconnectez-vous';
+                state.user = null;
+                // localStorage.removeItem('user');
             })
             .addCase(updateUser.pending, (state) => {
                 state.status = 'loading';

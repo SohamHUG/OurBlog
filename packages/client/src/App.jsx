@@ -18,14 +18,17 @@ import ConfirmEmail from './pages/ConfirmEmail/ConfirmEmail';
 import CreateArticle from './pages/Author/CreateArticle/CreateArticle';
 import MyProfilPage from './pages/MyProfil/MyProfil.page';
 import Article from './pages/Article/Article';
+import DashBoardAuthor from './pages/Author/AuthorDashboard/DashboardAuthor';
 
 function App() {
 
     const dispatch = useDispatch();
-    const userConnected = useSelector((state) => state.auth.userConnected);
+    const { userConnected, status } = useSelector((state) => state.auth);
+    const { user } = useSelector((state) => state.users);
+
 
     React.useEffect(() => {
-        if (userConnected) {
+        if (userConnected && !user) {
             dispatch(getUser());
         } else {
             dispatch(logoutUser())
@@ -50,6 +53,15 @@ function App() {
                         element={
                             <PrivateRoute roles={["admin"]}>
                                 <AdminDashboard />
+                            </PrivateRoute>
+                        }
+                    />
+                    
+                    <Route
+                        path="/author"
+                        element={
+                            <PrivateRoute role={["author", "admin"]}>
+                                <DashBoardAuthor />
                             </PrivateRoute>
                         }
                     />

@@ -36,12 +36,14 @@ export const updateUser = async (req, res) => {
 
     let roleId = user.role_id
 
-    if (firstName.length <= 0 || lastName.length <= 0) {
-        firstName = null;
-        lastName = null;
-        roleId = 1; // User
-    } else {
-        roleId = 3; //Author
+    if (user.role_name !== "admin") {
+        if (firstName.length <= 0 || lastName.length <= 0) {
+            firstName = null;
+            lastName = null;
+            roleId = 1; // User
+        } else {
+            roleId = 3; // Author
+        }
     }
 
     if (oldPassword && newPassword) {
@@ -56,17 +58,17 @@ export const updateUser = async (req, res) => {
         }
 
         const hashedPassword = bcrypt.hashSync(newPassword, 10);
-        userLog[0].password = hashedPassword; // Prépare la mise à jour
+        userLog[0].password = hashedPassword;
     }
 
     const updatedUser = {
-        first_name: firstName ,
-        last_name: lastName ,
+        first_name: firstName,
+        last_name: lastName,
         pseudo: pseudo || user.pseudo,
         email: email || user.email,
         // profil_picture: user.profil_picture,
         role_id: roleId,
-        password: userLog[0].password, // Utilise le mot de passe actuel ou mis à jour
+        password: userLog[0].password, // mot de passe actuel ou mis à jour
     };
 
     await updateUserById(id, updatedUser);
