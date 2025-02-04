@@ -26,7 +26,6 @@ const ArticleForm = ({
     return (
         <>
             <form onSubmit={handleSubmit}>
-                <h2>Créez votre article</h2>
                 {/* {error && <p style={{ color: 'red' }}>{error}</p>} */}
                 <label>
                     Titre :
@@ -51,7 +50,7 @@ const ArticleForm = ({
                     Tags (séparés par un #) :
                     <input
                         type="text"
-                        placeholder="ex: cuisine#recette#dessert"
+                        placeholder="ex: recette#à faire#dessert"
                         onChange={handleTagsChange}
                         value={formData.tags.join('#')}
                     />

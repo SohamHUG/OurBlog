@@ -10,18 +10,9 @@ import ArticleForm from '../../../components/ArticleForm/ArticleForm.jsx';
 
 const CreateArticle = () => {
     const dispatch = Redux.useDispatch();
-    const categories = Redux.useSelector(selectCategories);
-    const CategoriesStatus = Redux.useSelector(selectCategoriesStatus);
-    const error = Redux.useSelector(selectCategoriesError);
     const [openModal, setOpenModal] = React.useState(false);
     const [newId, setNewId] = React.useState(null);
     const navigate = useNavigate();
-
-    React.useEffect(() => {
-        if (CategoriesStatus === 'idle') {
-            dispatch(fetchCategories());
-        }
-    }, [CategoriesStatus, dispatch]);
 
     const [formData, setFormData] = React.useState({
         title: '',
@@ -35,13 +26,11 @@ const CreateArticle = () => {
         const tagsArray = input.split('#');
 
         setFormData({ ...formData, tags: tagsArray });
-
-        // console.log(formData.tags)
     };
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
-   
+
     };
 
     const handleContentChange = React.useCallback((content) => {
@@ -51,7 +40,6 @@ const CreateArticle = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         const article = await dispatch(createPost(formData));
 
         if (createPost.fulfilled.match(article)) {
@@ -74,53 +62,14 @@ const CreateArticle = () => {
 
     return (
         <>
-            <ArticleForm 
+            <h2>Créez votre article</h2>
+            <ArticleForm
                 formData={formData}
                 handleChange={handleChange}
                 handleContentChange={handleContentChange}
                 handleTagsChange={handleTagsChange}
                 handleSubmit={handleSubmit}
             />
-            {/* <form onSubmit={handleSubmit}>
-                <h2>Créez votre article</h2>
-                <label>
-                    Titre :
-                    <input type="text" name="title" value={formData.title} onChange={handleChange} required />
-                </label>
-
-                <label>
-                    Catégorie :
-                    <select name="category" id="category" value={formData.category} onChange={handleChange} required>
-                        <option value="">-- Sélectionnez une catégorie --</option>
-                        {categories.map((category) => {
-                            return (
-                                <option key={category.id} value={category.id}>
-                                    {category.name.charAt(0).toUpperCase() + category.name.slice(1)}
-                                </option>
-                            )
-                        })}
-                    </select>
-                </label>
-
-                <label>
-                    Tags (séparés par un #) :
-                    <input
-                        type="text"
-                        placeholder="ex: cuisine#recette#dessert"
-                        onChange={handleTagsChange}
-                        value={formData.tags.join('#')}
-                    />
-                </label>
-
-                <label>
-                    Contenu :
-                </label>
-                <RichTextEditor value={formData.content} onChange={handleContentChange} />
-
-                <button type="submit">
-                    Publier
-                </button>
-            </form> */}
 
             {openModal &&
                 <Modal

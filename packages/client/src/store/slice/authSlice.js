@@ -95,7 +95,7 @@ const authSlice = createSlice({
                 state.error = null;
             })
             .addCase(loginUser.fulfilled, (state) => {
-                state.status = 'succeeded';
+                state.status = 'idle';
                 state.userConnected = true;
                 localStorage.setItem('user', JSON.stringify(true));
             })
@@ -119,7 +119,7 @@ const authSlice = createSlice({
                 state.error = null;
             })
             .addCase(logout.fulfilled, (state) => {
-                state.status = 'succeeded';
+                state.status = 'idle';
                 state.userConnected = null;
                 localStorage.removeItem('user');
             })

@@ -2,10 +2,16 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const getPosts = createAsyncThunk(
     "posts/getPosts",
-    async (_, { rejectWithValue }) => {
+    async (filters, { rejectWithValue }) => {
+        
         try {
+            let params = new URLSearchParams();
+            if (filters?.userId) {
+                params.append("userId", filters.userId);
+            }
+
             const response = await fetch(
-                `http://localhost:3000/articles`
+                `http://localhost:3000/articles?${params}`
             );
             if (!response.ok) {
                 throw new Error("Erreur lors du chargement des posts.");
@@ -59,13 +65,9 @@ const postsSlice = createSlice({
     initialState: {
         posts: [],
         post: null,
-        page: 1,
-        loading: true,
         error: null,
         errorPost: null,
         status: "idle",
-        statusPosts: "idle",
-        statusPost: "idle",
     },
     reducers: {
     },
@@ -76,8 +78,7 @@ const postsSlice = createSlice({
                 state.error = null;
             })
             .addCase(getPosts.fulfilled, (state, action) => {
-                state.status = 'succeeded';
-                // console.log(action.payload)
+                state.status = 'idle';
                 state.posts = action.payload.articles;
             })
             .addCase(getPosts.rejected, (state, action) => {
@@ -85,16 +86,16 @@ const postsSlice = createSlice({
                 state.error = action.error.message;
             })
             .addCase(getPost.pending, (state) => {
-                state.statusPost = 'loading';
+                state.status = 'loading';
                 state.errorPost = null;
             })
             .addCase(getPost.fulfilled, (state, action) => {
-                state.statusPost = 'succeeded';
+                state.status = 'succeeded';
                 // console.log(action.payload)
                 state.post = action.payload.article;
             })
             .addCase(getPost.rejected, (state, action) => {
-                state.statusPost = 'failed';
+                state.status = 'failed';
                 // console.log(action.error)
                 state.errorPost = action.error.message;
             })
@@ -103,7 +104,7 @@ const postsSlice = createSlice({
                 state.error = null;
             })
             .addCase(createPost.fulfilled, (state, action) => {
-                state.status = 'succeeded';
+                state.status = 'idle';
                 // console.log(action)
 
             })

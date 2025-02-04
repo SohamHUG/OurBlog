@@ -57,7 +57,7 @@ const Menu = ({ menuActive, menuRef }) => {
                         <p>Publier un article</p>
                     </NavLink>
 
-                    <NavLink to={'/author'} className="menu-link">
+                    <NavLink to={'/articles'} className="menu-link">
                         <DescriptionIcon className="icon" />
                         <p>Gérer vos articles</p>
                     </NavLink>

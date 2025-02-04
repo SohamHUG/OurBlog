@@ -24,6 +24,7 @@ app.use(cors({
 app.use(cookieParser());
 
 app.use(refreshTokenMiddleware);
+
 app.use('/upload', uploadRoutes)
 
 app.use(express.json());

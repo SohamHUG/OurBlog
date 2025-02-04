@@ -19,6 +19,7 @@ import CreateArticle from './pages/Author/CreateArticle/CreateArticle';
 import MyProfilPage from './pages/MyProfil/MyProfil.page';
 import Article from './pages/Article/Article';
 import DashBoardAuthor from './pages/Author/AuthorDashboard/DashboardAuthor';
+import UpdateArticlePage from './pages/Author/UpdateArticle/UpdateArticle';
 
 function App() {
 
@@ -26,6 +27,8 @@ function App() {
     const { userConnected, status } = useSelector((state) => state.auth);
     const { user } = useSelector((state) => state.users);
 
+    // console.log(user)
+    // console.log(userConnected)
 
     React.useEffect(() => {
         if (userConnected && !user) {
@@ -56,9 +59,9 @@ function App() {
                             </PrivateRoute>
                         }
                     />
-                    
+
                     <Route
-                        path="/author"
+                        path="/articles"
                         element={
                             <PrivateRoute role={["author", "admin"]}>
                                 <DashBoardAuthor />
@@ -71,6 +74,15 @@ function App() {
                         element={
                             <PrivateRoute role={["author", "admin"]}>
                                 <CreateArticle />
+                            </PrivateRoute>
+                        }
+                    />
+
+                    <Route
+                        path="/articles/update/:id"
+                        element={
+                            <PrivateRoute role={["author", "admin"]} >
+                                <UpdateArticlePage />
                             </PrivateRoute>
                         }
                     />

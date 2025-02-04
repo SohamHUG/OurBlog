@@ -13,25 +13,23 @@ const Article = () => {
     const { id } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { post, statusPost, errorPost } = useSelector((state) => state.posts)
+    const { post, status } = useSelector((state) => state.posts)
 
     React.useEffect(() => {
-
-        dispatch(getPost(id))
-
+        dispatch(getPost(id));
     }, [id, dispatch]);
 
     return (
         <>
-            {statusPost === 'loading' &&
+            {status === 'loading' &&
                 <div>Loading</div>
             }
 
-            {statusPost === 'failed' &&
+            {status === 'failed' &&
                 <div className='alert'>Post introuvable </div>
             }
 
-            {statusPost === 'succeeded' &&
+            {status === 'succeeded' && post &&
                 <section className='article-page'>
                     <div className='post-head'>
                         <ArrowBackIcon
@@ -59,10 +57,10 @@ const Article = () => {
 
                     <div className='comments-container'>
                         <h3>Commentaires :</h3>
-                            <form action="">
-                                <label htmlFor="">Ajouter un commentaire</label>
-                                <input type="text" placeholder='...' />
-                            </form>
+                        <form action="">
+                            <label htmlFor="">Ajouter un commentaire</label>
+                            <input type="text" placeholder='...' />
+                        </form>
                     </div>
                 </section>
             }

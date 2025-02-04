@@ -49,9 +49,12 @@ export const createArticle = async (req, res) => {
 
 export const getArticles = async (req, res) => {
     try {
+        const filters = {
+            userId: req.query.userId,
+        };
 
         // console.log(req.query)
-        const articles = await findAllArticles();
+        const articles = await findAllArticles(filters);
 
         return res.status(200).json({ articles })
     } catch (err) {
@@ -66,7 +69,7 @@ export const getArticleById = async (req, res) => {
         // console.log(req.query)
         const article = await findArticleById(id);
 
-        if (article.length === 0) {
+        if (!article || article.length === 0) {
             return res.status(404).json({ message: 'Aucun article' })
         }
 

@@ -99,13 +99,12 @@ export const loginUser = async (req, res) => {
 
         const refreshToken = jwt.sign({ id: user[0].id, }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: process.env.REFRESH_TOKEN_EXPIRATION });
 
-        await updateUserById(user[0].id, { refresh_token: refreshToken })
-
         res.cookie('accessToken', accessToken, {
             httpOnly: true,
             secure: false, // à modifier à true car pas https pour l'instant
             sameSite: 'strict', // Limite les cookies aux mêmes origines
-            maxAge: 3600000, // 1 heure
+            // maxAge: 3600000, // 1 heure
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 jours
         });
 
         res.cookie('refreshToken', refreshToken, {
@@ -115,6 +114,8 @@ export const loginUser = async (req, res) => {
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 jours
             // maxAge: 10 * 1000, // 10 sec
         });
+
+        await updateUserById(user[0].id, { refresh_token: refreshToken });
 
         return res.status(200).json({ message: "Connexion réussi !" });
 

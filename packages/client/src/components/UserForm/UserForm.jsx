@@ -8,14 +8,15 @@ import './UserForm.scss'
 
 const UserForm = (props) => {
 
-    const { statusEmailSend, errorEmailSend } = useSelector((state) => state.auth);
+    const { status } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
-    // console.log(statusEmailSend)
+    console.log(status)
 
     const handleEmailConfirm = () => {
-        if (statusEmailSend === 'idle') {
+        if (status === 'idle') {
             dispatch(sendEmailConfirm());
         }
+
     }
     return (
         <div className='user-form'>
@@ -26,19 +27,19 @@ const UserForm = (props) => {
                     <p className='verif-email-infos'>
                         <span className='alert'>Si vous souhaitez modifier votre profil, merci de verifier votre adresse email. </span>
                         <small style={{ textDecoration: 'underline' }} onClick={handleEmailConfirm} className='link'> Renvoyer l'email de confirmation</small>
-                        {statusEmailSend === 'loading' &&
-                            <span style={{color: 'orange'}}>
+                        {status === 'loading' &&
+                            <span style={{ color: 'orange' }}>
                                 <HourglassFullRoundedIcon />
                             </span>
                         }
-                        {statusEmailSend === 'succeeded' &&
-                            <span style={{color: 'green'}}>
+                        {status === 'succeeded' &&
+                            <span style={{ color: 'green' }}>
                                 <CheckCircleRoundedIcon />
                             </span>
                         }
-                        {statusEmailSend === 'failed' &&
+                        {status === 'failed' &&
                             <span className='alert'>
-                                {errorEmailSend}
+                                Error
                             </span>
                         }
                     </p>

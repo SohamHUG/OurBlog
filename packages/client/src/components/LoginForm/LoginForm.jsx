@@ -2,6 +2,7 @@ import * as React from 'react';
 import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../../store/slice/authSlice';
+import { getUser } from '../../store/slice/userSlice';
 
 const LoginForm = ({ closeModal }) => {
     const navigate = useNavigate();
@@ -21,6 +22,7 @@ const LoginForm = ({ closeModal }) => {
         e.preventDefault();
         const resultAction = await dispatch(loginUser({ email, password }));
         if (loginUser.fulfilled.match(resultAction)) {
+            dispatch(getUser());
             closeModal();
         }
     };

@@ -1,23 +1,16 @@
 import * as React from "react";
 import * as Redux from "react-redux";
-import {
-    selectPosts,
-    selectPostsStatus,
-    selectPostsError,
-    selectUsers,
-    selectPhotos,
-} from "../../store/selectors";
-import { getPosts } from "../../store/slice/articleSlice";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import EastIcon from "@mui/icons-material/East";
-import { searchUsers } from "../../store/slice/userSlice";
-import { searchPhotos } from "../../store/slice/photoSlice";
 import "./PostsList.scss";
 import PostContentResum from "../PostContent/PostContentResum";
-import { Link } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 const PostsList = ({ posts }) => {
-    const dispatch = Redux.useDispatch();
+    const location = useLocation();
+    const user = Redux.useSelector((state) => state.users.user);
+
+    // console.log(location)
 
     // console.log(posts)
     return (
@@ -42,9 +35,9 @@ const PostsList = ({ posts }) => {
                                     //     post.title.slice(1))
                                 }
                             </h4>
-                            <Link to={`category/${post.category_id}`} className="post-category link">
+                            <NavLink to={`/category/${post.category_id}`} className="post-category link">
                                 {post.category_name}
-                            </Link>
+                            </NavLink>
 
 
                         </div>
@@ -54,12 +47,25 @@ const PostsList = ({ posts }) => {
                         </div>
 
 
-                        <Link className="article-link" to={`article/${post.id}`}>
+                        <NavLink className="article-link" to={`/article/${post.id}`}>
                             <button>
                                 <span>Voir l'article</span>
                                 <EastIcon fontSize="small" />
                             </button>
-                        </Link>
+                        </NavLink>
+                        {user && (user.user_id === post.user_id || user.role_name === 'admin') &&
+                            <>
+                                <NavLink className="article-link" to={`/articles/update/${post.id}`}>
+                                    <button>
+                                        <span>Modifier</span>
+                                        <EastIcon fontSize="small" />
+                                    </button>
+                                </NavLink>
+                                <button>
+                                    <span>Supprimer</span>
+                                </button>
+                            </>
+                        }
 
                     </div>
                 );

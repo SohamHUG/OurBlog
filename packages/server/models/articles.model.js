@@ -15,9 +15,9 @@ export const saveArticle = async (user, category, title, content) => {
     })
 }
 
-export const findAllArticles = () => {
+export const findAllArticles = (filters = {}) => {
     return new Promise((resolve, reject) => {
-        const sql = `
+        let sql = `
         SELECT 
             article.id, 
             article.user_id, 
@@ -26,13 +26,26 @@ export const findAllArticles = () => {
             article.category_id, 
             category.name as category_name, 
             article.title, 
-            article.content 
+            article.content,
+            article.created_at 
         FROM article
         INNER JOIN user ON article.user_id = user.id
         INNER JOIN category ON article.category_id = category.id
+        WHERE 1=1
         `;
 
-        db.query(sql, (err, result) => {
+        const params = [];
+
+        if (filters.userId) {
+            sql += `AND article.user_id = ?`;
+            params.push(filters.userId);
+        }
+
+        sql += ` GROUP BY article.id`;
+
+        // console.log(sql)
+
+        db.query(sql, params, (err, result) => {
             if (err) {
                 reject(err)
             }
