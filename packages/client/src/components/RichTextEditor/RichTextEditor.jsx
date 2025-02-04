@@ -1,10 +1,14 @@
-import React, { useState, useRef, useMemo } from 'react';
+import React, { useState, useRef, useMemo, useEffect } from 'react';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 
 const RichTextEditor = ({ value, onChange }) => {
-    const [content, setContent] = useState(value || '');
+    const [content, setContent] = useState(value);
     const quillRef = useRef(null);
+
+    useEffect(() => {
+        setContent(value);
+    }, [value]);
 
     const handleChange = (content, delta, source, editor) => {
         // if (source === 'user') {

@@ -21,6 +21,8 @@ const CreateArticle = () => {
         tags: [],
     });
 
+    console.log(formData)
+
     const handleTagsChange = (e) => {
         const input = e.target.value;
         const tagsArray = input.split('#');

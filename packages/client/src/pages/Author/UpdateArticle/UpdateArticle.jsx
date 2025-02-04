@@ -13,7 +13,7 @@ const UpdateArticlePage = () => {
         dispatch(getPost(id));
     }, [id]);
 
-    // console.log(status)
+    // console.log(post)
 
     const [formData, setFormData] = React.useState({
         title: '',
@@ -26,17 +26,15 @@ const UpdateArticlePage = () => {
         if (status === 'succeeded') {
             setFormData({
                 title: post.title || '',
-                // content: post.content || '',
-                category: post.category_name || '',
+                content: post.content,
+                category: post.category_id || '',
                 tags: [],
             })
-            handleContentChange(post.content)
+            // handleContentChange(post.content)
         }
-
-
     }, [status,]);
 
-    console.log(formData)
+    // console.log(formData)
 
     const handleTagsChange = (e) => {
         const input = e.target.value;
