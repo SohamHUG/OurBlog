@@ -72,7 +72,6 @@ const HomePage = () => {
             <div className="home-page-content">
 
                 <div className='left'>
-                    {/* Filtre à mettre en component */}
                     <div className="filter-articles-home">
                         <h3>
                             {filter === 'recent' ? 'Les derniers articles' : 'Les articles tendances'}

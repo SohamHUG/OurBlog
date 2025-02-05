@@ -3,16 +3,21 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 export const getPosts = createAsyncThunk(
     "posts/getPosts",
     async (filters, { rejectWithValue }) => {
-        
-        try {
-            let params = new URLSearchParams();
-            if (filters?.userId) {
-                params.append("userId", filters.userId);
-            }
 
-            const response = await fetch(
-                `http://localhost:3000/articles?${params}`
-            );
+        try {
+            // let params = new URLSearchParams();
+            // if (filters?.userId) {
+            //     params.append("userId", filters.userId);
+            // }
+            // if (filters?.category) {
+            //     params.append("category", filters.category);
+            // }
+
+            // const response = await fetch(
+            //     `http://localhost:3000/articles?${params}`
+            // );
+            const response = await fetch(`http://localhost:3000/articles?${new URLSearchParams(filters)}`);
+
             if (!response.ok) {
                 throw new Error("Erreur lors du chargement des posts.");
             }
@@ -60,7 +65,7 @@ export const createPost = createAsyncThunk('posts/createPost', async (articleDat
     }
 });
 
-export const updateArticle = createAsyncThunk('posts/updateArticle', async ({id, articleData}, { rejectWithValue }) => {
+export const updateArticle = createAsyncThunk('posts/updateArticle', async ({ id, articleData }, { rejectWithValue }) => {
     try {
         const response = await fetch(`http://localhost:3000/articles/update/${id}`, {
             method: 'PUT',
@@ -104,11 +109,21 @@ const postsSlice = createSlice({
     initialState: {
         posts: [],
         post: null,
+        filters: {
+            tags: [],
+            sortBy: 'recent'
+        },
         error: null,
         errorPost: null,
         status: "idle",
     },
     reducers: {
+        setTagsFilter: (state, action) => {
+            state.filters.tags = action.payload;
+        },
+        setSortBy: (state, action) => {
+            state.filters.sortBy = action.payload;
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -117,7 +132,7 @@ const postsSlice = createSlice({
                 state.error = null;
             })
             .addCase(getPosts.fulfilled, (state, action) => {
-                state.status = 'idle';
+                state.status = 'succeeded';
                 state.posts = action.payload.articles;
             })
             .addCase(getPosts.rejected, (state, action) => {
@@ -177,4 +192,5 @@ const postsSlice = createSlice({
 });
 
 
+export const { setTagsFilter, setSortBy } = postsSlice.actions;
 export default postsSlice.reducer;

@@ -18,7 +18,7 @@ export const saveArticle = async (user, category, title, content) => {
 export const updateArticleById = async (id, article) => {
     return new Promise((resolve, reject) => {
 
-        const {...allowedUpdates } = article;
+        const { ...allowedUpdates } = article;
 
         const columns = Object.keys(allowedUpdates)
 
@@ -41,7 +41,7 @@ export const updateArticleById = async (id, article) => {
                 reject(err)
             }
             if (result.affectedRows === 0) {
-                return resolve(null); 
+                return resolve(null);
             }
             const newArticleData = await findArticleById(id);
 
@@ -66,19 +66,33 @@ export const findAllArticles = (filters = {}) => {
         FROM article
         INNER JOIN user ON article.user_id = user.id
         INNER JOIN category ON article.category_id = category.id
+        LEFT JOIN article_tag ON article.id = article_tag.article_id
+        LEFT JOIN tag ON article_tag.tag_id = tag.id
         WHERE 1=1
         `;
 
         const params = [];
 
         if (filters.userId) {
-            sql += `AND article.user_id = ?`;
+            sql += ` AND article.user_id = ?`;
             params.push(filters.userId);
+        }
+        if (filters.category) {
+            sql += ` AND category.name = ?`;
+            params.push(filters.category);
+        }
+
+        if (filters.tags && filters.tags.length > 0) {
+            const tagList = filters.tags.map(tag => tag.trim());
+            sql += ` AND tag.name IN (${tagList.map(() => '?').join(', ')})`;
+            params.push(...tagList);
         }
 
         sql += ` GROUP BY article.id`;
 
-        // console.log(sql)
+        sql += ` ORDER BY article.created_at DESC`;
+
+        console.log(sql)
 
         db.query(sql, params, (err, result) => {
             if (err) {

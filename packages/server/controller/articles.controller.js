@@ -101,9 +101,11 @@ export const getArticles = async (req, res) => {
     try {
         const filters = {
             userId: req.query.userId,
+            category: req.query.category,
+            tags: req.query.tags ? req.query.tags.split(',') : [],
         };
 
-        // console.log(req.query)
+        console.log(filters)
         const articles = await findAllArticles(filters);
 
         return res.status(200).json({ articles })

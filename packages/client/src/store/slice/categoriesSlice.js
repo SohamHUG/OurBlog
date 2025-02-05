@@ -52,11 +52,20 @@ export const deleteCategory = createAsyncThunk('categories/deleteCategory', asyn
     }
 });
 
+export const getTags = createAsyncThunk('categories/getTags', async () => {
+    let url = 'http://localhost:3000/tags';
+
+    const response = await fetch(url);
+    const data = await response.json();
+    return data.data;
+});
+
 
 const categoriesSlice = createSlice({
     name: 'categories',
     initialState: {
         items: [],
+        tags: [],
         status: 'idle',
         error: null,
     },
@@ -100,6 +109,18 @@ const categoriesSlice = createSlice({
                 state.items = state.items.filter((category) => category.id !== deletedId);
             })
             .addCase(deleteCategory.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message;
+            })
+            .addCase(getTags.pending, (state) => {
+                state.status = 'loading';
+                state.error = null;
+            })
+            .addCase(getTags.fulfilled, (state, action) => {
+                state.status = 'idle';
+                state.tags = action.payload;
+            })
+            .addCase(getTags.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.error.message;
             })
