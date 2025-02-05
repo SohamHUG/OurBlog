@@ -1,12 +1,13 @@
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { getPost } from '../../../store/slice/articleSlice';
+import { getPost, updateArticle } from '../../../store/slice/articleSlice';
 import ArticleForm from '../../../components/ArticleForm/ArticleForm';
 
 const UpdateArticlePage = () => {
     const { id } = useParams();
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const { post, status, error } = useSelector((state) => state.posts)
 
     React.useEffect(() => {
@@ -28,7 +29,7 @@ const UpdateArticlePage = () => {
                 title: post.title || '',
                 content: post.content,
                 category: post.category_id || '',
-                tags: [],
+                tags: post.tags ? post.tags.split(', '): [],
             })
             // handleContentChange(post.content)
         }
@@ -55,12 +56,14 @@ const UpdateArticlePage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // const article = await dispatch(createPost(formData));
+        const articleUp = await dispatch(updateArticle({id: post.id, articleData: formData}))
 
-        // if (createPost.fulfilled.match(article)) {
-        //     setNewId(article.payload.article);
-        //     setOpenModal(true);
-        // }
+        if (updateArticle.fulfilled.match(articleUp)) {
+            // setNewId(article.payload.article);
+            // setOpenModal(true);
+            navigate(`/article/${articleUp.payload.article.id}`)
+            // console.log(articleUp)
+        }
 
     };
 

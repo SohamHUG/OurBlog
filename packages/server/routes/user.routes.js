@@ -2,12 +2,13 @@ import { Router } from 'express';
 import { deleteUser, getUserById, updateUser} from '../controller/user.controller.js';
 import { authMiddleware } from '../middlewares/auth.middleware.js';
 import upload from '../middlewares/upload.middleware.js';
+import { isVerified } from '../middlewares/role.middleware.js';
 
 const router = Router();
 
 router.get('/me', [authMiddleware], getUserById);
 
-router.put('/update/:id', [authMiddleware], updateUser);
+router.put('/update/:id', [authMiddleware, isVerified], updateUser);
 
 router.delete('/:id', [authMiddleware], deleteUser)
 

@@ -5,14 +5,20 @@ import EastIcon from "@mui/icons-material/East";
 import "./PostsList.scss";
 import PostContentResum from "../PostContent/PostContentResum";
 import { NavLink, useLocation } from "react-router-dom";
+import { deleteArticle } from "../../store/slice/articleSlice";
 
 const PostsList = ({ posts }) => {
     const location = useLocation();
     const user = Redux.useSelector((state) => state.users.user);
+    const dispatch = Redux.useDispatch()
 
     // console.log(location)
 
     // console.log(posts)
+    const handleRemoveArticle = (id) => {
+        dispatch(deleteArticle(id))
+    }
+
     return (
         <div className="posts-list-container">
             {posts.map((post, index) => {
@@ -61,7 +67,7 @@ const PostsList = ({ posts }) => {
                                         <EastIcon fontSize="small" />
                                     </button>
                                 </NavLink>
-                                <button>
+                                <button onClick={() => handleRemoveArticle(post.id)}>
                                     <span>Supprimer</span>
                                 </button>
                             </>

@@ -69,20 +69,22 @@ export const updateUserById = async (id, user) => {
         // exclu l'email des mises à jour
         const { email, ...allowedUpdates } = user;
 
-        const validColumns = [
-            'first_name',
-            'last_name',
-            'pseudo',
-            'refresh_token',
-            'is_verified',
-            'profil_picture',
-            'profil_picture_public_id',
-            'role_id',
-            'password'
-        ];
+        // const validColumns = [
+        //     'first_name',
+        //     'last_name',
+        //     'pseudo',
+        //     'refresh_token',
+        //     'is_verified',
+        //     'profil_picture',
+        //     'profil_picture_public_id',
+        //     'role_id',
+        //     'password'
+        // ];
 
         // extraie les colonnes à mettre à jour
-        const columns = Object.keys(allowedUpdates).filter(column => validColumns.includes(column));
+        const columns = Object.keys(allowedUpdates)
+            // .filter(column => validColumns.includes(column));
+            
         if (columns.length === 0) {
             return reject(new Error("Aucune donnée valide à mettre à jour."));
         }

@@ -86,10 +86,14 @@ export const deleteUser = async (req, res) => {
         return res.status(403).json({ message: "Vous n'êtes pas autorisé" });
     }
 
+    if (parseInt(id) === user.user_id) {
+        res.clearCookie('accessToken');
+        res.clearCookie('refreshToken');
+    }
+    
     await deleteUserById(id);
 
-    res.clearCookie('accessToken');
-    res.clearCookie('refreshToken');
+
 
     return res.status(200).json({ message: "Utilisateur supprimé" });
 }

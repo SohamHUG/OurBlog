@@ -12,3 +12,10 @@ export const isAuthor = async (req, res, next) => {
     }
     next();
 }
+
+export const isVerified = async (req, res, next) => {
+    if (req.user.is_verified !== 1) {
+        return res.status(401).send({ message: "Votre compte n'est pas vérifié" })
+    }
+    next();
+}

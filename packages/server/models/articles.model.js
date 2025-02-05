@@ -15,6 +15,41 @@ export const saveArticle = async (user, category, title, content) => {
     })
 }
 
+export const updateArticleById = async (id, article) => {
+    return new Promise((resolve, reject) => {
+
+        const {...allowedUpdates } = article;
+
+        const columns = Object.keys(allowedUpdates)
+
+        if (columns.length === 0) {
+            return reject(new Error("Aucune donnée valide à mettre à jour."));
+        }
+
+        columns.push('updated_at');
+        allowedUpdates['updated_at'] = new Date();
+
+        // construire dynamiquement la requête SQL
+        const setClause = columns.map(column => `${column} = ?`).join(", ");
+        const values = columns.map(column => allowedUpdates[column]);
+
+        const sql = `UPDATE article SET ${setClause} WHERE id = ?`;
+        values.push(id);
+
+        db.query(sql, values, async (err, result) => {
+            if (err) {
+                reject(err)
+            }
+            if (result.affectedRows === 0) {
+                return resolve(null); 
+            }
+            const newArticleData = await findArticleById(id);
+
+            resolve(newArticleData);
+        })
+    })
+}
+
 export const findAllArticles = (filters = {}) => {
     return new Promise((resolve, reject) => {
         let sql = `
@@ -65,12 +100,16 @@ export const findArticleById = (id) => {
             user.profil_picture as user_picture,
             article.category_id, 
             category.name as category_name, 
+            GROUP_CONCAT(tag.name SEPARATOR ', ') as tags,
             article.title, 
             article.content 
         FROM article
         INNER JOIN user ON article.user_id = user.id
         INNER JOIN category ON article.category_id = category.id
+        LEFT JOIN article_tag ON article.id = article_tag.article_id
+        LEFT JOIN tag ON article_tag.tag_id = tag.id
         WHERE article.id = ?
+        GROUP BY article.id;
         `;
 
         db.query(sql, id, (err, result) => {
@@ -82,6 +121,20 @@ export const findArticleById = (id) => {
             }
 
             resolve(result[0]);
+        })
+    })
+}
+
+export const deleteArticleById = async (id) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'DELETE FROM article WHERE id = ?';
+        db.query(sql, [id], (err, result) => {
+            if (err) {
+                return reject(err);
+            }
+            if (result) {
+                return resolve(result)
+            }
         })
     })
 }

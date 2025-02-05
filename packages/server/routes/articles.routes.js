@@ -1,7 +1,7 @@
 import {Router} from 'express';
-import { isAuthor } from '../middlewares/role.middleware.js';
+import { isAuthor, isVerified } from '../middlewares/role.middleware.js';
 import { authMiddleware } from '../middlewares/auth.middleware.js';
-import { createArticle, getArticleById, getArticles } from '../controller/articles.controller.js';
+import { createArticle, deleteArticle, getArticleById, getArticles, updateArticle } from '../controller/articles.controller.js';
 
 const router = Router();
 
@@ -9,6 +9,10 @@ router.get('/', getArticles);
 
 router.get('/:id', getArticleById);
 
-router.post('/create-article', [authMiddleware, isAuthor], createArticle);
+router.post('/create-article', [authMiddleware, isAuthor, isVerified], createArticle);
+
+router.put('/update/:id', [authMiddleware, isAuthor, isVerified], updateArticle);
+
+router.delete('/delete/:id', [authMiddleware, isAuthor, isVerified], deleteArticle);
 
 export default router;

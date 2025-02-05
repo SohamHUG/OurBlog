@@ -60,6 +60,45 @@ export const createPost = createAsyncThunk('posts/createPost', async (articleDat
     }
 });
 
+export const updateArticle = createAsyncThunk('posts/updateArticle', async ({id, articleData}, { rejectWithValue }) => {
+    try {
+        const response = await fetch(`http://localhost:3000/articles/update/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', },
+            body: JSON.stringify(articleData),
+            credentials: 'include',
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            return rejectWithValue(errorData.message);
+        }
+
+        return await response.json();
+    } catch (error) {
+        return rejectWithValue(error.message);
+    }
+});
+
+export const deleteArticle = createAsyncThunk('posts/deleteArticle', async (id, { rejectWithValue }) => {
+    try {
+        const response = await fetch(`http://localhost:3000/articles/delete/${id}`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json', },
+            credentials: 'include',
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            return rejectWithValue(errorData.message);
+        }
+
+        return await response.json();
+    } catch (error) {
+        return rejectWithValue(error.message);
+    }
+});
+
 const postsSlice = createSlice({
     name: "posts",
     initialState: {
@@ -105,10 +144,32 @@ const postsSlice = createSlice({
             })
             .addCase(createPost.fulfilled, (state, action) => {
                 state.status = 'idle';
-                // console.log(action)
-
             })
             .addCase(createPost.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message;
+            })
+            .addCase(updateArticle.pending, (state) => {
+                state.status = 'loading';
+                state.error = null;
+            })
+            .addCase(updateArticle.fulfilled, (state, action) => {
+                state.status = 'idle';
+            })
+            .addCase(updateArticle.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message;
+            })
+            .addCase(deleteArticle.pending, (state) => {
+                state.status = 'loading';
+                state.error = null;
+            })
+            .addCase(deleteArticle.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                const deleteId = action.meta.arg;
+                state.posts = state.posts.filter((post) => post.id !== deleteId)
+            })
+            .addCase(deleteArticle.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.error.message;
             })

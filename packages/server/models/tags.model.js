@@ -58,3 +58,14 @@ export const linkArticleToTag = async (articleId, tagId) => {
     });
 };
 
+export const deleteArticleTags = (articleId) => {
+    return new Promise((resolve, reject) => {
+        const sql = `DELETE FROM article_tag WHERE article_id = ?`;
+        db.query(sql, [articleId], (err, result) => {
+            if (err) {
+                reject(err);
+            }
+            resolve(result);
+        });
+    });
+};
