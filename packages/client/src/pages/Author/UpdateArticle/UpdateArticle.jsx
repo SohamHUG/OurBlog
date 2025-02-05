@@ -14,7 +14,7 @@ const UpdateArticlePage = () => {
         dispatch(getPost(id));
     }, [id]);
 
-    // console.log(post)
+    console.log(status)
 
     const [formData, setFormData] = React.useState({
         title: '',
@@ -24,7 +24,7 @@ const UpdateArticlePage = () => {
     });
 
     React.useEffect(() => {
-        if (status === 'succeeded') {
+        if (status === 'succeeded' && post) {
             setFormData({
                 title: post.title || '',
                 content: post.content,
@@ -33,7 +33,7 @@ const UpdateArticlePage = () => {
             })
             // handleContentChange(post.content)
         }
-    }, [status,]);
+    }, [status]);
 
     // console.log(formData)
 

@@ -104,7 +104,7 @@ export const findAllArticles = (filters = {}) => {
 
         // sql += ` ORDER BY article.created_at DESC`;
 
-        console.log(sql)
+        // console.log(sql)
 
         db.query(sql, params, (err, result) => {
             if (err) {

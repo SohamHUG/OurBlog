@@ -60,7 +60,7 @@ export const refreshTokenMiddleware = async (req, res, next) => {
 
         res.cookie('accessToken', newAccessToken, {
             httpOnly: true,
-            secure: false, // à modifier à true car pas https pour l'instant
+            secure: true, // à modifier à true car pas https pour l'instant
             sameSite: 'strict', // Limite les cookies aux mêmes origines
             // maxAge: 3600000, // 1 heure
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 jours
@@ -68,7 +68,7 @@ export const refreshTokenMiddleware = async (req, res, next) => {
 
         res.cookie('refreshToken', newRefreshToken, {
             httpOnly: true,
-            secure: false, // à modifier à true car pas https pour l'instant
+            secure: true, // à modifier à true car pas https pour l'instant
             sameSite: 'strict', // Limite les cookies aux mêmes origines
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 jours
             // maxAge: 10 * 1000, // 10 sec
