@@ -14,6 +14,7 @@ const Article = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { post, status } = useSelector((state) => state.posts)
+    const { user } = useSelector((state) => state.users)
 
     React.useEffect(() => {
         dispatch(getPost(id));
@@ -57,10 +58,13 @@ const Article = () => {
 
                     <div className='comments-container'>
                         <h3>Commentaires :</h3>
-                        <form action="">
-                            <label htmlFor="">Ajouter un commentaire</label>
-                            <input type="text" placeholder='...' />
-                        </form>
+
+                        {user && user.is_verified === 1 &&
+                            <form action="">
+                                <label htmlFor="comment">Ajouter un commentaire</label>
+                                <input id='comment' name='comment' type="text" placeholder='...' />
+                            </form>
+                        }
                     </div>
                 </section>
             }

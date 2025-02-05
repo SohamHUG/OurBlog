@@ -102,6 +102,7 @@ export const getArticles = async (req, res) => {
         const filters = {
             userId: req.query.userId,
             category: req.query.category,
+            sortBy: req.query.sortBy,
             tags: req.query.tags ? req.query.tags.split(',') : [],
         };
 

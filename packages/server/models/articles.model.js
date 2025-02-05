@@ -62,12 +62,14 @@ export const findAllArticles = (filters = {}) => {
             category.name as category_name, 
             article.title, 
             article.content,
-            article.created_at 
+            article.created_at,
+            COUNT(comment.id) AS comment_count
         FROM article
         INNER JOIN user ON article.user_id = user.id
         INNER JOIN category ON article.category_id = category.id
         LEFT JOIN article_tag ON article.id = article_tag.article_id
         LEFT JOIN tag ON article_tag.tag_id = tag.id
+        LEFT JOIN comment ON article.id = comment.article_id
         WHERE 1=1
         `;
 
@@ -81,7 +83,6 @@ export const findAllArticles = (filters = {}) => {
             sql += ` AND category.name = ?`;
             params.push(filters.category);
         }
-
         if (filters.tags && filters.tags.length > 0) {
             const tagList = filters.tags.map(tag => tag.trim());
             sql += ` AND tag.name IN (${tagList.map(() => '?').join(', ')})`;
@@ -90,9 +91,15 @@ export const findAllArticles = (filters = {}) => {
 
         sql += ` GROUP BY article.id`;
 
-        sql += ` ORDER BY article.created_at DESC`;
+        if (filters.sortBy === 'famous') {
+            sql += ` ORDER BY comment_count DESC`;
+        } else {
+            sql += ` ORDER BY article.created_at DESC`;
+        }
 
-        console.log(sql)
+        // sql += ` ORDER BY article.created_at DESC`;
+
+        // console.log(sql)
 
         db.query(sql, params, (err, result) => {
             if (err) {
