@@ -87,9 +87,14 @@ export const findAllArticles = (filters = {}) => {
             const tagList = filters.tags.map(tag => tag.trim());
             sql += ` AND tag.name IN (${tagList.map(() => '?').join(', ')})`;
             params.push(...tagList);
+
+            sql += ` GROUP BY article.id HAVING COUNT(DISTINCT tag.name) = ?`;
+            params.push(tagList.length);
+        } else {
+            sql += ` GROUP BY article.id`;
         }
 
-        sql += ` GROUP BY article.id`;
+
 
         if (filters.sortBy === 'famous') {
             sql += ` ORDER BY comment_count DESC`;
@@ -99,7 +104,7 @@ export const findAllArticles = (filters = {}) => {
 
         // sql += ` ORDER BY article.created_at DESC`;
 
-        // console.log(sql)
+        console.log(sql)
 
         db.query(sql, params, (err, result) => {
             if (err) {
