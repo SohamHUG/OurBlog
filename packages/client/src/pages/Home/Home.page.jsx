@@ -10,11 +10,11 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import KeyboardArrowUpRoundedIcon from '@mui/icons-material/KeyboardArrowUpRounded';
 // import PopularAuthorsList from '../../components/PopularAuthorsList/PopularAuthorsList';
 import './Home.scss';
-import { getPosts } from '../../store/slice/articleSlice';
+import { getPosts, setSortBy } from '../../store/slice/articleSlice';
 import { useNavigate } from 'react-router-dom';
 
 const HomePage = () => {
-    const [filter, setFilter] = React.useState('recent');
+    const filters = Redux.useSelector((state) => state.posts.filters)
     const dispatch = Redux.useDispatch();
     const navigate = useNavigate()
     const status = Redux.useSelector(selectUsersStatus);
@@ -25,13 +25,11 @@ const HomePage = () => {
     const [showToTop, setShowToTop] = React.useState(false);
 
     React.useEffect(() => {
-        if (status === 'idle') {
-            dispatch(searchUsers());
-        }
+        // if (status === 'idle') {
+        //     dispatch(searchUsers());
+        // }
 
-        if (filter === 'recent') {
-            dispatch(getPosts());
-        }
+        dispatch(getPosts({ sortBy: filters.sortBy }));
 
         const handleScroll = () => {
             setShowToTop(window.scrollY > 500);
@@ -42,10 +40,11 @@ const HomePage = () => {
         return () => {
             window.removeEventListener('scroll', handleScroll);
         };
-    }, [status, dispatch, showToTop]);
+    }, [status, dispatch, showToTop, filters.sortBy]);
 
-    const handleFilterChange = (event) => {
-        setFilter(event.target.value);
+    const handleSortChange = (event) => {
+        const sortBy = event.target.value;
+        dispatch(setSortBy(sortBy));
     };
 
     const handlePublishPost = (e) => {
@@ -74,9 +73,9 @@ const HomePage = () => {
                 <div className='left'>
                     <div className="filter-articles-home">
                         <h3>
-                            {filter === 'recent' ? 'Les derniers articles' : 'Les articles tendances'}
+                            {filters.sortBy === 'recent' ? 'Les derniers articles' : 'Les articles tendances'}
                         </h3>
-                        <select onChange={handleFilterChange} value={filter}>
+                        <select value={filters.sortBy} onChange={handleSortChange}>
                             <option value="recent">Les plus récents</option>
                             <option value="famous">Les plus populaires</option>
                         </select>

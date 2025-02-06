@@ -14,7 +14,7 @@ const UpdateArticlePage = () => {
         dispatch(getPost(id));
     }, [id]);
 
-    console.log(status)
+    // console.log(status)
 
     const [formData, setFormData] = React.useState({
         title: '',

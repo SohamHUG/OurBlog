@@ -19,14 +19,14 @@ const CategoryPage = () => {
     const [selectedTags, setSelectedTags] = React.useState([]);
 
     React.useEffect(() => {
-        dispatch(getTags())
-    }, [])
-
-    React.useEffect(() => {
-
         if (status === 'idle') {
             dispatch(fetchCategories());
         }
+
+        if (category && category.name) {
+            dispatch(getTags({ category: category.name }))
+        }
+
         if (status === 'succeeded') {
             dispatch(getPosts({
                 category: category.name,
@@ -36,6 +36,7 @@ const CategoryPage = () => {
         }
 
     }, [status, dispatch, category, selectedTags, filters.sortBy]);
+
 
     const handleTagChange = (tag) => {
         const newTags = selectedTags.includes(tag)
@@ -50,6 +51,8 @@ const CategoryPage = () => {
         dispatch(setSortBy(sortBy));
     };
 
+    // console.log(status)
+
     return (
         <>
             {status === 'loading' &&
@@ -63,30 +66,31 @@ const CategoryPage = () => {
             {status === 'succeeded' && statusPost === 'succeeded' &&
                 <div>
                     <h1>{category.name.charAt(0).toUpperCase() + category.name.slice(1)}</h1>
-                    <select onChange={handleSortChange}>
+                    <select value={filters.sortBy} onChange={handleSortChange}>
                         <option value="recent">Les plus récents</option>
                         <option value="famous">Les plus populaires</option>
                     </select>
 
                     <div>
                         <h3>Filtrer par tags :</h3>
-                        {tags.map((tag) => (
-                            <button
-                                key={tag.id}
-                                onClick={() => handleTagChange(tag.name)}
-                                style={{
-                                    backgroundColor: selectedTags.includes(tag.name) ? '#235AF3' : '#ccc',
-                                    color: selectedTags.includes(tag.name) ? '#fff' : '#000',
-                                    margin: '5px',
-                                    padding: '5px 10px',
-                                    border: 'none',
-                                    borderRadius: '5px',
-                                    cursor: 'pointer',
-                                }}
-                            >
-                                {tag.name}
-                            </button>
-                        ))}
+                        {tags && tags.length > 0 &&
+                            tags.map((tag) => (
+                                <button
+                                    key={tag.id}
+                                    onClick={() => handleTagChange(tag.name)}
+                                    style={{
+                                        backgroundColor: selectedTags.includes(tag.name) ? '#235AF3' : '#ccc',
+                                        color: selectedTags.includes(tag.name) ? '#fff' : '#000',
+                                        margin: '5px',
+                                        padding: '5px 10px',
+                                        border: 'none',
+                                        borderRadius: '5px',
+                                        cursor: 'pointer',
+                                    }}
+                                >
+                                    {tag.name}
+                                </button>
+                            ))}
                     </div>
                     {posts.length <= 0 && <h3>Aucun article</h3>}
                     <PostsList posts={posts} />

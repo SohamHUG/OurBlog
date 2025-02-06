@@ -1,11 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-export const fetchCategories = createAsyncThunk('categories/searchCategories', async (id) => {
+export const fetchCategories = createAsyncThunk('categories/searchCategories', async () => {
     let url = 'http://localhost:3000/categories';
-
-    // if (id) {
-    //     url += '/' + id;
-    // }
 
     const response = await fetch(url);
     const data = await response.json();
@@ -52,13 +48,23 @@ export const deleteCategory = createAsyncThunk('categories/deleteCategory', asyn
     }
 });
 
-export const getTags = createAsyncThunk('categories/getTags', async () => {
-    let url = 'http://localhost:3000/tags';
+export const getTags = createAsyncThunk(
+    "categories/getPosts",
+    async (filters, { rejectWithValue }) => {
 
-    const response = await fetch(url);
-    const data = await response.json();
-    return data.data;
-});
+        try {
+            const response = await fetch(`http://localhost:3000/tags?${new URLSearchParams(filters)}`);
+
+            if (!response.ok) {
+                throw new Error("Erreur lors du chargement des posts.");
+            }
+
+            return await response.json();
+        } catch (error) {
+            return rejectWithValue(error.message);
+        }
+    }
+);
 
 
 const categoriesSlice = createSlice({
@@ -67,6 +73,7 @@ const categoriesSlice = createSlice({
         items: [],
         tags: [],
         status: 'idle',
+        tagStatus: 'idle',
         error: null,
     },
     reducers: {
@@ -113,15 +120,15 @@ const categoriesSlice = createSlice({
                 state.error = action.error.message;
             })
             .addCase(getTags.pending, (state) => {
-                state.status = 'loading';
+                state.tagStatus = 'loading';
                 state.error = null;
             })
             .addCase(getTags.fulfilled, (state, action) => {
-                state.status = 'idle';
-                state.tags = action.payload;
+                state.tagStatus = 'succeeded';
+                state.tags = action.payload.tags;
             })
             .addCase(getTags.rejected, (state, action) => {
-                state.status = 'failed';
+                state.tagStatus = 'failed';
                 state.error = action.error.message;
             })
     },

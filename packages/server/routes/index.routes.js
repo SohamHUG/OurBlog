@@ -6,6 +6,7 @@ import adminRoutes from './admin.routes.js';
 import articleRoutes from './articles.routes.js';
 import userRoutes from './user.routes.js';
 import tagRoutes from './tags.routes.js';
+import commentRoutes from './comment.routes.js'
 
 
 const router= Router();
@@ -19,6 +20,8 @@ router.use('/auth', authRoutes);
 router.use('/admin', adminRoutes);
 
 router.use('/articles', articleRoutes);
+
+router.use('/comments', commentRoutes);
 
 router.use('/users', userRoutes);
 

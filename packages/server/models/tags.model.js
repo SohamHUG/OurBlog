@@ -1,10 +1,20 @@
 import db from '../config/db.js';
 
-export const findTags = async () => {
+export const findTags = async (category) => {
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT id, name FROM tag';
+        let sql = 'SELECT DISTINCT tag.id, tag.name FROM tag';
 
-        db.query(sql, (err, result) => {
+        if (category) {
+            // console.log(category)
+            sql += `
+            INNER JOIN article_tag ON tag.id = article_tag.tag_id
+            INNER JOIN article ON article_tag.article_id = article.id
+            INNER JOIN category ON article.category_id = category.id
+            WHERE category.name = ?
+            `
+        }
+
+        db.query(sql, category, (err, result) => {
             if (err) {
                 reject(err)
             }
@@ -39,7 +49,7 @@ export const saveTag = async (name) => {
             if (err) {
                 reject(err)
             }
-            
+
             resolve(result.insertId);
         })
     })

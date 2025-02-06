@@ -87,8 +87,9 @@ function App() {
                         }
                     />
 
-                    <Route path={'*'} element={<Err404 />} />
+
                     <Route path={'/not-allowed'} element={<Err403 />} />
+                    <Route path={'*'} element={<Err404 />} />
                 </Route>
 
 

@@ -5,17 +5,6 @@ export const getPosts = createAsyncThunk(
     async (filters, { rejectWithValue }) => {
 
         try {
-            // let params = new URLSearchParams();
-            // if (filters?.userId) {
-            //     params.append("userId", filters.userId);
-            // }
-            // if (filters?.category) {
-            //     params.append("category", filters.category);
-            // }
-
-            // const response = await fetch(
-            //     `http://localhost:3000/articles?${params}`
-            // );
             const response = await fetch(`http://localhost:3000/articles?${new URLSearchParams(filters)}`);
 
             if (!response.ok) {
