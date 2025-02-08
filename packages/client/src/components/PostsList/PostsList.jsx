@@ -15,6 +15,7 @@ const PostsList = ({ posts }) => {
     // console.log(location)
 
     // console.log(posts)
+    
     const handleRemoveArticle = (id) => {
         dispatch(deleteArticle(id))
     }

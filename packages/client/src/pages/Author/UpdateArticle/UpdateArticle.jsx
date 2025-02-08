@@ -1,21 +1,22 @@
 import * as React from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { getPost, updateArticle } from '../../../store/slice/articleSlice';
 import ArticleForm from '../../../components/ArticleForm/ArticleForm';
 
 const UpdateArticlePage = () => {
     const { id } = useParams();
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
+    const { user } = useSelector((state) => state.users);
     const { post, status, error } = useSelector((state) => state.posts)
+    const dispatch = useDispatch();
+
 
     React.useEffect(() => {
         dispatch(getPost(id));
-    }, [id]);
+    }, [id, dispatch]);
 
     // console.log(status)
-
+    const navigate = useNavigate();
     const [formData, setFormData] = React.useState({
         title: '',
         content: '',
@@ -29,7 +30,7 @@ const UpdateArticlePage = () => {
                 title: post.title || '',
                 content: post.content,
                 category: post.category_id || '',
-                tags: post.tags ? post.tags.split(', '): [],
+                tags: post.tags ? post.tags.split(', ') : [],
             })
             // handleContentChange(post.content)
         }
@@ -56,7 +57,7 @@ const UpdateArticlePage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const articleUp = await dispatch(updateArticle({id: post.id, articleData: formData}))
+        const articleUp = await dispatch(updateArticle({ id: post.id, articleData: formData }))
 
         if (updateArticle.fulfilled.match(articleUp)) {
             // setNewId(article.payload.article);
@@ -67,18 +68,22 @@ const UpdateArticlePage = () => {
 
     };
 
+    if (status === 'loading') {
+        return <div>Loading...</div>;
+    }
+
+    if (status === 'failed') {
+        return <div className='alert'>Post introuvable </div>
+    }
+
+    if (post && user && (post.user_id !== user.user_id && user.role_name !== 'admin')) {
+        return <Navigate to="/not-allowed" />;
+    }
+
     // console.log(post)
 
     return (
         <>
-            {status === 'loading' &&
-                <div>Loading</div>
-            }
-
-            {status === 'failed' &&
-                <div className='alert'>Post introuvable </div>
-            }
-
             {status === 'succeeded' && post &&
                 <section>
                     <h2>Modifier l'article : {post.title}</h2>

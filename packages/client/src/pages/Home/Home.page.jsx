@@ -12,6 +12,7 @@ import KeyboardArrowUpRoundedIcon from '@mui/icons-material/KeyboardArrowUpRound
 import './Home.scss';
 import { getPosts, setSortBy } from '../../store/slice/articleSlice';
 import { useNavigate } from 'react-router-dom';
+import ScrollToTopButton from '../../components/ScrollToTopButton/ScrollToTopButton';
 
 const HomePage = () => {
     const filters = Redux.useSelector((state) => state.posts.filters)
@@ -22,32 +23,17 @@ const HomePage = () => {
     const users = Redux.useSelector(selectUsers);
     const { user } = Redux.useSelector((state) => state.users);
     const posts = Redux.useSelector(selectPosts);
-    const [showToTop, setShowToTop] = React.useState(false);
 
     React.useEffect(() => {
-        // if (status === 'idle') {
-        //     dispatch(searchUsers());
-        // }
-
         dispatch(getPosts({ sortBy: filters.sortBy }));
-
-        const handleScroll = () => {
-            setShowToTop(window.scrollY > 500);
-        };
-
-        window.addEventListener('scroll', handleScroll);
-
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-        };
-    }, [status, dispatch, showToTop, filters.sortBy]);
-
+    }, [filters.sortBy, dispatch]); 
+    
     const handleSortChange = (event) => {
         const sortBy = event.target.value;
         dispatch(setSortBy(sortBy));
     };
 
-    const handlePublishPost = (e) => {
+    const handlePublishPost = () => {
         if (!user) {
             dispatch(openModalLogin())
         } else if (user && user.role_name !== 'author') {
@@ -56,14 +42,6 @@ const HomePage = () => {
             navigate('/article/create')
         }
     }
-
-    const scrollToTop = () => {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-    };
-
 
     return (
         <section className='home-page'>
@@ -106,11 +84,8 @@ const HomePage = () => {
                     />
 
                 </div> */}
-                {showToTop &&
-                    <button className='to-top-btn' onClick={scrollToTop}>
-                        <KeyboardArrowUpRoundedIcon fontSize='medium' />
-                    </button>
-                }
+
+                <ScrollToTopButton />
             </div>
         </section>
     );

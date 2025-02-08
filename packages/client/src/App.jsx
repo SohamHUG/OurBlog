@@ -81,9 +81,9 @@ function App() {
                     <Route
                         path="/articles/update/:id"
                         element={
-                            <PrivateRoute role={["author", "admin"]} >
+                            // <PrivateRoute role={["author", "admin"]} >
                                 <UpdateArticlePage />
-                            </PrivateRoute>
+                            // </PrivateRoute>
                         }
                     />
 

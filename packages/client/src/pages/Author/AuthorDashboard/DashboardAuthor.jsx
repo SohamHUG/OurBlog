@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as Redux from 'react-redux';
 import { getPosts } from '../../../store/slice/articleSlice';
 import PostsList from '../../../components/PostsList/PostsList';
+import ScrollToTopButton from '../../../components/ScrollToTopButton/ScrollToTopButton';
 
 
 const DashBoardAuthor = () => {
@@ -24,6 +25,7 @@ const DashBoardAuthor = () => {
             <PostsList
                 posts={posts}
             />
+            <ScrollToTopButton />
         </>
     );
 };
