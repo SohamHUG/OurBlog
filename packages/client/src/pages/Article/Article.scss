@@ -10,9 +10,18 @@
         align-items: center;
         border-bottom: 2px solid black;
 
+        .back-btn {
+            font-size: 2.5em;
+        }
+
+        .post-title {
+            font-size: 2.1em;
+        }
+
         .author {
             display: flex;
             align-items: center;
+            font-size: 1.3em;
 
             img {
                 margin-right: .5em;
@@ -21,6 +30,7 @@
 
         .post-category {
             display: none;
+            font-size: 1em;
 
             @media screen and (min-width: 800px) {
                 display: initial;

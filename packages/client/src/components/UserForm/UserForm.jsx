@@ -7,7 +7,6 @@ import HourglassFullRoundedIcon from '@mui/icons-material/HourglassFullRounded';
 import './UserForm.scss'
 
 const UserForm = (props) => {
-
     const { status } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
     // console.log(status)
@@ -18,6 +17,7 @@ const UserForm = (props) => {
         }
 
     }
+
     return (
         <div className='user-form'>
             <form onSubmit={props.handleSubmit}>
@@ -26,7 +26,7 @@ const UserForm = (props) => {
                 {props.user && props.user.is_verified === 0 &&
                     <p className='verif-email-infos'>
                         <span className='alert'>Si vous souhaitez modifier votre profil, merci de verifier votre adresse email. </span>
-                        <small style={{ textDecoration: 'underline' }} onClick={handleEmailConfirm} className='link'> Renvoyer l'email de confirmation</small>
+                        <small style={{ textDecoration: 'underline' }} onClick={handleEmailConfirm} className='link'>Renvoyer l'email de confirmation</small>
                         {status === 'loading' &&
                             <span style={{ color: 'orange' }}>
                                 <HourglassFullRoundedIcon />
@@ -89,7 +89,7 @@ const UserForm = (props) => {
                 </div>
 
                 <div className='input-label-container'>
-                    <label>Pseudo:</label>
+                    <label>Pseudo{!props.user && '*'}:</label>
                     <input type="text" name="pseudo"
                         value={props.formUser.pseudo}
                         onChange={props.handleChange}
@@ -98,7 +98,7 @@ const UserForm = (props) => {
                     />
                 </div>
                 <div className='input-label-container'>
-                    <label>Email:</label>
+                    <label>Email{!props.user && '*'}:</label>
                     <input type="email" name="email"
                         onChange={props.handleChange}
                         value={props.formUser.email}

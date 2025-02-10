@@ -22,6 +22,7 @@ const storage = new CloudinaryStorage({
         allowed_formats: ['jpg', 'jpeg', 'png'], // Formats acceptés
         public_id: (req, file) => {
             // générer un nom unique
+            // console.log("Image envoyée à Cloudinary :", file);
             const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
             return `${uniqueSuffix}`;
         },
@@ -43,5 +44,7 @@ const upload = multer({
     limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
     // fileFilter: fileFilter
 });
+
+// console.log("Multer configuré pour accepter le champ: 'file'");
 
 export default upload;

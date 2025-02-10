@@ -32,7 +32,7 @@ const PostsList = ({ posts }) => {
                                     :
                                     <img className="avatar" src={post.user_picture} alt={`Photo de profil de ${post.user_pseudo}`} />
                                 }
-                                {post.user_pseudo}
+                                <span>{post.user_pseudo}</span>
                             </p>
                             <h4 className="post-title">
                                 {post.title.charAt(0).toUpperCase() + post.title.slice(1)

@@ -30,7 +30,7 @@ app.use('/upload', uploadRoutes)
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // lire le body lorsque le payload sera de type form-data-urlencoded (formulaire)
 
-app.use('/uploads', express.static('uploads'));
+// app.use('/uploads', express.static('uploads'));
 
 app.use(routes);
 

@@ -49,6 +49,42 @@ export const findUserById = async (id) => {
     });
 };
 
+export const findPopularUsers = async () => {
+    return new Promise((resolve, reject) => {
+        const sql = `
+            SELECT 
+                user.id AS user_id, 
+                user.first_name, 
+                user.last_name, 
+                user.pseudo, 
+                user.profil_picture,
+                user.profil_picture_public_id,
+                user.refresh_token, 
+                user.is_verified,
+                role.name AS role_name,
+                user.role_id,
+                COUNT(comment.id) AS total_comments
+            FROM user 
+            INNER JOIN role ON user.role_id = role.id
+            INNER JOIN article ON user.id = article.user_id
+            LEFT JOIN comment ON article.id = comment.article_id
+            GROUP BY user.id
+            ORDER BY total_comments DESC
+            LIMIT 10
+        `;
+
+        db.query(sql, (err, result) => {
+            if (err) {
+                return reject(err);
+            }
+            if (!result[0]) {
+                return resolve(null);
+            }
+            return resolve(result[0]);
+        });
+    });
+};
+
 
 export const findByCredentials = async (email) => {
     return new Promise((resolve, reject) => {
@@ -83,8 +119,8 @@ export const updateUserById = async (id, user) => {
 
         // extraie les colonnes à mettre à jour
         const columns = Object.keys(allowedUpdates)
-            // .filter(column => validColumns.includes(column));
-            
+        // .filter(column => validColumns.includes(column));
+
         if (columns.length === 0) {
             return reject(new Error("Aucune donnée valide à mettre à jour."));
         }

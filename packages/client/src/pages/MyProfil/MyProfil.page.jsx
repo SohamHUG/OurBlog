@@ -52,6 +52,7 @@ const MyProfilPage = () => {
         if (profilPicture) {
             const formData = new FormData();
             formData.append('profilPicture', profilPicture);
+            console.log("FormData content:", formData.get('profilPicture'));
             dispatch(uploadProfilPic(formData));
             // setPreviewImage(null);
         }

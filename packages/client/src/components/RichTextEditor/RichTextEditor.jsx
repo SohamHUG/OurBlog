@@ -27,15 +27,19 @@ const RichTextEditor = ({ value, onChange }) => {
 
         input.onchange = async () => {
             const file = input.files[0];
-            const formData = new FormData();
-            formData.append('file', file);
 
+            const formData = new FormData();
+            formData.append('articleFile', file);
+            // console.log(formData.append('file', file));
+            // console.log("FormData content:", formData.get('articleFile'));
             // Envoyez l'image à Cloudinary
             const response = await fetch('http://localhost:3000/upload/article-files', {
                 method: 'POST',
                 body: formData,
                 credentials: 'include',
             });
+
+            // console.log(response)
 
             const data = await response.json();
             // console.log(data)

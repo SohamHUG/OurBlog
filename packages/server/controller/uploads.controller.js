@@ -7,7 +7,7 @@ import fs from 'fs';
 export const uploadProfilPic = async (req, res) => {
 
     const user = req.user;
-    // console.log(req.file);
+    // console.log('files controller: ', req.file);
     if (!req.file) {
         return res.status(400).json({ message: 'Aucun fichier uploadé' });
     }
@@ -64,9 +64,11 @@ export const deleteProfilPicture = async (req, res) => {
         return res.status(403).json({ message: "Vous n'êtes pas autorisé" });
     }
 
-    await cloudinary.uploader.destroy(user.profil_picture_public_id);
+    const userToUp = await findUserById(id);
 
-    await updateUserById(user.user_id, {
+    await cloudinary.uploader.destroy(userToUp.profil_picture_public_id);
+
+    await updateUserById(userToUp.user_id, {
         profil_picture: null,
         profil_picture_public_id: null,
     });
@@ -75,3 +77,4 @@ export const deleteProfilPicture = async (req, res) => {
         message: 'Photo de profil supprimé avec succès'
     });
 }
+

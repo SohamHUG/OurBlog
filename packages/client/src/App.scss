@@ -123,7 +123,12 @@ html {
 
         &.dark {
             background-color: vars.$dark-bck-color;
-            color: vars.$primary-white;
+            color: vars.$primary-white !important;
+
+            p,
+            span {
+                color: vars.$primary-white !important;
+            }
 
             .user-title,
             .article-page .post-head {

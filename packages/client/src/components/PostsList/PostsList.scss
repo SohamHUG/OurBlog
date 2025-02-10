@@ -42,7 +42,7 @@
                 font-weight: 500;
 
                 .avatar {
-                    max-width: 50%;
+                    // max-width: 50%;
                     // height: 2.2em;
                     margin-right: .5em;
                     flex-shrink: 0;
@@ -53,6 +53,10 @@
                     height: 1.2em;
                     // margin-right: .2em;
                 }
+
+                // span {
+                //     display: none;
+                // }
 
             }
 
@@ -72,6 +76,11 @@
                 margin: 0;
                 font-size: 1em;
                 font-family: roboto-thin-italic;
+                display: none;
+
+                @media screen and (min-width: 500px) {
+                    display: initial;
+                }
             }
         }
 
