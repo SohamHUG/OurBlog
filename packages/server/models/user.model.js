@@ -53,16 +53,12 @@ export const findPopularUsers = async () => {
     return new Promise((resolve, reject) => {
         const sql = `
             SELECT 
-                user.id AS user_id, 
+                user.id, 
                 user.first_name, 
                 user.last_name, 
                 user.pseudo, 
                 user.profil_picture,
                 user.profil_picture_public_id,
-                user.refresh_token, 
-                user.is_verified,
-                role.name AS role_name,
-                user.role_id,
                 COUNT(comment.id) AS total_comments
             FROM user 
             INNER JOIN role ON user.role_id = role.id
@@ -77,10 +73,7 @@ export const findPopularUsers = async () => {
             if (err) {
                 return reject(err);
             }
-            if (!result[0]) {
-                return resolve(null);
-            }
-            return resolve(result[0]);
+            return resolve(result);
         });
     });
 };

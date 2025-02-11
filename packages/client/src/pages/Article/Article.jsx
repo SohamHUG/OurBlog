@@ -24,15 +24,16 @@ const Article = () => {
     }, [id, dispatch]);
 
     React.useEffect(() => {
-        if (statusComments === 'idle' && post) {
+        if (post) {
             dispatch(getComments({ articleId: post.id }))
         }
-    }, [statusComments, post]);
+    }, [post]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         const newComm = await dispatch(createComment({ comment: comment, id: post.id }));
         if (createComment.fulfilled.match(newComm)) {
+            dispatch(getComments({ articleId: post.id }))
             setComment('')
         }
 
@@ -85,6 +86,7 @@ const Article = () => {
                                 <input
                                     id='comment'
                                     name='comment'
+                                    autoComplete='off'
                                     type="text"
                                     placeholder='...'
                                     value={comment}

@@ -49,13 +49,22 @@ function App() {
                     <Route path={'/privacy-policy'} element={<PrivacyPolicy />} />
                     <Route path={'/register'} element={<RegisterPage />} />
                     <Route path={'/confirm/:token'} element={<ConfirmEmail />} />
-                    <Route path={'/profil'} element={<MyProfilPage />} />
+
                     <Route path={'/article/:id'} element={<Article />} />
                     <Route
                         path="/admin"
                         element={
                             <PrivateRoute roles={["admin"]}>
                                 <AdminDashboard />
+                            </PrivateRoute>
+                        }
+                    />
+
+                    <Route
+                        path={'/profil'}
+                        element={
+                            <PrivateRoute role={["author", "admin", "user", "moderator"]}>
+                                <MyProfilPage />
                             </PrivateRoute>
                         }
                     />
@@ -82,7 +91,7 @@ function App() {
                         path="/articles/update/:id"
                         element={
                             // <PrivateRoute role={["author", "admin"]} >
-                                <UpdateArticlePage />
+                            <UpdateArticlePage />
                             // </PrivateRoute>
                         }
                     />

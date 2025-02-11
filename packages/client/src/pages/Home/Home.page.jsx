@@ -4,7 +4,6 @@ import PostsList from "../../components/PostsList/PostsList";
 import SideList from '../../components/SideList/SideList';
 import CategoriesNav from '../../components/CategoriesNav/CategoriesNav';
 import { selectUsersStatus, selectUsersError, selectUsers, selectPosts } from '../../store/selectors';
-import { searchUsers, } from '../../store/slice/userSlice';
 import { openModalLogin } from '../../store/slice/authSlice';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import KeyboardArrowUpRoundedIcon from '@mui/icons-material/KeyboardArrowUpRounded';
@@ -13,6 +12,7 @@ import './Home.scss';
 import { getPosts, setSortBy } from '../../store/slice/articleSlice';
 import { useNavigate } from 'react-router-dom';
 import ScrollToTopButton from '../../components/ScrollToTopButton/ScrollToTopButton';
+import { getPopularUsers } from '../../store/slice/userSlice';
 
 const HomePage = () => {
     const filters = Redux.useSelector((state) => state.posts.filters)
@@ -25,9 +25,13 @@ const HomePage = () => {
     const posts = Redux.useSelector(selectPosts);
 
     React.useEffect(() => {
+        dispatch(getPopularUsers());
+    }, [dispatch]);
+
+    React.useEffect(() => {
         dispatch(getPosts({ sortBy: filters.sortBy }));
-    }, [filters.sortBy, dispatch]); 
-    
+    }, [filters.sortBy, dispatch]);
+
     const handleSortChange = (event) => {
         const sortBy = event.target.value;
         dispatch(setSortBy(sortBy));
@@ -66,7 +70,7 @@ const HomePage = () => {
                     />
                 </div>
 
-                {/* <div className='right'>
+                <div className='right'>
                     <SideList
                         items={users}
                         status={status}
@@ -76,14 +80,17 @@ const HomePage = () => {
                         seeMoreType={'expand'}
                         renderItem={(user) => (
                             <div className='popular-authors'>
-                                <AccountCircleIcon fontSize='large' />
-                                {user.name}
+                                {!user.profil_picture ?
+                                    <AccountCircleIcon className='default-avatar' fontSize="large" />
+                                    :
+                                    <img className="avatar" src={user.profil_picture} alt={`Photo de profil de ${user.user_pseudo}`} />
+                                }
+                                <p>{user.pseudo}</p>
                             </div>
                         )}
-                    // content={<PopularAuthorsList/>}
                     />
 
-                </div> */}
+                </div>
 
                 <ScrollToTopButton />
             </div>

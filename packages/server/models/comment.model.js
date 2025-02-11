@@ -39,7 +39,7 @@ export const findAllComments = async (filters = {}) => {
             params.push(filters.articleId)
         }
 
-        sql += ` ORDER BY comment.created_at DESC` 
+        sql += ` ORDER BY comment.created_at ASC` 
 
         db.query(sql, params, async (err, result) => {
             if (err) {

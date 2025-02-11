@@ -10,10 +10,15 @@ const handleResponse = async (response) => {
     return response.json();
 };
 
-export const searchUsers = createAsyncThunk('users/searchUsers', async () => {
-    const url = 'https://jsonplaceholder.typicode.com/users';
-    const response = await fetch(url);
-    return response.json();
+export const getPopularUsers = createAsyncThunk('user/getPopularUsers', async (_, { rejectWithValue }) => {
+    try {
+        const response = await fetch(`${BASE_URL}/popular`, {
+            method: 'GET',
+        });
+        return handleResponse(response).then((data) => data.users);
+    } catch (error) {
+        return rejectWithValue(error.message);
+    }
 });
 
 export const getUser = createAsyncThunk('user/getUser', async (_, { rejectWithValue }) => {
@@ -63,15 +68,15 @@ const usersSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(searchUsers.pending, (state) => {
+            .addCase(getPopularUsers.pending, (state) => {
                 state.status = 'loading';
                 state.error = null;
             })
-            .addCase(searchUsers.fulfilled, (state, action) => {
+            .addCase(getPopularUsers.fulfilled, (state, action) => {
                 state.status = 'succeeded';
                 state.users = action.payload;
             })
-            .addCase(searchUsers.rejected, (state, action) => {
+            .addCase(getPopularUsers.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.error.message;
             })
@@ -105,10 +110,13 @@ const usersSlice = createSlice({
                 state.status = 'loading';
                 state.error = null;
             })
-            .addCase(deleteUser.fulfilled, (state) => {
+            .addCase(deleteUser.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                state.user = null;
-                localStorage.removeItem('user');
+                if (state.user.user_id === action.meta.arg) {
+                    state.user = null;
+                    localStorage.removeItem('user');
+                }
+
             })
             .addCase(deleteUser.rejected, (state, action) => {
                 state.status = 'failed';

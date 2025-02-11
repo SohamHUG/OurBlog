@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { deleteUser, getUserById, updateUser} from '../controller/user.controller.js';
+import { deleteUser, getPopularUsers, getUserById, updateUser} from '../controller/user.controller.js';
 import { authMiddleware } from '../middlewares/auth.middleware.js';
 import upload from '../middlewares/upload.middleware.js';
 import { isVerified } from '../middlewares/role.middleware.js';
@@ -7,6 +7,8 @@ import { isVerified } from '../middlewares/role.middleware.js';
 const router = Router();
 
 router.get('/me', [authMiddleware], getUserById);
+
+router.get('/popular', getPopularUsers);
 
 router.put('/update/:id', [authMiddleware, isVerified], updateUser);
 

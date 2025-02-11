@@ -25,11 +25,11 @@
             align-items: center;
 
             @media screen and (min-width: 1024px) {
-                // width: 60%;
+                max-width: 65%;
             }
 
             @media screen and (min-width: 1440px) {
-                // width: 50%;
+                // max-width: 50%;
             }
 
             .filter-articles-home {
@@ -75,29 +75,37 @@
             }
         }
 
-        // .right {
-        //     width: 30%;
-        //     display: none;
+        .right {
+            // width: 30%;
+            width: 20%;
+            display: none;
 
-        //     @media screen and (min-width: 1024px) {
-        //         display: initial;
-        //     }
+            @media screen and (min-width: 1024px) {
+                display: initial;
+            }
 
-        //     @media screen and (min-width: 1440px) {
-        //         width: 23%;
-        //     }
+            @media screen and (min-width: 1440px) {
+                // width: 23%;
+            }
 
-        //     .popular-authors {
-        //         display: flex;
-        //         align-items: center;
-        //         justify-content: flex-start;
-        //         font-size: 17px;
+            .popular-authors {
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                font-size: 17px;
 
-        //         svg {
-        //             margin-right: 10px;
-        //         }
-        //     }
+                .default-avatar {
+                    margin-right: .1em;
+                    margin-left: 0;
+                    font-size: 2.75em;
+                }
 
-        // }
+                .avatar {
+                    margin-right: .5em;
+                    flex-shrink: 0;
+                }
+            }
+
+        }
     }
 }

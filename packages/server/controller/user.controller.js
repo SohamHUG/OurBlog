@@ -1,4 +1,4 @@
-import { deleteUserById, findByCredentials, findUserById, updateUserById } from "../models/user.model.js";
+import { deleteUserById, findByCredentials, findPopularUsers, findUserById, updateUserById } from "../models/user.model.js";
 import bcrypt from 'bcrypt';
 
 
@@ -7,6 +7,16 @@ export const getUserById = async (req, res) => {
         const user = req.user;
 
         return res.status(201).json({ user });
+    } catch (err) {
+        console.error(err)
+        return res.status(500).json({ message: err });
+    }
+}
+
+export const getPopularUsers = async (req, res) => {
+    try {
+        const users = await findPopularUsers()
+        return res.status(201).json({ users });
     } catch (err) {
         console.error(err)
         return res.status(500).json({ message: err });
