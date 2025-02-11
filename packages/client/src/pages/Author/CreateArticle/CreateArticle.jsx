@@ -45,7 +45,7 @@ const CreateArticle = () => {
         const article = await dispatch(createPost(formData));
 
         if (createPost.fulfilled.match(article)) {
-            setNewId(article.payload.article);
+            setNewId(article.payload.article.id);
             setOpenModal(true);
         }
 

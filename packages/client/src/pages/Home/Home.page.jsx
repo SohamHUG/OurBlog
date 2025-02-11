@@ -7,40 +7,64 @@ import { selectUsersStatus, selectUsersError, selectUsers, selectPosts } from '.
 import { openModalLogin } from '../../store/slice/authSlice';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import KeyboardArrowUpRoundedIcon from '@mui/icons-material/KeyboardArrowUpRounded';
-// import PopularAuthorsList from '../../components/PopularAuthorsList/PopularAuthorsList';
 import './Home.scss';
-import { getPosts, setSortBy } from '../../store/slice/articleSlice';
+import { getPosts, setSortBy, resetAllPosts } from '../../store/slice/articleSlice';
 import { useNavigate } from 'react-router-dom';
 import ScrollToTopButton from '../../components/ScrollToTopButton/ScrollToTopButton';
 import { getPopularUsers } from '../../store/slice/userSlice';
+import InfiniteScroll from '../../components/InfiniteScroll/InfiniteScroll';
 
 const HomePage = () => {
     const filters = Redux.useSelector((state) => state.posts.filters)
     const dispatch = Redux.useDispatch();
     const navigate = useNavigate()
-    const status = Redux.useSelector(selectUsersStatus);
-    const error = Redux.useSelector(selectUsersError);
+    const status = Redux.useSelector((state) => state.posts.allPosts.status);
+    const error = Redux.useSelector((state) => state.posts.allPosts.error);
     const users = Redux.useSelector(selectUsers);
     const { user } = Redux.useSelector((state) => state.users);
-    const posts = Redux.useSelector(selectPosts);
+    const posts = Redux.useSelector((state) => state.posts.allPosts.items);
+    const [page, setPage] = React.useState(1);
+    const hasMore = Redux.useSelector((state) => state.posts.allPosts.hasMore)
+
+    // console.log(hasMore)
+
+    // console.log(posts)
 
     React.useEffect(() => {
         dispatch(getPopularUsers());
     }, [dispatch]);
 
     React.useEffect(() => {
-        dispatch(getPosts({ sortBy: filters.sortBy }));
-    }, [filters.sortBy, dispatch]);
+        dispatch(getPosts({
+            sortBy: filters.sortBy,
+            page,
+            limit: 10,
+            context: 'all'
+        }));
+    }, [filters.sortBy, page, dispatch]);
+
+    const loadMorePosts = () => {
+        if (status !== 'loading' && hasMore) {
+            setPage((prevPage) => prevPage + 1);
+        }
+    };
 
     const handleSortChange = (event) => {
         const sortBy = event.target.value;
         dispatch(setSortBy(sortBy));
+        setPage(1);
+        dispatch(resetAllPosts());
     };
+
+    // React.useEffect(() => {
+    //     setPage(1);
+    //     dispatch(resetAllPosts());
+    // }, [filters.sortBy, dispatch]);
 
     const handlePublishPost = () => {
         if (!user) {
             dispatch(openModalLogin())
-        } else if (user && user.role_name !== 'author') {
+        } else if (user && user.role_name !== 'author' && user.role_name !== 'admin') {
             navigate('/profil')
         } else {
             navigate('/article/create')
@@ -73,8 +97,6 @@ const HomePage = () => {
                 <div className='right'>
                     <SideList
                         items={users}
-                        status={status}
-                        error={error}
                         title={'RÉDACTEURS POPULAIRES'}
                         limit={5}
                         seeMoreType={'expand'}
@@ -85,15 +107,19 @@ const HomePage = () => {
                                     :
                                     <img className="avatar" src={user.profil_picture} alt={`Photo de profil de ${user.user_pseudo}`} />
                                 }
-                                <p>{user.pseudo}</p>
+                                <p className='author-pseudo'>{user.pseudo}</p>
                             </div>
                         )}
                     />
 
                 </div>
-
-                <ScrollToTopButton />
             </div>
+            <InfiniteScroll
+                onLoadMore={loadMorePosts}
+                isLoading={status === 'loading'}
+                hasMore={hasMore}
+            />
+
         </section>
     );
 };

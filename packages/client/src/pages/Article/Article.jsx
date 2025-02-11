@@ -8,6 +8,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import './Article.scss'
 import { createComment, getComments } from '../../store/slice/commentSlice';
+import ScrollToTopButton from '../../components/ScrollToTopButton/ScrollToTopButton';
 
 const Article = () => {
     const { id } = useParams();
@@ -39,7 +40,7 @@ const Article = () => {
 
     }
 
-    // console.log(comments)
+    // console.log(post)
 
     return (
         <>
@@ -114,6 +115,7 @@ const Article = () => {
                             })
                         }
                     </div>
+                    {/* <ScrollToTopButton /> */}
                 </section>
             }
         </>

@@ -10,7 +10,8 @@ export const saveArticle = async (user, category, title, content) => {
             }
 
             // console.log(result.insertId)
-            resolve(result.insertId);
+            const article = await findArticleById(result.insertId)
+            resolve(article);
         })
     })
 }
@@ -102,7 +103,13 @@ export const findAllArticles = (filters = {}) => {
             sql += ` ORDER BY article.created_at DESC`;
         }
 
-        // sql += ` ORDER BY article.created_at DESC`;
+        if (filters.limit && filters.page) {
+            const offset = (filters.page - 1) * filters.limit;
+            sql += ` LIMIT ? OFFSET ?`;
+            params.push(filters.limit, offset);
+        }
+
+
 
         // console.log(sql)
 

@@ -104,6 +104,8 @@ export const getArticles = async (req, res) => {
             category: req.query.category,
             sortBy: req.query.sortBy,
             tags: req.query.tags ? req.query.tags.split(',') : [],
+            page: parseInt(req.query.page),
+            limit: parseInt(req.query.limit)
         };
 
         // console.log(filters)

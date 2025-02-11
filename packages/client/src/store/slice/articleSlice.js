@@ -1,16 +1,14 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
+// Thunks
 export const getPosts = createAsyncThunk(
     "posts/getPosts",
     async (filters, { rejectWithValue }) => {
-
         try {
             const response = await fetch(`http://localhost:3000/articles?${new URLSearchParams(filters)}`);
-
             if (!response.ok) {
                 throw new Error("Erreur lors du chargement des posts.");
             }
-
             return await response.json();
         } catch (error) {
             return rejectWithValue(error.message);
@@ -18,93 +16,79 @@ export const getPosts = createAsyncThunk(
     }
 );
 
-export const getPost = createAsyncThunk(
-    "posts/getPost",
-    async (id) => {
-
-        const response = await fetch(
-            `http://localhost:3000/articles/${id}`
-        );
-        if (!response.ok) {
-            throw new Error("Erreur lors du chargement du post.");
-        }
-
-        return await response.json();
-
-    }
-);
-
-export const createPost = createAsyncThunk('posts/createPost', async (articleData, { rejectWithValue }) => {
+export const getPost = createAsyncThunk("posts/getPost", async (id, { rejectWithValue }) => {
     try {
-        const response = await fetch('http://localhost:3000/articles/create-article', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', },
-            body: JSON.stringify(articleData),
-            credentials: 'include',
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            return rejectWithValue(errorData.message);
-        }
-
+        const response = await fetch(`http://localhost:3000/articles/${id}`);
+        if (!response.ok) throw new Error("Erreur lors du chargement du post.");
         return await response.json();
     } catch (error) {
         return rejectWithValue(error.message);
     }
 });
 
-export const updateArticle = createAsyncThunk('posts/updateArticle', async ({ id, articleData }, { rejectWithValue }) => {
+export const createPost = createAsyncThunk("posts/createPost", async (articleData, { rejectWithValue }) => {
+    try {
+        const response = await fetch("http://localhost:3000/articles/create-article", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(articleData),
+            credentials: "include",
+        });
+        if (!response.ok) {
+            const errorData = await response.json();
+            return rejectWithValue(errorData.message);
+        }
+        return await response.json();
+    } catch (error) {
+        return rejectWithValue(error.message);
+    }
+});
+
+export const updateArticle = createAsyncThunk("posts/updateArticle", async ({ id, articleData }, { rejectWithValue }) => {
     try {
         const response = await fetch(`http://localhost:3000/articles/update/${id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json', },
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(articleData),
-            credentials: 'include',
+            credentials: "include",
         });
-
         if (!response.ok) {
             const errorData = await response.json();
             return rejectWithValue(errorData.message);
         }
-
         return await response.json();
     } catch (error) {
         return rejectWithValue(error.message);
     }
 });
 
-export const deleteArticle = createAsyncThunk('posts/deleteArticle', async (id, { rejectWithValue }) => {
+export const deleteArticle = createAsyncThunk("posts/deleteArticle", async (id, { rejectWithValue }) => {
     try {
         const response = await fetch(`http://localhost:3000/articles/delete/${id}`, {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/json', },
-            credentials: 'include',
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
         });
-
         if (!response.ok) {
             const errorData = await response.json();
             return rejectWithValue(errorData.message);
         }
-
-        return await response.json();
+        return id;
     } catch (error) {
         return rejectWithValue(error.message);
     }
 });
 
+// Slice
 const postsSlice = createSlice({
     name: "posts",
     initialState: {
-        posts: [],
+        allPosts: { items: [], status: "idle", hasMore: true, error: null },
+        categoryPosts: { items: [], status: "idle", hasMore: true, error: null },
+        authorPosts: { items: [], status: "idle", hasMore: true, error: null },
         post: null,
-        filters: {
-            tags: [],
-            sortBy: 'recent'
-        },
-        error: null,
-        errorPost: null,
-        status: "idle",
+        status: 'idle',
+        filters: { tags: [], sortBy: "recent" },
     },
     reducers: {
         setTagsFilter: (state, action) => {
@@ -113,73 +97,131 @@ const postsSlice = createSlice({
         setSortBy: (state, action) => {
             state.filters.sortBy = action.payload;
         },
+        resetCategoryPosts: (state) => {
+            state.categoryPosts = { items: [], status: "idle", hasMore: true, error: null };
+        },
+        resetAuthorPosts: (state) => {
+            state.authorPosts = { items: [], status: "idle", hasMore: true, error: null };
+        },
+        resetAllPosts: (state) => {
+            state.allPosts = { items: [], status: "idle", hasMore: true, error: null };
+        },
     },
     extraReducers: (builder) => {
         builder
-            .addCase(getPosts.pending, (state) => {
-                state.status = 'loading';
-                state.error = null;
+            // GET POSTS
+            .addCase(getPosts.pending, (state, action) => {
+                const { context } = action.meta.arg;
+                if (context === "category") state.categoryPosts.status = "loading";
+                else if (context === "author") state.authorPosts.status = "loading";
+                else if (context === "all") state.allPosts.status = "loading";
             })
             .addCase(getPosts.fulfilled, (state, action) => {
-                state.status = 'succeeded';
-                state.posts = action.payload.articles;
+                const { context } = action.meta.arg;
+                const newPosts = action.payload.articles;
+                if (context === "category") {
+                    newPosts.forEach(post => {
+                        if (!state.categoryPosts.items.find(existingPost => existingPost.id === post.id)) {
+                            state.categoryPosts.items.push(post);
+                        }
+                    });
+                    state.categoryPosts.status = "succeeded";
+                    if (newPosts.length < 10) state.categoryPosts.hasMore = false;
+                    else state.categoryPosts.hasMore = true;
+                } else if (context === "author") {
+                    newPosts.forEach(post => {
+                        if (!state.authorPosts.items.find(existingPost => existingPost.id === post.id)) {
+                            state.authorPosts.items.push(post);
+                        }
+                    });
+                    state.authorPosts.status = "succeeded";
+                    if (newPosts.length < 10) state.authorPosts.hasMore = false;
+                    else state.authorPosts.hasMore = true;
+                } else if (context === "all") {
+                    newPosts.forEach(post => {
+                        if (!state.allPosts.items.find(existingPost => existingPost.id === post.id)) {
+                            state.allPosts.items.push(post);
+                        }
+                    });
+                    state.allPosts.status = "succeeded";
+                    if (newPosts.length < 10) state.allPosts.hasMore = false;
+                    else state.allPosts.hasMore = true;
+                }
             })
             .addCase(getPosts.rejected, (state, action) => {
-                state.status = 'failed';
-                state.error = action.error.message;
+                const { context } = action.meta.arg;
+                if (context === "category") {
+                    state.categoryPosts.status = "failed";
+                    state.categoryPosts.error = action.payload;
+                } else if (context === "author") {
+                    state.authorPosts.status = "failed";
+                    state.authorPosts.error = action.payload;
+                } else if (context === "all") {
+                    state.allPosts.status = "failed";
+                    state.allPosts.error = action.payload;
+                }
             })
+
+            // GET SINGLE POST
             .addCase(getPost.pending, (state) => {
                 state.status = 'loading';
-                state.errorPost = null;
+                state.post = null;
             })
             .addCase(getPost.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                // console.log(action.payload)
                 state.post = action.payload.article;
             })
             .addCase(getPost.rejected, (state, action) => {
                 state.status = 'failed';
-                // console.log(action.error)
-                state.errorPost = action.error.message;
+                state.post = null;
             })
+
+            // CREATE POST
             .addCase(createPost.pending, (state) => {
-                state.status = 'loading';
-                state.error = null;
+                state.allPosts.status = "loading";
             })
             .addCase(createPost.fulfilled, (state, action) => {
-                state.status = 'idle';
+                state.allPosts.status = "succeeded";
+                if (state.filters.sortBy === 'recent') {
+                    state.allPosts.items.unshift(action.payload.article);
+                }
+                // state.allPosts.items.unshift(action.payload.article);
             })
             .addCase(createPost.rejected, (state, action) => {
-                state.status = 'failed';
-                state.error = action.error.message;
+                state.allPosts.status = "failed";
+                state.allPosts.error = action.payload;
             })
+
+            // UPDATE POST
             .addCase(updateArticle.pending, (state) => {
-                state.status = 'loading';
-                state.error = null;
+                state.allPosts.status = "loading";
             })
             .addCase(updateArticle.fulfilled, (state, action) => {
-                state.status = 'idle';
+                state.allPosts.status = "succeeded";
+                const updatedPost = action.payload.article;
+                state.allPosts.items = state.allPosts.items.map((post) =>
+                    post.id === updatedPost.id ? updatedPost : post
+                );
             })
             .addCase(updateArticle.rejected, (state, action) => {
-                state.status = 'failed';
-                state.error = action.error.message;
+                state.allPosts.status = "failed";
+                state.allPosts.error = action.payload;
             })
+
+            // DELETE POST
             .addCase(deleteArticle.pending, (state) => {
-                state.status = 'loading';
-                state.error = null;
+                state.allPosts.status = "loading";
             })
             .addCase(deleteArticle.fulfilled, (state, action) => {
-                state.status = 'succeeded';
-                const deleteId = action.meta.arg;
-                state.posts = state.posts.filter((post) => post.id !== deleteId)
+                state.allPosts.status = "succeeded";
+                state.allPosts.items = state.allPosts.items.filter((post) => post.id !== action.meta.arg);
             })
             .addCase(deleteArticle.rejected, (state, action) => {
-                state.status = 'failed';
-                state.error = action.error.message;
-            })
+                state.allPosts.status = "failed";
+                state.allPosts.error = action.payload;
+            });
     },
 });
 
-
-export const { setTagsFilter, setSortBy } = postsSlice.actions;
+export const { setTagsFilter, setSortBy, resetCategoryPosts, resetAuthorPosts, resetAllPosts } = postsSlice.actions;
 export default postsSlice.reducer;

@@ -2,21 +2,25 @@ import * as React from 'react';
 import * as Redux from 'react-redux';
 import { selectCategories, selectCategoriesStatus, selectCategoriesError } from '../../store/selectors';
 import { fetchCategories, getTags } from '../../store/slice/categoriesSlice';
-import { getPosts, setTagsFilter, setSortBy } from '../../store/slice/articleSlice';
+import { getPosts, setTagsFilter, setSortBy, resetCategoryPosts } from '../../store/slice/articleSlice';
 import { useParams } from 'react-router-dom';
 import PostsList from '../../components/PostsList/PostsList';
+import InfiniteScroll from '../../components/InfiniteScroll/InfiniteScroll';
 
 const CategoryPage = () => {
     const { categoryId } = useParams();
     const dispatch = Redux.useDispatch()
     const category = Redux.useSelector(selectCategories).find((category) => category.id === Number(categoryId));
     const status = Redux.useSelector(selectCategoriesStatus);
-    const statusPost = Redux.useSelector((state) => state.posts.status);
-    const posts = Redux.useSelector((state) => state.posts.posts)
+    const statusPosts = Redux.useSelector((state) => state.posts.categoryPosts.status);
+    const posts = Redux.useSelector((state) => state.posts.categoryPosts.items)
     const tags = Redux.useSelector((state) => state.categories.tags)
     const filters = Redux.useSelector((state) => state.posts.filters)
     const error = Redux.useSelector(selectCategoriesError);
     const [selectedTags, setSelectedTags] = React.useState([]);
+    const [page, setPage] = React.useState(1);
+    const hasMore = Redux.useSelector((state) => state.posts.categoryPosts.hasMore)
+
 
     React.useEffect(() => {
         if (status === 'idle') {
@@ -27,15 +31,32 @@ const CategoryPage = () => {
             dispatch(getTags({ category: category.name }))
         }
 
+        // if (status === 'succeeded') {
+        //     dispatch(getPosts({
+        //         category: category.name,
+        //         tags: selectedTags.join(','),
+        //         sortBy: filters.sortBy,
+        //         limit: 10,
+        //         page,
+        //         context: 'category',
+        //     }))
+        // }
+
+    }, [status, dispatch, category]);
+
+    React.useEffect(() => {
         if (status === 'succeeded') {
             dispatch(getPosts({
                 category: category.name,
                 tags: selectedTags.join(','),
                 sortBy: filters.sortBy,
+                limit: 10,
+                page,
+                context: 'category',
             }))
         }
 
-    }, [status, dispatch, category, selectedTags, filters.sortBy]);
+    }, [dispatch, status, category, selectedTags, filters.sortBy, page]);
 
 
     const handleTagChange = (tag) => {
@@ -51,7 +72,18 @@ const CategoryPage = () => {
         dispatch(setSortBy(sortBy));
     };
 
-    // console.log(status)
+    const loadMorePosts = () => {
+        if (statusPosts !== 'loading' && hasMore) {
+            setPage((prevPage) => prevPage + 1);
+        }
+    };
+
+    // console.log(hasMore)
+
+    React.useEffect(() => {
+        setPage(1);
+        dispatch(resetCategoryPosts());
+    }, [filters.sortBy, selectedTags, dispatch]);
 
     return (
         <>
@@ -63,7 +95,7 @@ const CategoryPage = () => {
                 <div>{error}</div>
             }
 
-            {status === 'succeeded' && statusPost === 'succeeded' &&
+            {status === 'succeeded' && posts && posts.length > 0 &&
                 <div>
                     <h1>{category.name.charAt(0).toUpperCase() + category.name.slice(1)}</h1>
                     <select value={filters.sortBy} onChange={handleSortChange}>
@@ -94,6 +126,12 @@ const CategoryPage = () => {
                     </div>
                     {posts.length <= 0 && <h3>Aucun article</h3>}
                     <PostsList posts={posts} />
+
+                    <InfiniteScroll
+                        onLoadMore={loadMorePosts}
+                        isLoading={statusPosts === 'loading'}
+                        hasMore={hasMore}
+                    />
 
                 </div>
             }

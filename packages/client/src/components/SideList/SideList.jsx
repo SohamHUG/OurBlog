@@ -1,7 +1,7 @@
 import * as React from 'react';
 import './SideList.scss';
 
-const SideList = ({ title, items = [], status, error, limit, seeMoreType, renderItem }) => {
+const SideList = ({ title, items = [], limit, seeMoreType, renderItem }) => {
     const [visibleItemsCount, setVisibleItemsCount] = React.useState(limit);
     const [showMore, setShowMore] = React.useState(false);
 
@@ -19,15 +19,15 @@ const SideList = ({ title, items = [], status, error, limit, seeMoreType, render
 
     return (
         <>
-            {status === 'loading' &&
+            {/* {status === 'loading' &&
                 <div>Loading</div>
+            } */}
+
+            {!items || items.length <= 0 &&
+                <div>Erreur</div>
             }
 
-            {status === 'failed' &&
-                <div>{error}</div>
-            }
-
-            {status === 'succeeded' &&
+            {items && items.length > 0 &&
                 <div className='side-list-container'>
                     <h3>{title}</h3>
                     {/* {content} */}
