@@ -20,16 +20,15 @@ const HomePage = () => {
     const navigate = useNavigate()
     const status = Redux.useSelector((state) => state.posts.allPosts.status);
     const error = Redux.useSelector((state) => state.posts.allPosts.error);
-    const users = Redux.useSelector(selectUsers);
+    const users = Redux.useSelector(((state) => state.users.users));
     const { user } = Redux.useSelector((state) => state.users);
     const posts = Redux.useSelector((state) => state.posts.allPosts.items);
-    // const [page, setPage] = React.useState(1);
     const hasMore = Redux.useSelector((state) => state.posts.allPosts.hasMore)
     const page = Redux.useSelector((state) => state.posts.allPosts.page)
 
     // console.log(page)
 
-    // console.log(posts)
+    // console.log(users)
 
     React.useEffect(() => {
         dispatch(getPopularUsers());
@@ -44,23 +43,12 @@ const HomePage = () => {
         }));
     }, [filters.sortBy, page, dispatch]);
 
-    // const loadMorePosts = () => {
-    //     if (status !== 'loading' && hasMore) {
-    //         setPage((prevPage) => prevPage + 1);
-    //     }
-    // };
-
     const handleSortChange = (event) => {
         const sortBy = event.target.value;
         dispatch(setSortBy(sortBy));
         // setPage(1);
         dispatch(resetAllPosts({context: "all"}));
     };
-
-    // React.useEffect(() => {
-    //     setPage(1);
-    //     dispatch(resetAllPosts());
-    // }, [filters.sortBy, dispatch]);
 
     const handlePublishPost = () => {
         if (!user) {
@@ -108,7 +96,7 @@ const HomePage = () => {
                                     :
                                     <img className="avatar" src={user.profil_picture} alt={`Photo de profil de ${user.user_pseudo}`} />
                                 }
-                                <p className='author-pseudo'>{user.pseudo}</p>
+                                <p className='author-pseudo'>{user.first_name} {user.last_name} </p>
                             </div>
                         )}
                     />

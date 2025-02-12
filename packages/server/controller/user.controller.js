@@ -2,9 +2,22 @@ import { deleteUserById, findByCredentials, findPopularUsers, findUserById, upda
 import bcrypt from 'bcrypt';
 
 
-export const getUserById = async (req, res) => {
+export const getMine = async (req, res) => {
     try {
         const user = req.user;
+
+        return res.status(201).json({ user });
+    } catch (err) {
+        console.error(err)
+        return res.status(500).json({ message: err });
+    }
+}
+
+export const getUserById = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const user = await findUserById(id)
 
         return res.status(201).json({ user });
     } catch (err) {
@@ -100,7 +113,7 @@ export const deleteUser = async (req, res) => {
         res.clearCookie('accessToken');
         res.clearCookie('refreshToken');
     }
-    
+
     await deleteUserById(id);
 
 

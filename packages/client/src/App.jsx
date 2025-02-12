@@ -20,6 +20,8 @@ import MyProfilPage from './pages/MyProfil/MyProfil.page';
 import Article from './pages/Article/Article';
 import DashBoardAuthor from './pages/Author/AuthorDashboard/DashboardAuthor';
 import UpdateArticlePage from './pages/Author/UpdateArticle/UpdateArticle';
+import ProfilPage from './pages/Profil/Profil.page';
+import SearchResultsPage from './pages/SearchResultsPage/SearchResults.page';
 
 function App() {
 
@@ -49,8 +51,9 @@ function App() {
                     <Route path={'/privacy-policy'} element={<PrivacyPolicy />} />
                     <Route path={'/register'} element={<RegisterPage />} />
                     <Route path={'/confirm/:token'} element={<ConfirmEmail />} />
-
+                    <Route path={'/search'} element={<SearchResultsPage />} />
                     <Route path={'/article/:id'} element={<Article />} />
+                    <Route path={'/profil/:id'} element={<ProfilPage />} />
                     <Route
                         path="/admin"
                         element={

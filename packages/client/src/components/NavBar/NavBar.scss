@@ -23,6 +23,7 @@
 
     .icons-nav {
         display: flex;
+        flex-direction: row;
         align-items: center;
         width: 35px;
         position: relative;
@@ -47,6 +48,7 @@
 
         .search-bar {
             width: 0px;
+            height: .8em;
             opacity: 0;
             padding: .6em;
             border-radius: 50px;
@@ -63,6 +65,8 @@
                 margin-left: 1em;
             }
         }
+
+
     }
 
     .menu-login {

@@ -72,16 +72,16 @@ const UserForm = (props) => {
                 }
                 <div className='names-container'>
                     <div className='input-label-container'>
-                        <label>Prénom:</label>
-                        <input type="text" name="firstName"
+                        <label htmlFor='firstName'>Prénom:</label>
+                        <input type="text" name="firstName" id='firstName'
                             value={props.formUser.firstName}
                             onChange={props.handleChange}
                             disabled={props.user && props.user.is_verified === 0 ? true : false}
                         />
                     </div>
                     <div className='input-label-container'>
-                        <label>Nom:</label>
-                        <input type="text" name="lastName"
+                        <label htmlFor='lastName'>Nom:</label>
+                        <input type="text" name="lastName" id='lastName'
                             value={props.formUser.lastName} onChange={props.handleChange}
                             disabled={props.user && props.user.is_verified === 0 ? true : false}
                         />
@@ -89,8 +89,8 @@ const UserForm = (props) => {
                 </div>
 
                 <div className='input-label-container'>
-                    <label>Pseudo{!props.user && '*'}:</label>
-                    <input type="text" name="pseudo"
+                    <label htmlFor='pseudo'>Pseudo{!props.user && '*'}:</label>
+                    <input type="text" name="pseudo" id='pseudo'
                         value={props.formUser.pseudo}
                         onChange={props.handleChange}
                         required
@@ -98,8 +98,8 @@ const UserForm = (props) => {
                     />
                 </div>
                 <div className='input-label-container'>
-                    <label>Email{!props.user && '*'}:</label>
-                    <input type="email" name="email"
+                    <label htmlFor='email'>Email{!props.user && '*'}:</label>
+                    <input type="email" name="email" id='email'
                         onChange={props.handleChange}
                         value={props.formUser.email}
                         disabled={props.user ? true : false}
@@ -109,8 +109,8 @@ const UserForm = (props) => {
 
                 {!props.user &&
                     <div className='input-label-container'>
-                        <label htmlFor="">Mot de passe *:</label>
-                        <input type="password" name="password" value={props.formUser.password} onChange={props.handleChange} required />
+                        <label htmlFor="password">Mot de passe *:</label>
+                        <input type="password" id='password' name="password" value={props.formUser.password} onChange={props.handleChange} required />
                     </div>
                 }
                 {props.user ?
@@ -127,13 +127,13 @@ const UserForm = (props) => {
                         :
                         <div>
                             <div className='input-label-container'>
-                                <label htmlFor="">Mot de passe actuel:</label>
-                                <input type="password" name="oldPassword" value={props.formUser.oldPassword} onChange={props.handleChange} />
+                                <label htmlFor="oldPassword">Mot de passe actuel:</label>
+                                <input type="password" id='oldPassword' name="oldPassword" value={props.formUser.oldPassword} onChange={props.handleChange} />
 
                             </div>
                             <div className='input-label-container'>
-                                <label htmlFor="">Nouveau mot de passe :</label>
-                                <input type="password" name="newPassword" value={props.formUser.newPassword} onChange={props.handleChange} />
+                                <label htmlFor="newPassword">Nouveau mot de passe :</label>
+                                <input type="password" id='newPassword' name="newPassword" value={props.formUser.newPassword} onChange={props.handleChange} />
 
                             </div>
                             <p className="link alert" onClick={props.toggleUpdatePassword}>Annuler</p>

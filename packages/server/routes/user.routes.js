@@ -1,14 +1,15 @@
 import { Router } from 'express';
-import { deleteUser, getPopularUsers, getUserById, updateUser} from '../controller/user.controller.js';
+import { deleteUser, getMine, getPopularUsers, getUserById, updateUser } from '../controller/user.controller.js';
 import { authMiddleware } from '../middlewares/auth.middleware.js';
-import upload from '../middlewares/upload.middleware.js';
 import { isVerified } from '../middlewares/role.middleware.js';
 
 const router = Router();
 
-router.get('/me', [authMiddleware], getUserById);
+router.get('/me', [authMiddleware], getMine);
 
 router.get('/popular', getPopularUsers);
+
+router.get('/:id', getUserById);
 
 router.put('/update/:id', [authMiddleware, isVerified], updateUser);
 

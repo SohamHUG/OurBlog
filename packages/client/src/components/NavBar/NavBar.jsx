@@ -11,6 +11,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectDarkMode } from "../../store/selectors";
 import Menu from "../Menu/Menu";
 import { useNavigate } from 'react-router-dom';
+import debounce from 'lodash.debounce';
+import SearchResultsNav from "../SearchResults/SearchResultsNav";
 import "./NavBar.scss";
 
 const NavBar = () => {
@@ -22,6 +24,53 @@ const NavBar = () => {
     const user = useSelector((state) => state.users.user);
     const { modalLogin } = useSelector((state) => state.auth);
     const navigate = useNavigate();
+    const [searchQuery, setSearchQuery] = React.useState('');
+    const [searchResults, setSearchResults] = React.useState([]);
+
+    const performSearch = async (query) => {
+        if (query.trim() === '') {
+            setSearchResults([]);
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:3000/search?q=${encodeURIComponent(query)}&limit=true`, { method: 'GET' });
+            if (!response.ok) {
+                throw new Error('Erreur lors de la recherche');
+            }
+            const results = await response.json();
+            setSearchResults(results);
+        } catch (err) {
+            console.error('Erreur :', err);
+        }
+    };
+
+    const debouncedSearch = debounce(performSearch, 300);
+
+    React.useEffect(() => {
+        debouncedSearch(searchQuery);
+        return () => debouncedSearch.cancel();
+    }, [searchQuery]);
+
+    const handleSearchChange = (event) => {
+        setSearchQuery(event.target.value);
+    };
+
+    const handleSearchSubmit = (event) => {
+        event.preventDefault();
+        if (searchQuery.trim() === '') return;
+
+        setSearchQuery('')
+        setSearchResults([])
+        setSearchActive(false);
+        navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
+    };
+
+    const clearSearch = () => {
+        setSearchQuery('');
+        setSearchResults([])
+        setSearchActive(false);
+    };
 
     const toggleSearch = () => {
         setSearchActive(!searchActive);
@@ -49,6 +98,7 @@ const NavBar = () => {
                 !searchRef.current.contains(event.target)
             ) {
                 setSearchActive(false);
+                setSearchResults([])
             }
             if (
                 menuRef.current &&
@@ -74,7 +124,7 @@ const NavBar = () => {
                     OurBlog
                 </NavLink>
 
-                <div className="icons-nav">
+                <form onSubmit={handleSearchSubmit} className="icons-nav">
                     <label
                         className="search"
                         onClick={toggleSearch}
@@ -86,12 +136,22 @@ const NavBar = () => {
                     <input
                         type="text"
                         id="search-bar"
+                        autoComplete="off"
                         className="search-bar"
                         placeholder="Rechercher..."
                         ref={searchRef}
-                    />
-                </div>
+                        value={searchQuery}
+                        onChange={handleSearchChange}
 
+                    />
+
+                </form>
+                <SearchResultsNav
+                    className="search-results"
+                    results={searchResults}
+                    searchRef={searchRef}
+                    clearSearch={clearSearch}
+                />
                 <div className="menu-login">
                     {!user ? (
                         <button onClick={openLogin}>Se&nbsp;connecter</button>
@@ -132,5 +192,7 @@ const NavBar = () => {
         </>
     );
 };
+
+
 
 export default NavBar;

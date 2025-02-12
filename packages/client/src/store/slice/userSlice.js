@@ -21,6 +21,17 @@ export const getPopularUsers = createAsyncThunk('user/getPopularUsers', async (_
     }
 });
 
+export const getProfil = createAsyncThunk('user/getProfil', async (id, { rejectWithValue }) => {
+    try {
+        const response = await fetch(`${BASE_URL}/${id}`, {
+            method: 'GET',
+        });
+        return handleResponse(response).then((data) => data.user);
+    } catch (error) {
+        return rejectWithValue(error.message);
+    }
+});
+
 export const getUser = createAsyncThunk('user/getUser', async (_, { rejectWithValue }) => {
     try {
         const response = await fetch(`${BASE_URL}/me`, {
@@ -58,6 +69,7 @@ const usersSlice = createSlice({
     initialState: {
         users: [],
         user: null,
+        profil: null,
         status: 'idle',
         error: null,
     },
@@ -121,7 +133,19 @@ const usersSlice = createSlice({
             .addCase(deleteUser.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.error.message;
-            });
+            })
+            .addCase(getProfil.pending, (state) => {
+                state.status = 'loading';
+                state.error = null;
+            })
+            .addCase(getProfil.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.profil = action.payload;
+            })
+            .addCase(getProfil.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message;
+            })
     },
 });
 
