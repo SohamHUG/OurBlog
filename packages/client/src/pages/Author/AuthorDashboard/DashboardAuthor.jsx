@@ -12,8 +12,9 @@ const DashBoardAuthor = () => {
     const posts = Redux.useSelector((state) => state.posts.authorPosts.items);
     const status = Redux.useSelector((state) => state.posts.authorPosts.status);
     const dispatch = Redux.useDispatch();
-    const [page, setPage] = React.useState(1);
+    // const [page, setPage] = React.useState(1);
     const hasMore = Redux.useSelector((state) => state.posts.authorPosts.hasMore)
+    const page = Redux.useSelector((state) => state.posts.authorPosts.page)
 
     // console.log(status)
     React.useEffect(() => {
@@ -27,11 +28,6 @@ const DashBoardAuthor = () => {
 
     }, [dispatch, user.user_id, page])
 
-    const loadMorePosts = () => {
-        if (status !== 'loading' && hasMore) {
-            setPage((prevPage) => prevPage + 1);
-        }
-    };
 
     // console.log(hasMore)
     return (
@@ -42,7 +38,7 @@ const DashBoardAuthor = () => {
             />
 
             <InfiniteScroll
-                onLoadMore={loadMorePosts}
+                context="author"
                 isLoading={status === 'loading'}
                 hasMore={hasMore}
             />

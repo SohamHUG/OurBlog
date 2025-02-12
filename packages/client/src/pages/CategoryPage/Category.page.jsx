@@ -18,8 +18,9 @@ const CategoryPage = () => {
     const filters = Redux.useSelector((state) => state.posts.filters)
     const error = Redux.useSelector(selectCategoriesError);
     const [selectedTags, setSelectedTags] = React.useState([]);
-    const [page, setPage] = React.useState(1);
+    // const [page, setPage] = React.useState(1);
     const hasMore = Redux.useSelector((state) => state.posts.categoryPosts.hasMore)
+    const page = Redux.useSelector((state) => state.posts.categoryPosts.page)
 
 
     React.useEffect(() => {
@@ -30,17 +31,6 @@ const CategoryPage = () => {
         if (category && category.name) {
             dispatch(getTags({ category: category.name }))
         }
-
-        // if (status === 'succeeded') {
-        //     dispatch(getPosts({
-        //         category: category.name,
-        //         tags: selectedTags.join(','),
-        //         sortBy: filters.sortBy,
-        //         limit: 10,
-        //         page,
-        //         context: 'category',
-        //     }))
-        // }
 
     }, [status, dispatch, category]);
 
@@ -56,7 +46,7 @@ const CategoryPage = () => {
             }))
         }
 
-    }, [dispatch, status, category, selectedTags, filters.sortBy, page]);
+    }, [dispatch, status, category,  page, posts]);
 
 
     const handleTagChange = (tag) => {
@@ -72,16 +62,10 @@ const CategoryPage = () => {
         dispatch(setSortBy(sortBy));
     };
 
-    const loadMorePosts = () => {
-        if (statusPosts !== 'loading' && hasMore) {
-            setPage((prevPage) => prevPage + 1);
-        }
-    };
-
-    // console.log(hasMore)
+    // console.log(selectedTags)
 
     React.useEffect(() => {
-        setPage(1);
+        // setPage(1);
         dispatch(resetCategoryPosts());
     }, [filters.sortBy, selectedTags, dispatch]);
 
@@ -128,7 +112,7 @@ const CategoryPage = () => {
                     <PostsList posts={posts} />
 
                     <InfiniteScroll
-                        onLoadMore={loadMorePosts}
+                        context="category"
                         isLoading={statusPosts === 'loading'}
                         hasMore={hasMore}
                     />

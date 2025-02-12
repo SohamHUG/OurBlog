@@ -1,25 +1,48 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
+import { useDispatch } from 'react-redux';
+import { incrementPage } from '../../store/slice/articleSlice';
 
-const InfiniteScroll = ({ onLoadMore, isLoading, hasMore }) => {
-    // console.log(onLoadMore, isLoading, hasMore)
+const InfiniteScroll = ({ context, isLoading, hasMore }) => {
+    const dispatch = useDispatch();
+    const observerRef = useRef(null);
+    const isProcessingRef = useRef(false); // Empêche les déclenchements multiples
+
     useEffect(() => {
-        const handleScroll = () => {
-            if (
-                window.innerHeight + window.scrollY >= document.body.offsetHeight - 500 &&
-                !isLoading &&
-                hasMore
-            ) {
-                onLoadMore();
-            }
-        };
-        window.addEventListener('scroll', handleScroll);
+        if (isLoading || !hasMore) {
+            isProcessingRef.current = true;
+        } else {
+            isProcessingRef.current = false;
+        }
+    }, [isLoading, hasMore]);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting && !isProcessingRef.current) {
+                    console.log("Observer déclenché");
+                    dispatch(incrementPage({ context }));
+                    // isProcessingRef.current = true; // Empêche d'autres déclenchements avant le prochain changement de `isLoading`
+                }
+            },
+            { threshold: 0.5 }
+        );
+
+        if (observerRef.current) observer.observe(observerRef.current);
 
         return () => {
-            window.removeEventListener('scroll', handleScroll);
+            if (observerRef.current) observer.unobserve(observerRef.current);
         };
-    }, [isLoading, hasMore, onLoadMore]);
+    }, [dispatch, context]);
 
-    // return null;
+    return (
+        <div
+            ref={observerRef}
+            style={{
+                height: "5px",
+                background: "transparent",
+            }}
+        />
+    );
 };
 
 export default InfiniteScroll;

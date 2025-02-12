@@ -96,12 +96,12 @@ export const findAllArticles = (filters = {}) => {
         }
 
 
-
         if (filters.sortBy === 'famous') {
             sql += ` ORDER BY comment_count DESC`;
         } else {
             sql += ` ORDER BY article.created_at DESC`;
         }
+        // console.log(filters.sortBy)
 
         if (filters.limit && filters.page) {
             const offset = (filters.page - 1) * filters.limit;
@@ -112,11 +112,14 @@ export const findAllArticles = (filters = {}) => {
 
 
         // console.log(sql)
+        // console.log(params)
 
         db.query(sql, params, (err, result) => {
             if (err) {
                 reject(err)
             }
+
+            // console.log(result)
 
             resolve(result);
         })

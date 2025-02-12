@@ -23,10 +23,11 @@ const HomePage = () => {
     const users = Redux.useSelector(selectUsers);
     const { user } = Redux.useSelector((state) => state.users);
     const posts = Redux.useSelector((state) => state.posts.allPosts.items);
-    const [page, setPage] = React.useState(1);
+    // const [page, setPage] = React.useState(1);
     const hasMore = Redux.useSelector((state) => state.posts.allPosts.hasMore)
+    const page = Redux.useSelector((state) => state.posts.allPosts.page)
 
-    // console.log(hasMore)
+    // console.log(page)
 
     // console.log(posts)
 
@@ -43,17 +44,17 @@ const HomePage = () => {
         }));
     }, [filters.sortBy, page, dispatch]);
 
-    const loadMorePosts = () => {
-        if (status !== 'loading' && hasMore) {
-            setPage((prevPage) => prevPage + 1);
-        }
-    };
+    // const loadMorePosts = () => {
+    //     if (status !== 'loading' && hasMore) {
+    //         setPage((prevPage) => prevPage + 1);
+    //     }
+    // };
 
     const handleSortChange = (event) => {
         const sortBy = event.target.value;
         dispatch(setSortBy(sortBy));
-        setPage(1);
-        dispatch(resetAllPosts());
+        // setPage(1);
+        dispatch(resetAllPosts({context: "all"}));
     };
 
     // React.useEffect(() => {
@@ -115,7 +116,7 @@ const HomePage = () => {
                 </div>
             </div>
             <InfiniteScroll
-                onLoadMore={loadMorePosts}
+                context="all"
                 isLoading={status === 'loading'}
                 hasMore={hasMore}
             />

@@ -83,9 +83,9 @@ export const deleteArticle = createAsyncThunk("posts/deleteArticle", async (id, 
 const postsSlice = createSlice({
     name: "posts",
     initialState: {
-        allPosts: { items: [], status: "idle", hasMore: true, error: null },
-        categoryPosts: { items: [], status: "idle", hasMore: true, error: null },
-        authorPosts: { items: [], status: "idle", hasMore: true, error: null },
+        allPosts: { items: [], status: "idle", page: 1, hasMore: true, error: null },
+        categoryPosts: { items: [], status: "idle", page: 1, hasMore: true, error: null },
+        authorPosts: { items: [], status: "idle", page: 1, hasMore: true, error: null },
         post: null,
         status: 'idle',
         filters: { tags: [], sortBy: "recent" },
@@ -98,14 +98,21 @@ const postsSlice = createSlice({
             state.filters.sortBy = action.payload;
         },
         resetCategoryPosts: (state) => {
-            state.categoryPosts = { items: [], status: "idle", hasMore: true, error: null };
+            state.categoryPosts = { items: [], status: "idle", page: 1, hasMore: true, error: null };
         },
         resetAuthorPosts: (state) => {
-            state.authorPosts = { items: [], status: "idle", hasMore: true, error: null };
+            state.authorPosts = { items: [], status: "idle", page: 1, hasMore: true, error: null };
         },
-        resetAllPosts: (state) => {
-            state.allPosts = { items: [], status: "idle", hasMore: true, error: null };
+        resetAllPosts: (state, action) => {
+            // console.log(action)
+            state.allPosts = { items: [], status: "idle", page: 1, hasMore: true, error: null };
         },
+        incrementPage: (state, action) => {
+            // console.log(state.allPosts.page)
+            if (action.payload.context === 'all') state.allPosts.page += 1;
+            else if (action.payload.context === 'category') state.categoryPosts.page += 1;
+            else if (action.payload.context === 'author') state.authorPosts.page += 1;
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -138,6 +145,7 @@ const postsSlice = createSlice({
                     if (newPosts.length < 10) state.authorPosts.hasMore = false;
                     else state.authorPosts.hasMore = true;
                 } else if (context === "all") {
+                    // console.log(newPosts)
                     newPosts.forEach(post => {
                         if (!state.allPosts.items.find(existingPost => existingPost.id === post.id)) {
                             state.allPosts.items.push(post);
@@ -223,5 +231,5 @@ const postsSlice = createSlice({
     },
 });
 
-export const { setTagsFilter, setSortBy, resetCategoryPosts, resetAuthorPosts, resetAllPosts } = postsSlice.actions;
+export const { setTagsFilter, setSortBy, resetCategoryPosts, resetAuthorPosts, resetAllPosts, incrementPage } = postsSlice.actions;
 export default postsSlice.reducer;
