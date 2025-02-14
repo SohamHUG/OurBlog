@@ -21,14 +21,14 @@ const HomePage = () => {
     const status = Redux.useSelector((state) => state.posts.allPosts.status);
     const error = Redux.useSelector((state) => state.posts.allPosts.error);
     const users = Redux.useSelector(((state) => state.users.users));
-    const { user } = Redux.useSelector((state) => state.users);
+    const { user } = Redux.useSelector((state) => state.auth);
     const posts = Redux.useSelector((state) => state.posts.allPosts.items);
     const hasMore = Redux.useSelector((state) => state.posts.allPosts.hasMore)
     const page = Redux.useSelector((state) => state.posts.allPosts.page)
 
-    // console.log(page)
+    // console.log(posts)
 
-    // console.log(users)
+    // console.log(filters.sortBy)
 
     React.useEffect(() => {
         dispatch(getPopularUsers());
@@ -46,7 +46,6 @@ const HomePage = () => {
     const handleSortChange = (event) => {
         const sortBy = event.target.value;
         dispatch(setSortBy(sortBy));
-        // setPage(1);
         dispatch(resetAllPosts({context: "all"}));
     };
 

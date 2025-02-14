@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { deleteUser, updateUser } from './userSlice';
 
 const BASE_URL = 'http://localhost:3000/auth';
 
@@ -61,12 +62,26 @@ export const logout = createAsyncThunk(
     }
 );
 
+export const getMe = createAsyncThunk('user/getMe', async (_, { rejectWithValue }) => {
+    try {
+        const response = await fetch(`http://localhost:3000/users/me`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+        });
+        return handleResponse(response).then((data) => data.user);
+    } catch (error) {
+        return rejectWithValue(error.message);
+    }
+});
+
 const authSlice = createSlice({
     name: 'auth',
     initialState: {
         userConnected: JSON.parse(localStorage.getItem('user')) || null,
-        status: 'idle', 
-        error: null,    
+        user: null,
+        status: 'idle',
+        error: null,
         modalLogin: false,
     },
     reducers: {
@@ -75,6 +90,9 @@ const authSlice = createSlice({
         },
         closeModalLogin: (state) => {
             state.modalLogin = false;
+        },
+        logoutUser: (state) => {
+            state.user = null;
         },
     },
     extraReducers: (builder) => {
@@ -126,9 +144,39 @@ const authSlice = createSlice({
             .addCase(logout.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.payload || 'Logout failed';
-            });
+            })
+            .addCase(getMe.pending, (state) => {
+                state.status = 'loading';
+                state.error = null;
+            })
+            .addCase(getMe.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.user = action.payload;
+            })
+            .addCase(getMe.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = 'Session expirée, reconnectez-vous';
+                state.user = null;
+                // localStorage.removeItem('user');
+            })
+            .addCase(deleteUser.fulfilled, (state, action) => {
+                if (state.userConnected && state.user.user_id === action.meta.arg) {
+                    state.userConnected = null;
+                    state.user = null;
+                    localStorage.removeItem('user');
+                    state.status = 'succeeded';
+                }
+            })
+            // .addCase(deleteUser.rejected, (state, action) => {
+            //     state.status = 'failed';
+            //     state.error = action.error.message;
+            // })
+            .addCase(updateUser.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.user = action.payload;
+            })
     },
 });
 
-export const { openModalLogin, closeModalLogin } = authSlice.actions;
+export const { openModalLogin, closeModalLogin, logoutUser } = authSlice.actions;
 export default authSlice.reducer;

@@ -1,14 +1,15 @@
 import * as React from 'react';
 import * as Redux from 'react-redux';
 import { useNavigate, Navigate, useParams } from 'react-router-dom';
-import { getProfil } from '../../store/slice/userSlice';
-import { getPosts } from '../../store/slice/articleSlice';
+import { getProfil, resetProfil } from '../../store/slice/userSlice';
+import { getPosts, resetAuthorPosts } from '../../store/slice/articleSlice';
 import PostsList from '../../components/PostsList/PostsList';
 
 const ProfilPage = () => {
     const { id } = useParams()
     const dispatch = Redux.useDispatch();
     const profil = Redux.useSelector((state) => state.users.profil);
+    const status = Redux.useSelector((state) => state.users.status);
     const posts = Redux.useSelector((state) => state.posts.authorPosts.items)
 
     React.useEffect(() => {
@@ -16,13 +17,16 @@ const ProfilPage = () => {
     }, [dispatch, id])
 
     React.useEffect(() => {
-        if (profil && (profil.role_name === 'author' || profil.role_name === "admin")) {
+        if (profil?.user_id) {
+            dispatch(resetAuthorPosts());
             dispatch(getPosts({
                 context: 'author',
-                userId: profil.user_id
-            }))
+                userId: profil.user_id,
+            }));
         }
-    }, [dispatch, profil])
+    }, [dispatch, profil?.user_id]);
+
+    // console.log(profil)
 
     return (
         <section>
@@ -36,9 +40,9 @@ const ProfilPage = () => {
                 </div>
             }
 
-            {posts && posts.length > 0 &&
-
+            {posts && posts.length > 0 ?
                 <PostsList posts={posts} />
+                : <h3>Aucun article</h3>
             }
 
         </section>

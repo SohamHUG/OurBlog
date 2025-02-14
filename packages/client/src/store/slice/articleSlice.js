@@ -66,14 +66,15 @@ export const deleteArticle = createAsyncThunk("posts/deleteArticle", async (id, 
     try {
         const response = await fetch(`http://localhost:3000/articles/delete/${id}`, {
             method: "DELETE",
-            headers: { "Content-Type": "application/json" },
+            headers: { 'Content-Type': 'application/json', },
             credentials: "include",
         });
         if (!response.ok) {
             const errorData = await response.json();
             return rejectWithValue(errorData.message);
         }
-        return id;
+        // console.log(response)
+        return response.json();
     } catch (error) {
         return rejectWithValue(error.message);
     }
@@ -88,7 +89,7 @@ const postsSlice = createSlice({
         authorPosts: { items: [], status: "idle", page: 1, hasMore: true, error: null },
         post: null,
         status: 'idle',
-        filters: { tags: [], sortBy: "recent" },
+        filters: { tags: [], sortBy: "famous" },
     },
     reducers: {
         setTagsFilter: (state, action) => {
@@ -136,11 +137,12 @@ const postsSlice = createSlice({
                     if (newPosts.length < 10) state.categoryPosts.hasMore = false;
                     else state.categoryPosts.hasMore = true;
                 } else if (context === "author") {
-                    newPosts.forEach(post => {
-                        if (!state.authorPosts.items.find(existingPost => existingPost.id === post.id)) {
-                            state.authorPosts.items.push(post);
-                        }
-                    });
+                    // newPosts.forEach(post => {
+                    //     if (!state.authorPosts.items.find(existingPost => existingPost.id === post.id)) {
+                    //         state.authorPosts.items.push(post);
+                    //     }
+                    // });
+                    state.authorPosts.items = newPosts
                     state.authorPosts.status = "succeeded";
                     if (newPosts.length < 10) state.authorPosts.hasMore = false;
                     else state.authorPosts.hasMore = true;
@@ -222,7 +224,14 @@ const postsSlice = createSlice({
             })
             .addCase(deleteArticle.fulfilled, (state, action) => {
                 state.allPosts.status = "succeeded";
+                state.authorPosts.status = "succeeded";
+                state.categoryPosts.status = "succeeded";
+
                 state.allPosts.items = state.allPosts.items.filter((post) => post.id !== action.meta.arg);
+
+                state.authorPosts.items = state.authorPosts.items.filter((post) => post.id !== action.meta.arg);
+
+                state.categoryPosts.items = state.categoryPosts.items.filter((post) => post.id !== action.meta.arg);
             })
             .addCase(deleteArticle.rejected, (state, action) => {
                 state.allPosts.status = "failed";

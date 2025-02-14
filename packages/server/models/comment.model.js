@@ -76,3 +76,17 @@ export const findCommentById = async (id) => {
         })
     })
 }
+
+export const deleteCommentById = async (id) => {
+    return new Promise((resolve, reject) => {
+        let sql = `DELETE FROM comment WHERE id = ?`;
+
+        db.query(sql, [id], async (err, result) => {
+            if (err) {
+                reject(err)
+            }
+            
+            resolve(result);
+        })
+    })
+}

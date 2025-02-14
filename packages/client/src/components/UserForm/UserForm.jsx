@@ -4,6 +4,8 @@ import { sendEmailConfirm } from '../../store/slice/authSlice';
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import HourglassFullRoundedIcon from '@mui/icons-material/HourglassFullRounded';
+import CircularProgress from '@mui/material/CircularProgress';
+import Alert from '@mui/material/Alert';
 import './UserForm.scss'
 
 const UserForm = (props) => {
@@ -12,9 +14,9 @@ const UserForm = (props) => {
     // console.log(status)
 
     const handleEmailConfirm = () => {
-        if (status === 'idle') {
-            dispatch(sendEmailConfirm());
-        }
+        // if (status === 'idle') {
+        dispatch(sendEmailConfirm());
+        // }
 
     }
 
@@ -29,12 +31,12 @@ const UserForm = (props) => {
                         <small style={{ textDecoration: 'underline' }} onClick={handleEmailConfirm} className='link'>Renvoyer l'email de confirmation</small>
                         {status === 'loading' &&
                             <span style={{ color: 'orange' }}>
-                                <HourglassFullRoundedIcon />
+                                <CircularProgress size="25px" />
                             </span>
                         }
                         {status === 'succeeded' &&
                             <span style={{ color: 'green' }}>
-                                <CheckCircleRoundedIcon />
+                                <CheckCircleRoundedIcon fontSize="medium" />
                             </span>
                         }
                         {status === 'failed' &&
@@ -70,8 +72,10 @@ const UserForm = (props) => {
                         />
                     </div>
                 }
+                <small>Entrez vos noms et prénoms pour publier des articles</small>
                 <div className='names-container'>
                     <div className='input-label-container'>
+
                         <label htmlFor='firstName'>Prénom:</label>
                         <input type="text" name="firstName" id='firstName'
                             value={props.formUser.firstName}
@@ -97,8 +101,12 @@ const UserForm = (props) => {
                         disabled={props.user && props.user.is_verified === 0 ? true : false}
                     />
                 </div>
+
                 <div className='input-label-container'>
-                    <label htmlFor='email'>Email{!props.user && '*'}:</label>
+                    <label htmlFor='email'>
+                        Email{!props.user && '*'}:
+                    </label>
+                    {!props.user && <small>Vous ne pourrez pas modifier votre email par la suite</small>}
                     <input type="email" name="email" id='email'
                         onChange={props.handleChange}
                         value={props.formUser.email}
@@ -106,12 +114,30 @@ const UserForm = (props) => {
                         required
                     />
                 </div>
-
                 {!props.user &&
                     <div className='input-label-container'>
-                        <label htmlFor="password">Mot de passe *:</label>
-                        <input type="password" id='password' name="password" value={props.formUser.password} onChange={props.handleChange} required />
+                        <label htmlFor='email2'>Confirmer l'email{!props.user && '*'}:</label>
+                        <input type="email" name="email2" id='email2'
+                            onChange={props.handleChange}
+                            value={props.formUser.email2}
+                            autoComplete='off'
+                            required
+                        />
                     </div>
+                }
+
+                {!props.user &&
+                    <>
+                        <div className='input-label-container'>
+                            <label htmlFor="password">Mot de passe *:</label>
+                            <input type="password" id='password' name="password" value={props.formUser.password} onChange={props.handleChange} required />
+                        </div>
+
+                        <div className='input-label-container'>
+                            <label htmlFor="password2">Confirmer le mot de passe *:</label>
+                            <input type="password" id='password2' name="password2" value={props.formUser.password2} onChange={props.handleChange} required />
+                        </div>
+                    </>
                 }
                 {props.user ?
                     !props.updatePassword ?
@@ -148,7 +174,17 @@ const UserForm = (props) => {
                 }
 
                 <div className='form-footer'>
-                    <button type="submit" disabled={props.user && props.user.is_verified === 0 ? true : false}>
+                    {props.isLoading && 
+                        <CircularProgress/>
+                    }
+                    <button type="submit"
+                        disabled={
+                            (props.user && props.user.is_verified === 0) ||
+                            !props.formUser.pseudo ||
+                            !props.formUser.email ||
+                            (!props.user && (!props.formUser.email2 || !props.formUser.password || !props.formUser.password2))
+                        }
+                    >
                         {props.user ? 'Enregistrer' : "S'inscrire"}
                     </button>
 

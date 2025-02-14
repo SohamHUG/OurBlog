@@ -19,7 +19,7 @@ const Menu = ({ menuActive, menuRef }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate()
     const darkMode = useSelector(selectDarkMode);
-    const user = useSelector((state) => state.users.user);
+    const user = useSelector((state) => state.auth.user);
 
     const handleToggleDarkMode = () => {
         dispatch(toggleDarkMode());

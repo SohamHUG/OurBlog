@@ -7,7 +7,7 @@ import Modal from '../../components/Modal/Modal';
 import UserForm from '../../components/UserForm/UserForm';
 
 const MyProfilPage = () => {
-    const { user } = Redux.useSelector((state) => state.users);
+    const { user } = Redux.useSelector((state) => state.auth);
     // if (!user || !user.user_id) {
     //     return <Navigate to="/" />;
     // }

@@ -32,19 +32,6 @@ export const getProfil = createAsyncThunk('user/getProfil', async (id, { rejectW
     }
 });
 
-export const getUser = createAsyncThunk('user/getUser', async (_, { rejectWithValue }) => {
-    try {
-        const response = await fetch(`${BASE_URL}/me`, {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
-        });
-        return handleResponse(response).then((data) => data.user);
-    } catch (error) {
-        return rejectWithValue(error.message);
-    }
-});
-
 export const updateUser = createAsyncThunk('user/updateUser', async ({ id, userData }) => {
     const response = await fetch(`${BASE_URL}/update/${id}`, {
         method: 'PUT',
@@ -68,15 +55,12 @@ const usersSlice = createSlice({
     name: 'users',
     initialState: {
         users: [],
-        user: null,
         profil: null,
         status: 'idle',
         error: null,
     },
     reducers: {
-        logoutUser: (state) => {
-            state.user = null;
-        },
+       
     },
     extraReducers: (builder) => {
         builder
@@ -92,27 +76,13 @@ const usersSlice = createSlice({
                 state.status = 'failed';
                 state.error = action.error.message;
             })
-            .addCase(getUser.pending, (state) => {
-                state.status = 'loading';
-                state.error = null;
-            })
-            .addCase(getUser.fulfilled, (state, action) => {
-                state.status = 'succeeded';
-                state.user = action.payload;
-            })
-            .addCase(getUser.rejected, (state, action) => {
-                state.status = 'failed';
-                state.error = 'Session expirée, reconnectez-vous';
-                state.user = null;
-                // localStorage.removeItem('user');
-            })
             .addCase(updateUser.pending, (state) => {
                 state.status = 'loading';
                 state.error = null;
             })
             .addCase(updateUser.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                state.user = action.payload;
+                // state.user = action.payload;
             })
             .addCase(updateUser.rejected, (state, action) => {
                 state.status = 'failed';
@@ -123,12 +93,8 @@ const usersSlice = createSlice({
                 state.error = null;
             })
             .addCase(deleteUser.fulfilled, (state, action) => {
+                state.users = state.users.filter(user => user.id !== action.meta.arg);
                 state.status = 'succeeded';
-                if (state.user.user_id === action.meta.arg) {
-                    state.user = null;
-                    localStorage.removeItem('user');
-                }
-
             })
             .addCase(deleteUser.rejected, (state, action) => {
                 state.status = 'failed';
@@ -144,10 +110,11 @@ const usersSlice = createSlice({
             })
             .addCase(getProfil.rejected, (state, action) => {
                 state.status = 'failed';
+                console.log(action.error)
                 state.error = action.error.message;
             })
     },
 });
 
-export const { logoutUser } = usersSlice.actions;
+export const { resetProfil } = usersSlice.actions;
 export default usersSlice.reducer;

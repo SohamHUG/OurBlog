@@ -19,9 +19,9 @@ const InfiniteScroll = ({ context, isLoading, hasMore }) => {
         const observer = new IntersectionObserver(
             (entries) => {
                 if (entries[0].isIntersecting && !isProcessingRef.current) {
-                    console.log("Observer déclenché");
+                    // console.log("Observer déclenché");
                     dispatch(incrementPage({ context }));
-                    isProcessingRef.current = true; // Empêche d'autres déclenchements avant le prochain changement de `isLoading`
+                    isProcessingRef.current = true; // Empêche d'autres déclenchements avant le prochain chargement
                 }
             },
             { threshold: 0.5 }

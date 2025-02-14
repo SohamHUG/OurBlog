@@ -13,7 +13,6 @@ import './App.scss'
 import RegisterPage from './pages/RegisterPage/Register.page';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 import AdminDashboard from './pages/AdminDashboard/AdminDashboard';
-import { getUser, logoutUser } from './store/slice/userSlice';
 import ConfirmEmail from './pages/ConfirmEmail/ConfirmEmail';
 import CreateArticle from './pages/Author/CreateArticle/CreateArticle';
 import MyProfilPage from './pages/MyProfil/MyProfil.page';
@@ -22,19 +21,20 @@ import DashBoardAuthor from './pages/Author/AuthorDashboard/DashboardAuthor';
 import UpdateArticlePage from './pages/Author/UpdateArticle/UpdateArticle';
 import ProfilPage from './pages/Profil/Profil.page';
 import SearchResultsPage from './pages/SearchResultsPage/SearchResults.page';
+import { getMe, logoutUser } from './store/slice/authSlice';
 
 function App() {
 
     const dispatch = useDispatch();
-    const { userConnected, status } = useSelector((state) => state.auth);
-    const { user } = useSelector((state) => state.users);
+    const { userConnected, status, user } = useSelector((state) => state.auth);
+    // const { user } = useSelector((state) => state.auth);
 
     // console.log(user)
     // console.log(userConnected)
 
     React.useEffect(() => {
         if (userConnected && !user) {
-            dispatch(getUser());
+            dispatch(getMe());
         } else {
             dispatch(logoutUser())
         }

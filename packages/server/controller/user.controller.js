@@ -116,7 +116,5 @@ export const deleteUser = async (req, res) => {
 
     await deleteUserById(id);
 
-
-
     return res.status(200).json({ message: "Utilisateur supprimé" });
 }

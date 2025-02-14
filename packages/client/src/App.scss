@@ -50,7 +50,8 @@ html {
             height: fit-content;
         }
 
-        button {
+        button,
+        .button {
             font-family: vars.$primary-font;
             font-weight: 700;
             font-size: 13px;
@@ -126,9 +127,32 @@ html {
             color: vars.$primary-white !important;
 
             p,
-            span {
+            span,
+            h3,
+            .avatar {
                 color: vars.$primary-white !important;
             }
+
+            .result-card,
+            .search-results-container {
+                background-color: vars.$dark-secondary-bck-color;
+
+                .search-result-item {
+                    &:hover {
+                        background-color: vars.$dark-bck-color;
+                    }
+                }
+            }
+
+            .search-result-item {
+                &:hover {
+                    background-color: vars.$dark-bck-color;
+                }
+            }
+
+            // .search-result-container {
+
+            // }
 
             .user-title,
             .article-page .post-head {

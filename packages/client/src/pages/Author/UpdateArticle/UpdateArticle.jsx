@@ -6,7 +6,7 @@ import ArticleForm from '../../../components/ArticleForm/ArticleForm';
 
 const UpdateArticlePage = () => {
     const { id } = useParams();
-    const { user } = useSelector((state) => state.users);
+    const { user } = useSelector((state) => state.auth);
     const { post, status, error } = useSelector((state) => state.posts)
     const dispatch = useDispatch();
 

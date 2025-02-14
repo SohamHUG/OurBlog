@@ -9,13 +9,14 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import './Article.scss'
 import { createComment, getComments } from '../../store/slice/commentSlice';
 import ScrollToTopButton from '../../components/ScrollToTopButton/ScrollToTopButton';
+import CommentsList from '../../components/CommentsList/CommentsList';
 
 const Article = () => {
     const { id } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { post, status } = useSelector((state) => state.posts)
-    const { user } = useSelector((state) => state.users);
+    const { user } = useSelector((state) => state.auth);
     const { comments } = useSelector((state) => state.comments)
     const statusComments = useSelector((state) => state.comments.status)
     const [comment, setComment] = React.useState('')
@@ -98,24 +99,9 @@ const Article = () => {
                         }
 
                         {statusComments === "succeeded" &&
-                            comments.map((comm) => {
-                                return (
-                                    <div key={comm.id}>
-                                        <div>
-                                            {!comm.user_picture ?
-                                                <AccountCircleIcon className='default-avatar' fontSize="large" />
-                                                :
-                                                <img className="avatar" src={comm.user_picture} alt={`Photo de profil de ${comm.user_pseudo}`} />
-                                            }
-                                            {comm.user_pseudo}
-                                        </div>
-                                        <p>{comm.content}</p>
-                                    </div>
-                                )
-                            })
+                            <CommentsList comments={comments} />
                         }
                     </div>
-                    {/* <ScrollToTopButton /> */}
                 </section>
             }
         </>

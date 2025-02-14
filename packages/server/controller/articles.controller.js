@@ -151,7 +151,5 @@ export const deleteArticle = async (req, res) => {
     
     await deleteArticleById(id);
 
-
-
     return res.status(200).json({ message: "Article supprimé" });
 }

@@ -97,7 +97,7 @@ export const findAllArticles = (filters = {}) => {
 
 
         if (filters.sortBy === 'famous') {
-            sql += ` ORDER BY comment_count DESC`;
+            sql += ` ORDER BY comment_count DESC, article.created_at DESC`;
         } else {
             sql += ` ORDER BY article.created_at DESC`;
         }

@@ -20,6 +20,14 @@ export const createComment = createAsyncThunk('comments/createComment', async ({
     return handleResponse(response);
 });
 
+export const deleteComment = createAsyncThunk('comments/deleteComment', async (id) => {
+    const response = await fetch(`${BASE_URL}/${id}`, {
+        method: 'DELETE',
+        credentials: 'include',
+    });
+    return handleResponse(response);
+});
+
 export const getComments = createAsyncThunk(
     "comments/getComments",
     async (filters, { rejectWithValue }) => {
@@ -67,6 +75,19 @@ const commentSlice = createSlice({
                 state.comments = action.payload.comments
             })
             .addCase(getComments.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message;
+            })
+            .addCase(deleteComment.pending, (state) => {
+                state.status = 'loading';
+                state.error = null;
+            })
+            .addCase(deleteComment.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                const deletedId = action.meta.arg;
+                state.comments = state.comments.filter((comment) => comment.id !== deletedId);
+            })
+            .addCase(deleteComment.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.error.message;
             })

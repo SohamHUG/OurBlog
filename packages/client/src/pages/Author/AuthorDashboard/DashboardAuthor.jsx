@@ -1,14 +1,13 @@
 import * as React from 'react';
 import * as Redux from 'react-redux';
-import { getPosts } from '../../../store/slice/articleSlice';
+import { getPosts, resetAuthorPosts } from '../../../store/slice/articleSlice';
 import PostsList from '../../../components/PostsList/PostsList';
 import ScrollToTopButton from '../../../components/ScrollToTopButton/ScrollToTopButton';
 import InfiniteScroll from '../../../components/InfiniteScroll/InfiniteScroll';
 
 
 const DashBoardAuthor = () => {
-
-    const user = Redux.useSelector((state) => state.users.user);
+    const user = Redux.useSelector((state) => state.auth.user);
     const posts = Redux.useSelector((state) => state.posts.authorPosts.items);
     const status = Redux.useSelector((state) => state.posts.authorPosts.status);
     const dispatch = Redux.useDispatch();
@@ -18,11 +17,14 @@ const DashBoardAuthor = () => {
 
     // console.log(status)
     React.useEffect(() => {
+        dispatch(resetAuthorPosts())
+    }, [dispatch])
 
+    React.useEffect(() => {
         dispatch(getPosts({
             userId: user.user_id,
-            limit: 10,
-            page,
+            // limit: 10,
+            // page,
             context: 'author'
         }))
 
@@ -37,11 +39,11 @@ const DashBoardAuthor = () => {
                 posts={posts}
             />
 
-            <InfiniteScroll
+            {/* <InfiniteScroll
                 context="author"
                 isLoading={status === 'loading'}
                 hasMore={hasMore}
-            />
+            /> */}
         </>
     );
 };

@@ -1,4 +1,4 @@
-import { findAllComments, saveComment } from "../models/comment.model.js";
+import { deleteCommentById, findAllComments, saveComment } from "../models/comment.model.js";
 
 export const createComment = async (req, res) => {
     const comment = req.body.comment;
@@ -25,5 +25,23 @@ export const getComments = async (req, res) => {
         console.error(err);
         return res.status(500).json({ message: err })
     }
+
+}
+
+export const deleteComment = async (req, res) => {
+    const { id } = req.params;
+    const user = req.user;
+
+    if (
+        parseInt(id) !== user.user_id &&
+        req.user.role_name !== "admin" &&
+        req.user.role_name !== 'moderator'
+    ) {
+        return res.status(403).json({ message: "Vous n'êtes pas autorisé" });
+    }
+
+    await deleteCommentById(id)
+
+    return res.status(200).json({ message: "Commentaire supprimé" });
 
 }

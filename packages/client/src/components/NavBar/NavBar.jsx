@@ -21,7 +21,7 @@ const NavBar = () => {
     const [menuActive, setMenuActive] = React.useState(false);
     const searchRef = React.useRef(null);
     const menuRef = React.useRef(null);
-    const user = useSelector((state) => state.users.user);
+    const user = useSelector((state) => state.auth.user);
     const { modalLogin } = useSelector((state) => state.auth);
     const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = React.useState('');

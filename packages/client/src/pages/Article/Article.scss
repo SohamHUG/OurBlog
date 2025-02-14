@@ -17,19 +17,34 @@
 
         .post-title {
             font-size: 2em;
+            max-width: 50%;
+            white-space: nowrap;
+            overflow: scroll;
+
+            @media screen and (min-width: 800px) {
+                white-space: wrap;
+                overflow: auto;
+            }
         }
 
         .author {
-            display: none;
+            // display: none;
             font-size: 1.3em;
+            display: flex;
+            align-items: center;
 
             @media screen and (min-width: 800px) {
-                display: flex;
-                align-items: center;
+
+                
             }
 
             img {
                 margin-right: .5em;
+                // display: none;
+                @media screen and (min-width: 800px) {
+                    // display: initial;
+                
+                }
             }
         }
 
@@ -50,7 +65,7 @@
         max-width: 100%;
 
         img {
-            max-width: 80%;
+            max-width: 100%;
         }
 
         p,
