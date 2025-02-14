@@ -11,7 +11,7 @@ export const uploadProfilPic = createAsyncThunk(
     'photo/uploadProfilPic',
     async (file,) => {
 
-        console.log(file)
+        // console.log(file)
         const url = `http://localhost:3000/upload/profil-picture`;
 
         const response = await fetch(url, {
@@ -27,6 +27,30 @@ export const uploadProfilPic = createAsyncThunk(
 
         const data = await response.json();
         return data.user;
+
+    }
+);
+
+export const uploadArticlePic = createAsyncThunk(
+    'photo/uploadArticlePic',
+    async (file,) => {
+
+        // console.log(file)
+        const url = `http://localhost:3000/upload/article-files`;
+
+        const response = await fetch(url, {
+            method: 'POST',
+            body: file,
+            credentials: 'include',
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.message);
+        }
+
+        const data = await response.json();
+        return data.url;
 
     }
 );
@@ -89,6 +113,18 @@ const photosSlice = createSlice({
                 // console.log(action)
             })
             .addCase(uploadProfilPic.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message;
+            })
+            .addCase(uploadArticlePic.pending, (state) => {
+                state.status = 'loading';
+                state.error = null;
+            })
+            .addCase(uploadArticlePic.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                // console.log(action)
+            })
+            .addCase(uploadArticlePic.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.error.message;
             })

@@ -7,12 +7,16 @@ import RichTextEditor from '../../../components/RichTextEditor/RichTextEditor';
 import Modal from '../../../components/Modal/Modal';
 import { useNavigate, Navigate } from 'react-router-dom';
 import ArticleForm from '../../../components/ArticleForm/ArticleForm.jsx';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+
 
 const CreateArticle = () => {
     const dispatch = Redux.useDispatch();
+    const error = Redux.useSelector((state) => state.posts.error)
     const [openModal, setOpenModal] = React.useState(false);
     const [newId, setNewId] = React.useState(null);
     const navigate = useNavigate();
+    const [errorMessage, setErrorMessage] = React.useState("");
 
     const [formData, setFormData] = React.useState({
         title: '',
@@ -21,14 +25,14 @@ const CreateArticle = () => {
         tags: [],
     });
 
-    // console.log(formData)
-
     const handleTagsChange = (e) => {
         const input = e.target.value;
         const tagsArray = input.split('#');
 
         setFormData({ ...formData, tags: tagsArray });
     };
+
+    const goBack = () => navigate(-1);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -42,6 +46,17 @@ const CreateArticle = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!formData.title.trim() ||
+            !formData.category.trim() ||
+            !formData.content.replace(/<[^>]+>/g, '').trim()) {
+
+            setErrorMessage("Veuillez remplir tous les champs obligatoires (titre, catégorie, contenu)");
+            return;
+        }
+
+        setErrorMessage("");
+
         const article = await dispatch(createPost(formData));
 
         if (createPost.fulfilled.match(article)) {
@@ -58,19 +73,28 @@ const CreateArticle = () => {
         } else {
             navigate('/');
         }
-
     }
-
 
     return (
         <>
-            <h2>Créez votre article</h2>
+            <div className='header'
+                style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    borderBottom: '1px solid #eee',
+                    justifyContent: 'space-around'
+                }}
+            >
+                <ArrowBackIcon className='link back-btn' onClick={goBack} />
+                <h2 style={{textAlign: 'center', flex: '1'}}>Créez votre article</h2>
+            </div>
             <ArticleForm
                 formData={formData}
                 handleChange={handleChange}
                 handleContentChange={handleContentChange}
                 handleTagsChange={handleTagsChange}
                 handleSubmit={handleSubmit}
+                errorMessage={error || errorMessage}
             />
 
             {openModal &&

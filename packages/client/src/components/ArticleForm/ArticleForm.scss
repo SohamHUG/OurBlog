@@ -1,0 +1,64 @@
+.article-form-container {
+    padding: 1rem;
+    max-width: 90%;
+    margin: 0 auto;
+
+    @media screen and (min-width: 800px) {
+        max-width: 70%;
+    }
+
+    form {
+        // display: flex;
+        // flex-direction: column;
+        // gap: 1.5rem;
+
+        .duo-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+
+            @media screen and (min-width: 768px) {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+
+            div {
+                display: flex;
+                flex-direction: column;
+
+                @media screen and (min-width: 768px) {
+                    // flex-direction: row;
+                    width: 49%;
+                }
+
+                select {
+                    height: 3.15rem;
+                    border-radius: 10px;
+                    border: 1px solid black;
+                    margin: 1em 0;
+                    padding: .5em;
+                    font-size: 1.1em;
+                }
+            }
+        }
+
+        label {
+            font-weight: bold;
+            font-size: 1rem;
+            margin-top: 0.5rem;
+        }
+
+
+        .quill,
+        .ql-container,
+        .ql-editor {
+            min-height: 30em!important;
+        }
+
+        button {
+            margin: 1em 0;
+        }
+
+    }
+}
+

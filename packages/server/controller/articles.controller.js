@@ -7,6 +7,13 @@ export const createArticle = async (req, res) => {
         const { title, category, content, tags } = req.body
         const user = req.user.user_id;
 
+        if (!title || title.trim() === "" ||
+            !category || category.trim() === "" ||
+            !content || content.replace(/<[^>]+>/g, '').trim() === "") {
+
+            return res.status(400).json({ message: "Tous les champs obligatoires doivent être remplis." });
+        }
+
         const article = await saveArticle(user, category, title, content);
 
         const existingTags = await findTags();
@@ -52,13 +59,20 @@ export const updateArticle = async (req, res) => {
         const { title, category, content, tags } = req.body
         const user = req.user.user_id;
 
-        const oldArticle = await findArticleById(id);
+        if (!title || title.trim() === "" ||
+            !category || category.trim() === "" ||
+            !content || content.replace(/<[^>]+>/g, '').trim() === "") {
 
-        if (!oldArticle || oldArticle.length <= 0) {
+            return res.status(400).json({ message: "Tous les champs obligatoires doivent être remplis." });
+        }
+
+        const article = await findArticleById(id);
+
+        if (!article || article.length <= 0) {
             return res.status(404).json({ message: "Article introuvable" });
         }
 
-        if (oldArticle.user_id !== user && req.user.role_name !== "admin") {
+        if (article.user_id !== user && req.user.role_name !== "admin") {
             return res.status(403).json({ message: "Vous n'êtes pas autorisé" });
         }
 
@@ -68,9 +82,9 @@ export const updateArticle = async (req, res) => {
             content: content
         }
 
-        const newArticle = await updateArticleById(id, updateArticle);
+        const updatedArticle = await updateArticleById(id, updateArticle);
 
-        await deleteArticleTags(newArticle.id);
+        await deleteArticleTags(updatedArticle.id);
 
         const existingTags = await findTags();
         const existingTagMap = new Map(existingTags.map(tag => [tag.name, tag.id]));
@@ -86,10 +100,10 @@ export const updateArticle = async (req, res) => {
                 existingTagMap.set(tagName.toLowerCase().trim(), tagId);
             }
 
-            await linkArticleToTag(newArticle.id, tagId);
+            await linkArticleToTag(updatedArticle.id, tagId);
         }
 
-        return res.status(201).json({ message: "Article mis à jour avec succès", article: newArticle })
+        return res.status(201).json({ message: "Article mis à jour avec succès", article: updatedArticle })
 
     } catch (err) {
         console.error(err);
@@ -148,7 +162,7 @@ export const deleteArticle = async (req, res) => {
     if (article.user_id !== user.user_id && req.user.role_name !== "admin") {
         return res.status(403).json({ message: "Vous n'êtes pas autorisé" });
     }
-    
+
     await deleteArticleById(id);
 
     return res.status(200).json({ message: "Article supprimé" });

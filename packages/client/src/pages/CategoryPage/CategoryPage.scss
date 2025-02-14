@@ -1,0 +1,79 @@
+@use '../../variables' as vars;
+
+.category-page {
+    padding: .7em;
+
+
+    .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        // position: sticky;
+        // top: 0;
+        // background: white;
+        // padding: 1em 0;
+        // z-index: 10;
+        border-bottom: 1px solid #eee;
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-transform: capitalize;
+            text-align: center;
+            flex: 1;
+        }
+    }
+
+    .filter-section {
+        margin: 1rem 0;
+
+        select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: nowrap;
+            max-width: 100%;
+            overflow: auto;
+            gap: 0.5rem;
+            white-space: nowrap;
+
+            &::-webkit-scrollbar {
+                height: 4px; 
+            }
+
+            .tag {
+                padding: 0.5rem 1rem;
+                background: #f0f0f0;
+                border: none;
+                border-radius: 20px;
+                font-size: 0.9rem;
+                cursor: pointer;
+                transition: background 0.3s ease;
+                color: #000;
+
+                &.active {
+                    background: #235af3;
+                    color: white;
+                }
+
+                // &:hover {
+                //     background: #d1d1d1;
+                // }
+            }
+        }
+    }
+
+    .no-results {
+        text-align: center;
+        color: #666;
+        font-size: 1.2rem;
+        margin-top: 2rem;
+    }
+}

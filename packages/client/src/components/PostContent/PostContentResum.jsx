@@ -11,10 +11,6 @@ const PostContentResum = ({ content }) => {
     const plainText = sanitizedContent.replace(/<[^>]+>/g, ' ');
     // const plainText = sanitizedContent.replace(/<(?!\/?(ul|ol|li)\b)[^>]*>/gi, '');
 
-    // conserver les images 
-    // let filteredContent = sanitizedContent.replace(/<(?!\/?(img)\b)[^>]*>/gi, '');
-
-    // console.log(filteredContent)
     // conserver uniquement la première image
     let image = '';
     let imageFound = false;
@@ -39,7 +35,7 @@ const PostContentResum = ({ content }) => {
     // réduis le contenu 
     const resumContent =
         plainText.length > 200
-            ? `${image}<p>${plainText.trim().substring(0, 200)}...</p>`
+            ? `${image}<p>${plainText.trim().substring(0, 500)}...</p>`
             : `${image}<p>${plainText.trim()}</p>`;
 
     // console.log(resumContent)

@@ -38,6 +38,11 @@ html {
 
         }
 
+        .back-btn {
+            font-size: 2.5em;
+            margin-right: .5em;
+        }
+
         a {
             text-decoration: none;
             color: vars.$primary-black;
@@ -129,12 +134,33 @@ html {
             p,
             span,
             h3,
-            .avatar {
+            .avatar,
+            .ql-editor.ql-blank::before {
                 color: vars.$primary-white !important;
             }
 
+            .quill .ql-toolbar button .ql-stroke,
+            .quill .ql-toolbar span .ql-stroke {
+                stroke: vars.$primary-white !important; // Change la couleur du contour des icônes
+            }
+
+            .quill .ql-toolbar button .ql-fill {
+                fill: vars.$primary-white !important; // Change la couleur du remplissage des icônes
+            }
+
+            .quill .ql-toolbar button:hover .ql-stroke,
+            .quill .ql-toolbar button.ql-active .ql-stroke {
+                stroke: vars.$main-color !important; // Couleur lors du hover ou lorsque l'icône est active
+            }
+
+            .quill .ql-toolbar button:hover .ql-fill,
+            .quill .ql-toolbar button.ql-active .ql-fill {
+                fill: vars.$main-color !important;
+            }
+
             .result-card,
-            .search-results-container {
+            .search-results-container,
+            .ql-picker-options {
                 background-color: vars.$dark-secondary-bck-color;
 
                 .search-result-item {
@@ -149,10 +175,6 @@ html {
                     background-color: vars.$dark-bck-color;
                 }
             }
-
-            // .search-result-container {
-
-            // }
 
             .user-title,
             .article-page .post-head {

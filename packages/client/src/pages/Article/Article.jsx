@@ -5,7 +5,6 @@ import { getPost } from '../../store/slice/articleSlice';
 import PostContent from '../../components/PostContent/PostContent';
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-
 import './Article.scss'
 import { createComment, getComments } from '../../store/slice/commentSlice';
 import ScrollToTopButton from '../../components/ScrollToTopButton/ScrollToTopButton';

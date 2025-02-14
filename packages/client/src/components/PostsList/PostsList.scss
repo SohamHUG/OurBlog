@@ -2,7 +2,8 @@
 
 
 .posts-list-container {
-    width: 90%;
+    // width: 90%;
+    max-width: 100%;
     margin: 0 auto;
 
     .post {
@@ -31,7 +32,6 @@
             // @media screen and (min-width: 1024px) {
             //     justify-content: space-evenly;
             // }
-
 
             .author {
                 margin: 0;
@@ -82,6 +82,12 @@
                     display: initial;
                 }
             }
+
+            .delete-btn {
+                color: #f44336;
+                cursor: pointer;
+                // padding: .3em;
+            }
         }
 
         .post-body {
@@ -89,21 +95,26 @@
 
             div {
                 display: flex;
+                flex-direction: column;
                 align-items: center;
                 flex-wrap: wrap;
                 justify-content: space-between;
                 margin-bottom: 1.5em;
                 max-width: 100%;
 
-                @media screen and (min-width: 900px) {
-                    // justify-content: space-evenly;
+                @media screen and (min-width: 700px) {
+                    flex-direction: row;
                 }
 
                 img {
-                    max-width: 40%;
+                    max-width: 90%;
                     flex-shrink: 0; // Empêche l'image de rétrécir
                     // display: none;
-                    margin-right: 1em;
+                    margin: .5em;
+
+                    @media screen and (min-width: 700px) {
+                        max-width: 40%;
+                    }
 
                     @media screen and (min-width: 1024px) {
                         max-width: 30%;
@@ -112,19 +123,24 @@
                 }
 
                 p {
-                    font-size: 1.2em;
+                    font-size: 1em;
                     flex-grow: 1;
                     overflow: hidden;
                     text-overflow: ellipsis;
                     word-wrap: break-word;
-                    max-width: 50%;
-                    max-height: 6em;
+                    max-width: 90%;
+                    max-height: 7em;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
                     margin: 0;
-                    
+
+                    @media screen and (min-width: 700px) {
+                        max-width: 40%;
+                    }
 
                     @media screen and (min-width: 1024px) {
                         max-width: 60%;
-                        max-height: 6em;
+                        // max-height: 6em;
                         overflow: hidden;
                         text-overflow: ellipsis;
                     }
@@ -138,23 +154,23 @@
         .article-link {
             max-width: 100%;
             display: flex;
-            justify-content: flex-end;
+            justify-content: space-evenly;
 
-            // @media screen and (min-width: 1024px) {
-            //     display: flex;
-            //     justify-content: flex-end;
-            // }
+            @media screen and (min-width: 1024px) {
+                // display: flex;
+                // justify-content: flex-end;
+            }
 
             button {
                 width: 100%;
                 height: 2.5em;
+                margin: .3em 0;
 
                 @media screen and (min-width: 1024px) {
-                    width: 30%;
+                    // width: 30%;
                 }
             }
         }
-
 
     }
 }

@@ -88,7 +88,7 @@ export const updateUser = async (req, res) => {
         first_name: firstName,
         last_name: lastName,
         pseudo: pseudo || user.pseudo,
-        email: email || user.email,
+        // email: user.email,
         // profil_picture: user.profil_picture,
         role_id: roleId,
         password: userLog[0].password, // mot de passe actuel ou mis à jour

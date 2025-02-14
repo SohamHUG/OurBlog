@@ -89,6 +89,7 @@ const postsSlice = createSlice({
         authorPosts: { items: [], status: "idle", page: 1, hasMore: true, error: null },
         post: null,
         status: 'idle',
+        error: null,
         filters: { tags: [], sortBy: "famous" },
     },
     reducers: {
@@ -184,6 +185,7 @@ const postsSlice = createSlice({
             .addCase(getPost.rejected, (state, action) => {
                 state.status = 'failed';
                 state.post = null;
+                state.error = action.error.message
             })
 
             // CREATE POST
@@ -199,7 +201,8 @@ const postsSlice = createSlice({
             })
             .addCase(createPost.rejected, (state, action) => {
                 state.allPosts.status = "failed";
-                state.allPosts.error = action.payload;
+                // state.allPosts.error = action.payload;
+                state.error = action.error.message
             })
 
             // UPDATE POST
@@ -216,6 +219,7 @@ const postsSlice = createSlice({
             .addCase(updateArticle.rejected, (state, action) => {
                 state.allPosts.status = "failed";
                 state.allPosts.error = action.payload;
+                state.error = action.error.message
             })
 
             // DELETE POST

@@ -6,15 +6,16 @@ import "./PostsList.scss";
 import PostContentResum from "../PostContent/PostContentResum";
 import { NavLink, useLocation } from "react-router-dom";
 import { deleteArticle } from "../../store/slice/articleSlice";
+import DeleteIcon from '@mui/icons-material/Delete';
 import Modal from "../Modal/Modal";
 
 const PostsList = ({ posts }) => {
     const location = useLocation();
     const user = Redux.useSelector((state) => state.auth.user);
     const dispatch = Redux.useDispatch();
-    
+
     const [openModalConfirm, setOpenModalConfirm] = React.useState(false);
-    const [articleToDelete, setArticleToDelete] = React.useState(null); 
+    const [articleToDelete, setArticleToDelete] = React.useState(null);
 
     const toggleModalConfirm = (id) => {
         setArticleToDelete(id);
@@ -52,6 +53,12 @@ const PostsList = ({ posts }) => {
                         <NavLink to={`/category/${post.category_id}`} className="post-category link">
                             {post.category_name}
                         </NavLink>
+
+                        {user && (user.user_id === post.user_id || user.role_name === 'admin') &&
+                            // <button className="delete-btn" onClick={() => toggleModalConfirm(post.id)}>
+                            <DeleteIcon className="delete-btn" onClick={() => toggleModalConfirm(post.id)} />
+                            // </button>
+                        }
                     </div>
 
                     <div className="post-body">
@@ -73,9 +80,6 @@ const PostsList = ({ posts }) => {
                                     <EastIcon fontSize="small" />
                                 </button>
                             </NavLink>
-                            <button onClick={() => toggleModalConfirm(post.id)}> 
-                                <span>Supprimer</span>
-                            </button>
                         </>
                     )}
                 </div>

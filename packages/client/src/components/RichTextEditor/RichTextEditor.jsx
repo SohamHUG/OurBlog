@@ -1,22 +1,24 @@
 import React, { useState, useRef, useMemo, useEffect } from 'react';
-import ReactQuill from 'react-quill-new';
+import ReactQuill, { Quill } from 'react-quill-new';
+import ImageResize from 'quill-image-resize';
 import 'react-quill-new/dist/quill.snow.css';
+import { useDispatch } from 'react-redux';
+import { uploadArticlePic } from '../../store/slice/photoSlice';
+
+Quill.register('modules/imageResize', ImageResize);
 
 const RichTextEditor = ({ value, onChange }) => {
     const [content, setContent] = useState(value);
     const quillRef = useRef(null);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         setContent(value);
     }, [value]);
 
     const handleChange = (content, delta, source, editor) => {
-        // if (source === 'user') {
         setContent(content);
-        // if (onChange) {
         onChange(content);
-        // }
-        // }
     };
 
     const handleImageUpload = () => {
@@ -30,28 +32,14 @@ const RichTextEditor = ({ value, onChange }) => {
 
             const formData = new FormData();
             formData.append('articleFile', file);
-            // console.log(formData.append('file', file));
-            // console.log("FormData content:", formData.get('articleFile'));
-            // Envoyez l'image à Cloudinary
-            const response = await fetch('http://localhost:3000/upload/article-files', {
-                method: 'POST',
-                body: formData,
-                credentials: 'include',
-            });
 
-            // console.log(response)
+            const url = await dispatch(uploadArticlePic(formData));
+            const imageUrl = url.payload;
 
-            const data = await response.json();
-            // console.log(data)
-            const imageUrl = data.url;
-
-            const quill = quillRef.current
-            // console.log(quill)
-            // Insérez l'image dans l'éditeur
-            const range = quill.getEditor().getSelection(true);
-            // console.log(range)
-            quill.getEditor().insertEmbed(range.index, 'image', imageUrl);
-            handleChange(quill.value);
+            const quill = quillRef.current.getEditor();
+            const range = quill.getSelection(true);
+            quill.insertEmbed(range.index, 'image', imageUrl);
+            handleChange(quill.root.innerHTML);
         };
     };
 
@@ -69,6 +57,10 @@ const RichTextEditor = ({ value, onChange }) => {
             handlers: {
                 image: handleImageUpload,
             },
+        },
+        imageResize: {
+            parchment: Quill.import('parchment'),
+            modules: ['Resize', 'DisplaySize', 'Toolbar'],
         },
     }), []);
 

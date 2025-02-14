@@ -30,7 +30,7 @@ const UserForm = (props) => {
                         <span className='alert'>Si vous souhaitez modifier votre profil, merci de verifier votre adresse email. </span>
                         <small style={{ textDecoration: 'underline' }} onClick={handleEmailConfirm} className='link'>Renvoyer l'email de confirmation</small>
                         {status === 'loading' &&
-                            <span style={{ color: 'orange' }}>
+                            <span>
                                 <CircularProgress size="25px" />
                             </span>
                         }
@@ -182,6 +182,7 @@ const UserForm = (props) => {
                             (props.user && props.user.is_verified === 0) ||
                             !props.formUser.pseudo ||
                             !props.formUser.email ||
+                            props.isLoading ||
                             (!props.user && (!props.formUser.email2 || !props.formUser.password || !props.formUser.password2))
                         }
                     >
