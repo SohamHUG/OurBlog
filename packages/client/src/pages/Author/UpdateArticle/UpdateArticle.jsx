@@ -3,11 +3,13 @@ import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { getPost, updateArticle } from '../../../store/slice/articleSlice';
 import ArticleForm from '../../../components/ArticleForm/ArticleForm';
+import { uploadImagesAndUpdateContent } from '../../../store/slice/photoSlice.js';
 
 const UpdateArticlePage = () => {
     const { id } = useParams();
     const { user } = useSelector((state) => state.auth);
     const { post, status, error } = useSelector((state) => state.posts)
+    const [errorMessage, setErrorMessage] = React.useState("");
     const dispatch = useDispatch();
 
 
@@ -36,7 +38,7 @@ const UpdateArticlePage = () => {
         }
     }, [status]);
 
-    // console.log(formData)
+    // console.log(post.content)
 
     const handleTagsChange = (e) => {
         const input = e.target.value;
@@ -57,13 +59,29 @@ const UpdateArticlePage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const articleUp = await dispatch(updateArticle({ id: post.id, articleData: formData }))
 
-        if (updateArticle.fulfilled.match(articleUp)) {
-            // setNewId(article.payload.article);
-            // setOpenModal(true);
-            navigate(`/article/${articleUp.payload.article.id}`)
-            // console.log(articleUp)
+        if (!formData.title.trim() ||
+            !formData.category ||
+            !formData.content.replace(/<[^>]+>/g, '').trim()) {
+
+            setErrorMessage("Veuillez remplir tous les champs obligatoires (titre, catégorie, contenu)");
+            return;
+        }
+
+        setErrorMessage("");
+
+        try {
+            const updatedContent = await dispatch(uploadImagesAndUpdateContent({ content: formData.content })).unwrap();
+            const updatedFormData = { ...formData, content: updatedContent };
+
+            const articleUp = await dispatch(updateArticle({ id: post.id, articleData: updatedFormData }))
+
+            if (updateArticle.fulfilled.match(articleUp)) {
+                navigate(`/article/${articleUp.payload.article.id}`)
+            }
+        } catch (error) {
+            console.error('Erreur lors du téléchargement des images :', error);
+            setErrorMessage("Une erreur s'est produite lors du téléchargement des images.");
         }
 
     };
@@ -80,8 +98,6 @@ const UpdateArticlePage = () => {
         return <Navigate to="/not-allowed" />;
     }
 
-    // console.log(post)
-
     return (
         <>
             {status === 'succeeded' && post &&
@@ -93,6 +109,7 @@ const UpdateArticlePage = () => {
                         handleContentChange={handleContentChange}
                         handleTagsChange={handleTagsChange}
                         handleSubmit={handleSubmit}
+                        errorMessage={error || errorMessage}
                     />
                 </section>
             }

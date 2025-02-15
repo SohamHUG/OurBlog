@@ -109,8 +109,6 @@ export const findAllArticles = (filters = {}) => {
             params.push(filters.limit, offset);
         }
 
-
-
         // console.log(sql)
         // console.log(params)
 

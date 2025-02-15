@@ -14,9 +14,9 @@
 
         .post-title {
             font-size: 2em;
-            max-width: 50%;
+            // max-width: 50%;
             white-space: nowrap;
-            overflow: scroll;
+            overflow: auto;
 
             @media screen and (min-width: 800px) {
                 white-space: wrap;
@@ -47,7 +47,7 @@
 
         .post-category {
             display: none;
-            font-size: .7em;
+            font-size: .9em;
 
             @media screen and (min-width: 800px) {
                 display: initial;

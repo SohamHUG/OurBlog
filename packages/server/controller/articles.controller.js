@@ -1,5 +1,6 @@
 import { deleteArticleById, findAllArticles, findArticleById, saveArticle, updateArticleById } from "../models/articles.model.js";
 import { findTagByName, findTags, saveTag, linkArticleToTag, deleteArticleTags } from "../models/tags.model.js";
+import sanitizeHtml from 'sanitize-html';
 
 
 export const createArticle = async (req, res) => {
@@ -7,6 +8,7 @@ export const createArticle = async (req, res) => {
         const { title, category, content, tags } = req.body
         const user = req.user.user_id;
 
+        // console.log(content)
         if (!title || title.trim() === "" ||
             !category || category.trim() === "" ||
             !content || content.replace(/<[^>]+>/g, '').trim() === "") {
@@ -14,7 +16,18 @@ export const createArticle = async (req, res) => {
             return res.status(400).json({ message: "Tous les champs obligatoires doivent être remplis." });
         }
 
-        const article = await saveArticle(user, category, title, content);
+        const sanitizedContent = sanitizeHtml(content, {
+            allowedTags: [
+                'p', 'strong', 'em', 'u', 'a', 'ul', 'ol', 'li', 'br', 'img', 'blockquote'
+            ],
+            allowedAttributes: {
+                a: ['href', 'target', 'rel'],
+                img: ['src', 'alt']
+            },
+            disallowedTagsMode: 'discard',
+        });
+
+        const article = await saveArticle(user, category, title, sanitizedContent);
 
         const existingTags = await findTags();
         const existingTagMap = new Map(existingTags.map(tag => [tag.name, tag.id]));
@@ -59,8 +72,10 @@ export const updateArticle = async (req, res) => {
         const { title, category, content, tags } = req.body
         const user = req.user.user_id;
 
+        // console.log(content)
+
         if (!title || title.trim() === "" ||
-            !category || category.trim() === "" ||
+            !category ||
             !content || content.replace(/<[^>]+>/g, '').trim() === "") {
 
             return res.status(400).json({ message: "Tous les champs obligatoires doivent être remplis." });
@@ -76,10 +91,21 @@ export const updateArticle = async (req, res) => {
             return res.status(403).json({ message: "Vous n'êtes pas autorisé" });
         }
 
+        const sanitizedContent = sanitizeHtml(content, {
+            allowedTags: [
+                'p', 'strong', 'em', 'u', 'a', 'ul', 'ol', 'li', 'br', 'img', 'blockquote'
+            ],
+            allowedAttributes: {
+                a: ['href', 'target', 'rel'],
+                img: ['src', 'alt']
+            },
+            disallowedTagsMode: 'discard',
+        });
+
         const updateArticle = {
             title: title,
             category_id: category,
-            content: content
+            content: sanitizedContent
         }
 
         const updatedArticle = await updateArticleById(id, updateArticle);

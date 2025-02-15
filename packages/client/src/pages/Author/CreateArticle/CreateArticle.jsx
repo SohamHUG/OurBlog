@@ -8,6 +8,7 @@ import Modal from '../../../components/Modal/Modal';
 import { useNavigate, Navigate } from 'react-router-dom';
 import ArticleForm from '../../../components/ArticleForm/ArticleForm.jsx';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { uploadImagesAndUpdateContent } from '../../../store/slice/photoSlice.js';
 
 
 const CreateArticle = () => {
@@ -57,11 +58,19 @@ const CreateArticle = () => {
 
         setErrorMessage("");
 
-        const article = await dispatch(createPost(formData));
+        try {
+            const updatedContent = await dispatch(uploadImagesAndUpdateContent({ content: formData.content })).unwrap();
+            const updatedFormData = { ...formData, content: updatedContent };
 
-        if (createPost.fulfilled.match(article)) {
-            setNewId(article.payload.article.id);
-            setOpenModal(true);
+            const article = await dispatch(createPost(updatedFormData));
+
+            if (createPost.fulfilled.match(article)) {
+                setNewId(article.payload.article.id);
+                setOpenModal(true);
+            }
+        } catch (error) {
+            console.error('Erreur lors du téléchargement des images :', error);
+            setErrorMessage("Une erreur s'est produite lors du téléchargement des images.");
         }
 
     };
@@ -86,7 +95,7 @@ const CreateArticle = () => {
                 }}
             >
                 <ArrowBackIcon className='link back-btn' onClick={goBack} />
-                <h2 style={{textAlign: 'center', flex: '1'}}>Créez votre article</h2>
+                <h2 style={{ textAlign: 'center', flex: '1' }}>Créez votre article</h2>
             </div>
             <ArticleForm
                 formData={formData}

@@ -55,6 +55,36 @@ export const uploadArticlePic = createAsyncThunk(
     }
 );
 
+export const uploadImagesAndUpdateContent = createAsyncThunk(
+    'photo/uploadImagesAndUpdateContent',
+    async ({ content }, { dispatch }) => {
+        const imgRegex = /<img[^>]+src="([^">]+)"/g;
+        const images = [];
+        let match;
+
+        while ((match = imgRegex.exec(content)) !== null) {
+            images.push(match[1]);
+        }
+
+        let updatedContent = content;
+
+        for (const imageUrl of images) {
+            if (imageUrl.startsWith('data:')) {
+                const formData = new FormData();
+                const blob = await fetch(imageUrl).then((res) => res.blob());
+                formData.append('articleFile', blob);
+
+                const response = await dispatch(uploadArticlePic(formData));
+                const finalImageUrl = response.payload;
+
+                updatedContent = updatedContent.replace(imageUrl, finalImageUrl);
+            }
+        }
+
+        return updatedContent;
+    }
+);
+
 export const deleteProfilPic = createAsyncThunk(
     'user/uploadProfilPic',
     async (id) => {

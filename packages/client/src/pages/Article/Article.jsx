@@ -40,7 +40,7 @@ const Article = () => {
 
     }
 
-    // console.log(post)
+    // console.log(post.content)
 
     return (
         <>

@@ -54,13 +54,15 @@ const RichTextEditor = ({ value, onChange }) => {
                 ['link', 'image'],
                 [{ color: ["red", "#235AF3"] }],
             ],
-            handlers: {
-                image: handleImageUpload,
-            },
+            // handlers: {
+            //     // image: handleImageUpload,
+            // },
         },
         imageResize: {
             parchment: Quill.import('parchment'),
-            modules: ['Resize', 'DisplaySize', 'Toolbar'],
+            modules: ['Resize', 'DisplaySize',
+                // 'Toolbar'
+            ],
         },
     }), []);
 
