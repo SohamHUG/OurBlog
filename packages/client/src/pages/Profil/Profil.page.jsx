@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as Redux from 'react-redux';
 import { useNavigate, Navigate, useParams } from 'react-router-dom';
-import { getProfil, resetProfil } from '../../store/slice/userSlice';
+import { getProfil } from '../../store/slice/userSlice';
 import { getPosts, resetAuthorPosts } from '../../store/slice/articleSlice';
 import PostsList from '../../components/PostsList/PostsList';
 

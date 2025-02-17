@@ -5,6 +5,8 @@ import { isVerified } from '../middlewares/role.middleware.js';
 
 const router = Router();
 
+// router.get('/', getMine);
+
 router.get('/me', [authMiddleware], getMine);
 
 router.get('/popular', getPopularUsers);

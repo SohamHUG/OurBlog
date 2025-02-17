@@ -159,13 +159,13 @@ const NavBar = () => {
                         user.profil_picture ?
                             (
                                 <NavLink to={'/profil'}>
-                                    <img className="avatar" src={user.profil_picture} alt="" />
+                                    <img className="avatar" src={user.profil_picture} alt={`Photo de profil de ${user.first_name} ${user.last_name}`} />
                                 </NavLink>
                             )
                             :
                             (
                                 <NavLink to={'/profil'}>
-                                    <AccountCircleIcon fontSize="large" />
+                                    <AccountCircleIcon className="default-avatar" fontSize="large" />
                                 </NavLink>
                             )
                     }

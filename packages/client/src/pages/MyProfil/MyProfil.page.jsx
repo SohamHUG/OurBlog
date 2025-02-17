@@ -13,7 +13,6 @@ const MyProfilPage = () => {
     const navigate = useNavigate();
     const [openModalInfo, setOpenModalInfo] = React.useState(false);
     const [openModalConfirm, setOpenModalConfirm] = React.useState(false);
-    const [updatePassword, setUpdatePassword] = React.useState(false);
     const { status, error } = Redux.useSelector((state) => state.users);
 
     const [formUser, setFormUser] = React.useState({
@@ -21,6 +20,7 @@ const MyProfilPage = () => {
         lastName: user.last_name || '',
         pseudo: user.pseudo,
         email: user.email,
+        newEmail: '',
         oldPassword: '',
         newPassword: '',
     });
@@ -56,19 +56,15 @@ const MyProfilPage = () => {
 
         if (updateUser.fulfilled.match(data)) {
             setOpenModalInfo(true)
-            setUpdatePassword(false)
             formUser.oldPassword = '';
             formUser.newPassword = '';
         }
 
     };
 
-    const toggleUpdatePassword = () => {
-        setUpdatePassword(!updatePassword);
-    }
-
     const closeModalInfo = () => {
         setOpenModalInfo(false);
+        navigate('/')
     }
 
     const toggleModalConfirm = () => {
@@ -94,8 +90,9 @@ const MyProfilPage = () => {
                 handleSubmit={handleSubmit}
                 handleChange={handleChange}
                 errorMessage={error}
-                toggleUpdatePassword={toggleUpdatePassword}
-                updatePassword={updatePassword}
+                // toggleUpdatePassword={toggleUpdatePassword}
+                // updatePassword={updatePassword}
+                isLoading={status === 'loading'}
                 toggleModalConfirm={toggleModalConfirm}
                 previewImage={previewImage}
 

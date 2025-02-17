@@ -11,6 +11,8 @@ import './UserForm.scss'
 const UserForm = (props) => {
     const { status } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
+    const [updatePassword, setUpdatePassword] = React.useState(false);
+    const [updateEmail, setUpdateEmail] = React.useState(false);
     // console.log(status)
 
     const handleEmailConfirm = () => {
@@ -18,6 +20,25 @@ const UserForm = (props) => {
         dispatch(sendEmailConfirm());
         // }
 
+    }
+
+    const openUpdatePassword = () => {
+        setUpdatePassword(true);
+    }
+
+    const closeUpdatePassword = () => {
+        setUpdatePassword(false);
+        props.formUser.oldPassword = ''
+        props.formUser.newPassword = ''
+    }
+
+    const openUpdateEmail = () => {
+        setUpdateEmail(true);
+    }
+
+    const closeUpdateEmail = () => {
+        setUpdateEmail(false);
+        props.formUser.newEmail = '';
     }
 
     return (
@@ -106,7 +127,7 @@ const UserForm = (props) => {
                     <label htmlFor='email'>
                         Email{!props.user && '*'}:
                     </label>
-                    {!props.user && <small>Vous ne pourrez pas modifier votre email par la suite</small>}
+                    {/* {!props.user && <small>Vous ne pourrez pas modifier votre email par la suite</small>} */}
                     <input type="email" name="email" id='email'
                         onChange={props.handleChange}
                         value={props.formUser.email}
@@ -140,10 +161,35 @@ const UserForm = (props) => {
                     </>
                 }
                 {props.user ?
-                    !props.updatePassword ?
+                    !updateEmail ?
                         <p className='link'
                             onClick={props.user && props.user.is_verified !== 0 ?
-                                props.toggleUpdatePassword
+                                openUpdateEmail
+                                :
+                                null
+                            }
+                        >
+                            Modifier votre email
+                        </p>
+                        :
+                        <div>
+                            <div className='input-label-container'>
+                                <label htmlFor="newEmail">Nouvelle adresse email :</label>
+                                <small>Un email de confirmation vous sera renvoyé</small>
+                                <input type="email" id='newEmail' name="newEmail" value={props.formUser.newEmail} onChange={props.handleChange} />
+
+                            </div>
+                            <p className="link alert" onClick={closeUpdateEmail}>Annuler</p>
+                        </div>
+
+                    : ''
+                }
+
+                {props.user ?
+                    !updatePassword ?
+                        <p className='link'
+                            onClick={props.user && props.user.is_verified !== 0 ?
+                                openUpdatePassword
                                 :
                                 null
                             }
@@ -162,7 +208,7 @@ const UserForm = (props) => {
                                 <input type="password" id='newPassword' name="newPassword" value={props.formUser.newPassword} onChange={props.handleChange} />
 
                             </div>
-                            <p className="link alert" onClick={props.toggleUpdatePassword}>Annuler</p>
+                            <p className="link alert" onClick={closeUpdatePassword}>Annuler</p>
                         </div>
 
                     : ''
@@ -174,8 +220,8 @@ const UserForm = (props) => {
                 }
 
                 <div className='form-footer'>
-                    {props.isLoading && 
-                        <CircularProgress/>
+                    {props.isLoading &&
+                        <CircularProgress />
                     }
                     <button type="submit"
                         disabled={

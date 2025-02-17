@@ -21,18 +21,22 @@ const HomePage = () => {
     const status = Redux.useSelector((state) => state.posts.allPosts.status);
     const error = Redux.useSelector((state) => state.posts.allPosts.error);
     const users = Redux.useSelector(((state) => state.users.users));
+    const usersStatus = Redux.useSelector(((state) => state.users.status));
     const { user } = Redux.useSelector((state) => state.auth);
     const posts = Redux.useSelector((state) => state.posts.allPosts.items);
     const hasMore = Redux.useSelector((state) => state.posts.allPosts.hasMore)
     const page = Redux.useSelector((state) => state.posts.allPosts.page)
 
-    // console.log(posts)
+    // console.log(users.length)
 
     // console.log(filters.sortBy)
 
     React.useEffect(() => {
-        dispatch(getPopularUsers());
-    }, [dispatch]);
+        if (usersStatus === 'succeeded' || users.length === 0) {
+            dispatch(getPopularUsers());
+        }
+
+    }, [dispatch, usersStatus, users]);
 
     React.useEffect(() => {
         dispatch(getPosts({
@@ -46,7 +50,7 @@ const HomePage = () => {
     const handleSortChange = (event) => {
         const sortBy = event.target.value;
         dispatch(setSortBy(sortBy));
-        dispatch(resetAllPosts({context: "all"}));
+        dispatch(resetAllPosts({ context: "all" }));
     };
 
     const handlePublishPost = () => {
@@ -83,22 +87,25 @@ const HomePage = () => {
                 </div>
 
                 <div className='right'>
-                    <SideList
-                        items={users}
-                        title={'RÉDACTEURS POPULAIRES'}
-                        limit={5}
-                        seeMoreType={'expand'}
-                        renderItem={(user) => (
-                            <div className='popular-authors'>
-                                {!user.profil_picture ?
-                                    <AccountCircleIcon className='default-avatar' fontSize="large" />
-                                    :
-                                    <img className="avatar" src={user.profil_picture} alt={`Photo de profil de ${user.user_pseudo}`} />
-                                }
-                                <p className='author-pseudo'>{user.first_name} {user.last_name} </p>
-                            </div>
-                        )}
-                    />
+                    {usersStatus === 'idle' &&
+                        <SideList
+                            items={users}
+                            title={'RÉDACTEURS POPULAIRES'}
+                            limit={5}
+                            seeMoreType={'expand'}
+                            renderItem={(user) => (
+                                <div className='popular-authors'>
+                                    {!user.profil_picture ?
+                                        <AccountCircleIcon className='default-avatar' fontSize="large" />
+                                        :
+                                        <img className="avatar" src={user.profil_picture} alt={`Photo de profil de ${user.user_pseudo}`} />
+                                    }
+                                    <p className='author-pseudo'>{user.first_name} {user.last_name} </p>
+                                </div>
+                            )}
+                        />
+                    }
+
 
                 </div>
             </div>

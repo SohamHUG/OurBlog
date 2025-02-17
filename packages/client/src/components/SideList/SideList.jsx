@@ -19,10 +19,6 @@ const SideList = ({ title, items = [], limit, seeMoreType, renderItem }) => {
 
     return (
         <>
-            {/* {status === 'loading' &&
-                <div>Loading</div>
-            } */}
-
             {!items || items.length <= 0 &&
                 <div>Erreur</div>
             }

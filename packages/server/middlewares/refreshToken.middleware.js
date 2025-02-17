@@ -11,7 +11,6 @@ export const refreshTokenMiddleware = async (req, res, next) => {
         // Supprimer les cookies existants
         res.clearCookie('accessToken');
         res.clearCookie('refreshToken');
-        // console.log('mais non');
         return next(); // Passer au middleware suivant sans vérifier l'authentification
     }
 

@@ -31,7 +31,7 @@ const Menu = ({ menuActive, menuRef }) => {
 
     const handleLogout = () => {
         dispatch(logout());
-        navigate('/');
+        // navigate('/');
     };
 
     return (

@@ -1,5 +1,7 @@
-import { deleteUserById, findByCredentials, findPopularUsers, findUserById, updateUserById } from "../models/user.model.js";
+import { deleteUserById, findAllUsers, findByCredentials, findPopularUsers, findUserById, updateUserById } from "../models/user.model.js";
 import bcrypt from 'bcrypt';
+import jwt from "jsonwebtoken";
+import { sendConfirmationEmail } from "../utils/index.js";
 
 
 export const getMine = async (req, res) => {
@@ -26,6 +28,17 @@ export const getUserById = async (req, res) => {
     }
 }
 
+export const getUsers = async (req, res) => {
+    try {
+        const users = await findAllUsers()
+
+        return res.status(201).json({ users });
+    } catch (err) {
+        console.error(err)
+        return res.status(500).json({ message: err });
+    }
+}
+
 export const getPopularUsers = async (req, res) => {
     try {
         const users = await findPopularUsers()
@@ -39,8 +52,7 @@ export const getPopularUsers = async (req, res) => {
 export const updateUser = async (req, res) => {
     const { id } = req.params;
     const userId = req.user.user_id;
-    let { firstName, lastName, pseudo, email, oldPassword, newPassword } = req.body;
-
+    let { firstName, lastName, pseudo, email, newEmail, oldPassword, newPassword } = req.body;
 
 
     if (parseInt(id) !== userId && req.user.role_name !== "admin") {
@@ -48,14 +60,27 @@ export const updateUser = async (req, res) => {
     }
 
     const userLog = await findByCredentials(email);
-    // console.log(userLog)
 
     if (!userLog || userLog.length <= 0) {
         return res.status(404).json({ message: "Utilisateur introuvable" });
     }
 
     const user = await findUserById(id);
-    // console.log(user)
+
+    if (newEmail) {
+        // console.log(newEmail);
+        const emailAlreadyExist = await findByCredentials(newEmail);
+
+        if (emailAlreadyExist && emailAlreadyExist.length > 0) {
+            return res.status(400).json({ message: "Cet email est déja utilisé", });
+        }
+
+        await updateUserById(id, { is_verified: 0 })
+        const confirmationToken = jwt.sign({ id: id, }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRATION });
+
+        await sendConfirmationEmail(newEmail, confirmationToken);
+        userLog[0].email = newEmail;
+    }
 
     let roleId = user.role_id
 
@@ -84,11 +109,13 @@ export const updateUser = async (req, res) => {
         userLog[0].password = hashedPassword;
     }
 
+    // console.log(userLog[0])
+
     const updatedUser = {
         first_name: firstName,
         last_name: lastName,
         pseudo: pseudo || user.pseudo,
-        // email: user.email,
+        email: userLog[0].email,
         // profil_picture: user.profil_picture,
         role_id: roleId,
         password: userLog[0].password, // mot de passe actuel ou mis à jour

@@ -22,6 +22,8 @@ import UpdateArticlePage from './pages/Author/UpdateArticle/UpdateArticle';
 import ProfilPage from './pages/Profil/Profil.page';
 import SearchResultsPage from './pages/SearchResultsPage/SearchResults.page';
 import { getMe, logoutUser } from './store/slice/authSlice';
+import CategoriesList from './pages/AdminDashboard/CategoriesList/CategoriesList';
+import UsersList from './pages/AdminDashboard/Users/UsersList';
 
 function App() {
 
@@ -59,6 +61,22 @@ function App() {
                         element={
                             <PrivateRoute roles={["admin"]}>
                                 <AdminDashboard />
+                            </PrivateRoute>
+                        }
+                    />
+                    <Route
+                        path="/admin/categories"
+                        element={
+                            <PrivateRoute roles={["admin"]}>
+                                <CategoriesList />
+                            </PrivateRoute>
+                        }
+                    />
+                    <Route
+                        path="/admin/users"
+                        element={
+                            <PrivateRoute roles={["admin"]}>
+                                <UsersList />
                             </PrivateRoute>
                         }
                     />

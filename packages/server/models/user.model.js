@@ -17,6 +17,38 @@ export const saveUser = async (userData) => {
     })
 }
 
+export const findAllUsers = async () => {
+    return new Promise((resolve, reject) => {
+        const sql = `
+            SELECT 
+                user.id AS user_id, 
+                user.first_name, 
+                user.last_name, 
+                user.pseudo, 
+                user.email, 
+                user.profil_picture,
+                user.profil_picture_public_id,
+                user.refresh_token, 
+                is_verified,
+                role.name AS role_name,
+                user.role_id
+            FROM user 
+            INNER JOIN role ON user.role_id = role.id
+            ORDER BY is_verified ASC
+        `;
+
+        db.query(sql, (err, result) => {
+            if (err) {
+                return reject(err);
+            }
+            // if (!result[0]) {
+            //     return resolve(null);
+            // }
+            return resolve(result);
+        });
+    });
+};
+
 export const findUserById = async (id) => {
     return new Promise((resolve, reject) => {
         const sql = `
@@ -95,12 +127,12 @@ export const findByCredentials = async (email) => {
 
 export const updateUserById = async (id, user) => {
     return new Promise((resolve, reject) => {
-        // exclu l'email des mises à jour
-        const { email, ...allowedUpdates } = user;
+        const { ...allowedUpdates } = user;
 
         // const validColumns = [
         //     'first_name',
         //     'last_name',
+        //     'email',
         //     'pseudo',
         //     'refresh_token',
         //     'is_verified',

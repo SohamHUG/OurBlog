@@ -129,14 +129,15 @@ html {
 
         &.dark {
             background-color: vars.$dark-bck-color;
-            color: vars.$primary-white !important;
+            color: vars.$primary-white ;
 
             p,
             span,
             h3,
             .avatar,
+            .default-avatar,
             .ql-editor.ql-blank::before {
-                color: vars.$primary-white !important;
+                color: vars.$primary-white ;
             }
 
             .quill .ql-toolbar button .ql-stroke,

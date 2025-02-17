@@ -21,6 +21,18 @@ export const getPopularUsers = createAsyncThunk('user/getPopularUsers', async (_
     }
 });
 
+export const getAllUsers = createAsyncThunk('user/getAllUsers', async (_, { rejectWithValue }) => {
+    try {
+        const response = await fetch(`http://localhost:3000/admin/users`, {
+            method: 'GET',
+            credentials: 'include',
+        });
+        return handleResponse(response).then((data) => data.users);
+    } catch (error) {
+        return rejectWithValue(error.message);
+    }
+});
+
 export const getProfil = createAsyncThunk('user/getProfil', async (id, { rejectWithValue }) => {
     try {
         const response = await fetch(`${BASE_URL}/${id}`, {
@@ -60,7 +72,9 @@ const usersSlice = createSlice({
         error: null,
     },
     reducers: {
-       
+        resetUsers: (state) => {
+            state.users = [];
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -69,10 +83,22 @@ const usersSlice = createSlice({
                 state.error = null;
             })
             .addCase(getPopularUsers.fulfilled, (state, action) => {
-                state.status = 'succeeded';
+                state.status = 'idle';
                 state.users = action.payload;
             })
             .addCase(getPopularUsers.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message;
+            })
+            .addCase(getAllUsers.pending, (state) => {
+                state.status = 'loading';
+                state.error = null;
+            })
+            .addCase(getAllUsers.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.users = action.payload;
+            })
+            .addCase(getAllUsers.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.error.message;
             })
@@ -116,5 +142,5 @@ const usersSlice = createSlice({
     },
 });
 
-export const { resetProfil } = usersSlice.actions;
+export const { resetUsers } = usersSlice.actions;
 export default usersSlice.reducer;
