@@ -27,16 +27,14 @@ const HomePage = () => {
     const hasMore = Redux.useSelector((state) => state.posts.allPosts.hasMore)
     const page = Redux.useSelector((state) => state.posts.allPosts.page)
 
-    // console.log(users.length)
-
-    // console.log(filters.sortBy)
-
     React.useEffect(() => {
         if (usersStatus === 'succeeded' || users.length === 0) {
             dispatch(getPopularUsers());
         }
 
     }, [dispatch, usersStatus, users]);
+
+    // console.log(user)
 
     React.useEffect(() => {
         dispatch(getPosts({

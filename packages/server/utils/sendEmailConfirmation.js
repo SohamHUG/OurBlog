@@ -5,19 +5,19 @@ dotenv.config();
 const transporter = nodemailer.createTransport({
     service: 'Gmail',
     auth: {
-        user: process.env.EMAIL_USER, // Adresse email d'envoi
-        pass: process.env.EMAIL_PASSWORD, // Mot de passe ou clé d'application
+        user: process.env.EMAIL_USER, // email d'envoi
+        pass: process.env.EMAIL_PASSWORD, // clé d'application
     },
     // logger: true, 
     // debug: true,
 });
 
-// Fonction utilitaire pour envoyer un email
+// envoyer un email
 export const sendConfirmationEmail = async (email, token) => {
     const confirmationUrl = `${process.env.FRONTEND_URL}/confirm/${token}`;
     await transporter.sendMail({
-        from: '"OurBlog" <noreply@ourblog.com>', // Nom et adresse d'envoi
-        to: email, // Destinataire
+        from: '"OurBlog" <noreply@ourblog.com>',
+        to: email,
         subject: "Confirmez votre adresse email",
         html: `
             <p>Bonjour,</p>

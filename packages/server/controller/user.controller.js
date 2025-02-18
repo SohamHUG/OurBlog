@@ -8,7 +8,11 @@ export const getMine = async (req, res) => {
     try {
         const user = req.user;
 
-        return res.status(201).json({ user });
+        const { refresh_token, ...userData } = user;
+
+        // console.log(userData)
+
+        return res.status(201).json({ user: userData });
     } catch (err) {
         console.error(err)
         return res.status(500).json({ message: err });

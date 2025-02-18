@@ -5,7 +5,7 @@ import { createComment, deleteComment, getComments } from '../controller/comment
 
 const router = Router();
 
-router.post('/:id', [authMiddleware, isVerified], createComment)
+router.post('/:id', [authMiddleware,], createComment)
 
 router.get('/', getComments);
 

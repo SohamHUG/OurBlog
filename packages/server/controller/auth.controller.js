@@ -103,8 +103,8 @@ export const loginUser = async (req, res) => {
             httpOnly: true,
             secure: true, // à modifier à true car pas https pour l'instant
             sameSite: 'strict', // Limite les cookies aux mêmes origines
-            // maxAge: 3600000, // 1 heure
-            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 jours
+            maxAge: 3600000, // 1 heure
+            // maxAge: 30 * 1000, // 10 sec
         });
 
         res.cookie('refreshToken', refreshToken, {
@@ -112,7 +112,7 @@ export const loginUser = async (req, res) => {
             secure: true, // à modifier à true car pas https pour l'instant
             sameSite: 'strict', // Limite les cookies aux mêmes origines
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 jours
-            // maxAge: 10 * 1000, // 10 sec
+            // maxAge: 30 * 1000, // 10 sec
         });
 
         await updateUserById(user[0].id, { refresh_token: refreshToken });

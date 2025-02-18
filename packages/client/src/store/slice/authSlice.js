@@ -151,11 +151,14 @@ const authSlice = createSlice({
             })
             .addCase(getMe.fulfilled, (state, action) => {
                 state.status = 'succeeded';
+                // console.log(action.payload)
                 state.user = action.payload;
             })
             .addCase(getMe.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = 'Session expirée, reconnectez-vous';
+                // console.log(action)
+                // state.error = action.error.message
                 state.user = null;
                 // localStorage.removeItem('user');
             })

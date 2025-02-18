@@ -35,7 +35,7 @@ function App() {
     // console.log(userConnected)
 
     React.useEffect(() => {
-        if (userConnected && !user) {
+        if (userConnected) {
             dispatch(getMe());
         } else {
             dispatch(logoutUser())
@@ -111,9 +111,9 @@ function App() {
                     <Route
                         path="/articles/update/:id"
                         element={
-                            // <PrivateRoute role={["author", "admin"]} >
-                            <UpdateArticlePage />
-                            // </PrivateRoute>
+                            <PrivateRoute role={["author", "admin"]} >
+                                <UpdateArticlePage />
+                            </PrivateRoute>
                         }
                     />
 

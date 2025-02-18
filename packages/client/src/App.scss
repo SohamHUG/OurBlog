@@ -86,6 +86,12 @@ html {
             }
         }
 
+        .delete-btn {
+            color: #f44336;
+            cursor: pointer;
+            // padding: .3em;
+        }
+
 
 
         .link {
@@ -114,7 +120,8 @@ html {
                 font-size: 1.1em;
             }
 
-            input:disabled {
+            input:disabled,
+            select:disabled {
                 background-color: #f0f0f0;
                 color: #a0a0a0;
                 border-color: #d0d0d0;

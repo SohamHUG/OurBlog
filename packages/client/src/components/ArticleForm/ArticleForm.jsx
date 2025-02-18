@@ -4,7 +4,7 @@ import { selectCategories, selectCategoriesStatus, selectCategoriesError } from 
 import { fetchCategories } from '../../store/slice/categoriesSlice';
 import RichTextEditor from '../RichTextEditor/RichTextEditor';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import CircularProgress from '@mui/material/CircularProgress';
 import './ArticleForm.scss'
 
@@ -21,11 +21,13 @@ const ArticleForm = ({
     const CategoriesStatus = Redux.useSelector(selectCategoriesStatus);
     const error = Redux.useSelector(selectCategoriesError);
     const status = Redux.useSelector((state) => state.photos.status)
+    const user = Redux.useSelector((state) => state.auth.user)
 
 
     const isFormValid = formData.title.trim() !== "" &&
         formData.category &&
-        formData.content.replace(/<[^>]+>/g, '').trim() !== "";
+        formData.content.replace(/<[^>]+>/g, '').trim() !== "" &&
+        user && user.is_verified === 1;
 
     // console.log(isFormValid)
 
@@ -39,9 +41,13 @@ const ArticleForm = ({
 
     return (
         <div className="article-form-container">
-            {/* <div className="back-button" onClick={goBack}>
-                <ArrowBackIcon />
-            </div> */}
+
+            { user && user.is_verified === 0 &&
+                <>
+                    <span className='alert'>Si vous souhaitez publier un article, merci de verifier votre adresse email.</span><br />
+                    <small><NavLink to={'/profil'} style={{ textDecoration: 'underline' }} className={'link'}>Voir mon profil</NavLink></small>
+                </>
+            }
 
             <form onSubmit={handleSubmit}>
                 {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
@@ -57,12 +63,13 @@ const ArticleForm = ({
                             value={formData.title}
                             onChange={handleChange}
                             required
+                            disabled={user && user.is_verified === 0}
                         />
                     </div>
 
                     <div>
                         <label htmlFor='category'>Catégorie* :</label>
-                        <select id='category' name="category" value={formData.category} onChange={handleChange} required>
+                        <select id='category' name="category" value={formData.category} onChange={handleChange} required disabled={user && user.is_verified === 0}>
                             <option value="">-- Sélectionnez une catégorie --</option>
                             {categories.map((category) => (
                                 <option key={category.id} value={category.id}>
@@ -80,18 +87,23 @@ const ArticleForm = ({
                     placeholder="ex: recette#à faire#dessert"
                     value={formData.tags.join('#')}
                     onChange={handleTagsChange}
+                    disabled={user && user.is_verified === 0}
                 />
+                {user && user.is_verified === 1 &&
+                    <div>
+                        <label>Contenu* :</label>
+                        <small>La première image du contenu sera utilisé comme miniature</small>
+                        {status === 'loading' &&
+                            <span>
+                                <CircularProgress size="25px" />
+                            </span>
+                        }
 
-                <div>
-                    <label>Contenu* :</label>
-                    <small>La première image du contenu sera utilisé comme miniature</small>
-                    {status === 'loading' &&
-                        <span>
-                            <CircularProgress size="25px" />
-                        </span>
-                    }
-                    <RichTextEditor value={formData.content} onChange={handleContentChange} />
-                </div>
+                        <RichTextEditor value={formData.content} onChange={handleContentChange} />
+
+
+                    </div>
+                }
 
                 <button type="submit" disabled={!isFormValid}>
                     Publier

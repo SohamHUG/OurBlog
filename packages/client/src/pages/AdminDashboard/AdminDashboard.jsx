@@ -8,7 +8,7 @@ const AdminDashboard = () => {
     const dispatch = Redux.useDispatch();
 
     return (
-        <div className="page">
+        <div className="page-admin">
             <h1>Admin Dashboard</h1>
 
             <div>

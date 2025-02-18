@@ -4,6 +4,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getPost, updateArticle } from '../../../store/slice/articleSlice';
 import ArticleForm from '../../../components/ArticleForm/ArticleForm';
 import { uploadImagesAndUpdateContent } from '../../../store/slice/photoSlice.js';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import DeleteIcon from '@mui/icons-material/Delete';
+
 
 const UpdateArticlePage = () => {
     const { id } = useParams();
@@ -11,14 +14,16 @@ const UpdateArticlePage = () => {
     const { post, status, error } = useSelector((state) => state.posts)
     const [errorMessage, setErrorMessage] = React.useState("");
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
+    const goBack = () => navigate(-1);
 
     React.useEffect(() => {
         dispatch(getPost(id));
     }, [id, dispatch]);
 
     // console.log(status)
-    const navigate = useNavigate();
+
     const [formData, setFormData] = React.useState({
         title: '',
         content: '',
@@ -102,7 +107,18 @@ const UpdateArticlePage = () => {
         <>
             {status === 'succeeded' && post &&
                 <section>
-                    <h2>Modifier l'article : {post.title}</h2>
+                    <div className='header'
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            borderBottom: '1px solid #eee',
+                            justifyContent: 'space-around',
+                            padding: '0 .5em'
+                        }}
+                    >
+                        <ArrowBackIcon className='link back-btn' onClick={goBack} />
+                        <h2 style={{ textAlign: 'center', flex: '1' }}>Modifier l'article : {post.title}</h2>
+                    </div>
                     <ArticleForm
                         formData={formData}
                         handleChange={handleChange}
