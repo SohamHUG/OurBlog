@@ -7,13 +7,16 @@ import HourglassFullRoundedIcon from '@mui/icons-material/HourglassFullRounded';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
 import './UserForm.scss'
+import { useLocation } from 'react-router-dom';
 
 const UserForm = (props) => {
     const { status } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
     const [updatePassword, setUpdatePassword] = React.useState(false);
     const [updateEmail, setUpdateEmail] = React.useState(false);
-    // console.log(status)
+    const location = useLocation()
+
+    // console.log(location)
 
     const handleEmailConfirm = () => {
         // if (status === 'idle') {
@@ -44,9 +47,8 @@ const UserForm = (props) => {
     return (
         <div className='user-form'>
             <form onSubmit={props.handleSubmit}>
-                <h2 className='user-title'>{props.user ? 'Votre profil' : "S'inscrire"}</h2>
                 {props.errorMessage && <p className='alert'>{props.errorMessage}</p>}
-                {props.user && props.user.is_verified === 0 &&
+                {props.user && props.user.is_verified === 0 && !location.pathname.startsWith('/admin/user') &&
                     <p className='verif-email-infos'>
                         <span className='alert'>Si vous souhaitez modifier votre profil, merci de verifier votre adresse email. </span>
                         <small style={{ textDecoration: 'underline' }} onClick={handleEmailConfirm} className='link'>Renvoyer l'email de confirmation</small>
@@ -89,7 +91,7 @@ const UserForm = (props) => {
                             name="profilPicture"
                             accept="image/png, image/jpeg"
                             onChange={props.handleChange}
-                            disabled={props.user && props.user.is_verified === 0 ? true : false}
+                            disabled={!location.pathname.startsWith('/admin/user') && props.user && props.user.is_verified === 0 ? true : false}
                         />
                     </div>
                 }
@@ -101,14 +103,14 @@ const UserForm = (props) => {
                         <input type="text" name="firstName" id='firstName'
                             value={props.formUser.firstName}
                             onChange={props.handleChange}
-                            disabled={props.user && props.user.is_verified === 0 ? true : false}
+                            disabled={!location.pathname.startsWith('/admin/user') && props.user && props.user.is_verified === 0 ? true : false}
                         />
                     </div>
                     <div className='input-label-container'>
                         <label htmlFor='lastName'>Nom:</label>
                         <input type="text" name="lastName" id='lastName'
                             value={props.formUser.lastName} onChange={props.handleChange}
-                            disabled={props.user && props.user.is_verified === 0 ? true : false}
+                            disabled={!location.pathname.startsWith('/admin/user') && props.user && props.user.is_verified === 0 ? true : false}
                         />
                     </div>
                 </div>
@@ -119,7 +121,7 @@ const UserForm = (props) => {
                         value={props.formUser.pseudo}
                         onChange={props.handleChange}
                         required
-                        disabled={props.user && props.user.is_verified === 0 ? true : false}
+                        disabled={!location.pathname.startsWith('/admin/user') && props.user && props.user.is_verified === 0 ? true : false}
                     />
                 </div>
 
@@ -127,7 +129,6 @@ const UserForm = (props) => {
                     <label htmlFor='email'>
                         Email{!props.user && '*'}:
                     </label>
-                    {/* {!props.user && <small>Vous ne pourrez pas modifier votre email par la suite</small>} */}
                     <input type="email" name="email" id='email'
                         onChange={props.handleChange}
                         value={props.formUser.email}
@@ -136,19 +137,20 @@ const UserForm = (props) => {
                     />
                 </div>
                 {!props.user &&
-                    <div className='input-label-container'>
-                        <label htmlFor='email2'>Confirmer l'email{!props.user && '*'}:</label>
-                        <input type="email" name="email2" id='email2'
-                            onChange={props.handleChange}
-                            value={props.formUser.email2}
-                            autoComplete='off'
-                            required
-                        />
-                    </div>
-                }
-
-                {!props.user &&
                     <>
+                        <div className='input-label-container'>
+                            <label htmlFor='email2'>Confirmer l'email{!props.user && '*'}:</label>
+                            <input type="email" name="email2" id='email2'
+                                onChange={props.handleChange}
+                                value={props.formUser.email2}
+                                autoComplete='off'
+                                required
+                            />
+                        </div>
+                        {/* // } */}
+
+                        {/* // {!props.user && */}
+
                         <div className='input-label-container'>
                             <label htmlFor="password">Mot de passe *:</label>
                             <input type="password" id='password' name="password" value={props.formUser.password} onChange={props.handleChange} required />
@@ -163,19 +165,19 @@ const UserForm = (props) => {
                 {props.user ?
                     !updateEmail ?
                         <p className='link'
-                            onClick={props.user && props.user.is_verified !== 0 ?
+                            onClick={location.pathname.startsWith('/admin/user') || props.user && props.user.is_verified !== 0 ?
                                 openUpdateEmail
                                 :
                                 null
                             }
                         >
-                            Modifier votre email
+                            Modifier l'email
                         </p>
                         :
                         <div>
                             <div className='input-label-container'>
                                 <label htmlFor="newEmail">Nouvelle adresse email :</label>
-                                <small>Un email de confirmation vous sera renvoyé</small>
+                                <small>Un email de confirmation sera renvoyé</small>
                                 <input type="email" id='newEmail' name="newEmail" value={props.formUser.newEmail} onChange={props.handleChange} />
 
                             </div>
@@ -185,7 +187,7 @@ const UserForm = (props) => {
                     : ''
                 }
 
-                {props.user ?
+                {props.user && !location.pathname.startsWith('/admin/user') ?
                     !updatePassword ?
                         <p className='link'
                             onClick={props.user && props.user.is_verified !== 0 ?
@@ -225,7 +227,7 @@ const UserForm = (props) => {
                     }
                     <button type="submit"
                         disabled={
-                            (props.user && props.user.is_verified === 0) ||
+                            (props.user && props.user.is_verified === 0 && !location.pathname.startsWith('/admin/user')) ||
                             !props.formUser.pseudo ||
                             !props.formUser.email ||
                             props.isLoading ||

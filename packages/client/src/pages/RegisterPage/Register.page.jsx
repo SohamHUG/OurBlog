@@ -72,6 +72,7 @@ const RegisterPage = () => {
 
     return (
         <section>
+            <h2 className='user-title'>S'inscrire</h2>
             <UserForm
                 formUser={formUser}
                 handleSubmit={handleSubmit}

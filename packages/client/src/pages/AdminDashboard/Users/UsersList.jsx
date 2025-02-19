@@ -22,14 +22,27 @@ const UsersList = () => {
 
 
     return (
-        <div className="page">
+        <section className="page">
             {status === 'succeeded' &&
                 <div className=''>
                     {users.map((user) => {
                         return (
                             <div key={user.user_id}>
-                                <NavLink to={`admin/user/${user.user_id}`}  >
-                                    {user.pseudo}
+                                <NavLink to={`/admin/user/${user.user_id}`} >
+                                    <div>
+                                        {user.profil_picture ?
+                                            <img className='avatar' src={user.profil_picture} alt="" />
+                                            : ''
+                                        }
+                                    </div>
+                                    <p>{user.pseudo}</p>
+                                    <p>{user.first_name} {user.last_name}</p>
+                                    <p>
+                                        {user.is_verified === 1 ?
+                                            'yes'
+                                            : 'no'
+                                        }
+                                    </p>
                                 </NavLink>
                             </div>
                         )
@@ -38,7 +51,7 @@ const UsersList = () => {
                 </div>
             }
 
-        </div>
+        </section>
     );
 };
 

@@ -1,12 +1,19 @@
 import { NavLink } from "react-router-dom";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import './SearchResultsNav.scss'
+import { useDispatch } from "react-redux";
+import { clearNavSearch, clearSearch } from "../../store/slice/searchSlice";
 
-const SearchResultsNav = ({ results, searchRef, clearSearch }) => {
+const SearchResultsNav = ({ results, searchRef, }) => {
     // const isFocused = searchRef.current === document.activeElement;
     // if (isFocused && results.length === 0) {
     //     return null;
     // }
+    const dispatch = useDispatch()
+
+    const onClickItem = () => {
+        dispatch(clearNavSearch())
+    }
 
     if (results.length === 0) return null;
 
@@ -17,9 +24,8 @@ const SearchResultsNav = ({ results, searchRef, clearSearch }) => {
                 {results.map((result) => (
                     <NavLink
                         to={result.type === "article" ? `/article/${result.id}` : `/profil/${result.id}`}
-
                         className="search-result-item"
-                        onClick={clearSearch}
+                        onClick={onClickItem}
                         key={result.id + Math.random()}
                     >
                         <li className="search-result-link">
@@ -30,7 +36,7 @@ const SearchResultsNav = ({ results, searchRef, clearSearch }) => {
                                     : <AccountCircleIcon className='avatar' fontSize="large" />
                             )}
                             <span className="result-name">
-                                {result.name} {result.type === 'user' && <small>{result.description}</small>}
+                                {result.name} {result.type === 'user' && <small>{result.description && result.description}</small>}
                             </span>
 
                         </li> </NavLink>

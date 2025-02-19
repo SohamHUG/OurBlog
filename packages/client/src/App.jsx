@@ -24,6 +24,7 @@ import SearchResultsPage from './pages/SearchResultsPage/SearchResults.page';
 import { getMe, logoutUser } from './store/slice/authSlice';
 import CategoriesList from './pages/AdminDashboard/CategoriesList/CategoriesList';
 import UsersList from './pages/AdminDashboard/Users/UsersList';
+import UserPageAdmin from './pages/AdminDashboard/Users/UserPageAdmin';
 
 function App() {
 
@@ -77,6 +78,14 @@ function App() {
                         element={
                             <PrivateRoute roles={["admin"]}>
                                 <UsersList />
+                            </PrivateRoute>
+                        }
+                    />
+                    <Route
+                        path="/admin/user/:id"
+                        element={
+                            <PrivateRoute roles={["admin"]}>
+                                <UserPageAdmin />
                             </PrivateRoute>
                         }
                     />

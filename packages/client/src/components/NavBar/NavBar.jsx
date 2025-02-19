@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 import MenuIcon from "@mui/icons-material/Menu";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -14,9 +14,11 @@ import { useNavigate } from 'react-router-dom';
 import debounce from 'lodash.debounce';
 import SearchResultsNav from "../SearchResults/SearchResultsNav";
 import "./NavBar.scss";
+import { fetchSearchResultsNav, clearSearch, clearNavSearch } from "../../store/slice/searchSlice";
 
 const NavBar = () => {
     const dispatch = useDispatch();
+    const location = useLocation()
     const [searchActive, setSearchActive] = React.useState(false);
     const [menuActive, setMenuActive] = React.useState(false);
     const searchRef = React.useRef(null);
@@ -25,30 +27,17 @@ const NavBar = () => {
     const { modalLogin } = useSelector((state) => state.auth);
     const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = React.useState('');
-    const [searchResults, setSearchResults] = React.useState([]);
+    const searchResults = useSelector((state) => state.search.navResults);
 
-    const performSearch = async (query) => {
-        if (query.trim() === '') {
-            setSearchResults([]);
-            return;
-        }
-
-        try {
-            const response = await fetch(`http://localhost:3000/search?q=${encodeURIComponent(query)}&limit=true`, { method: 'GET' });
-            if (!response.ok) {
-                throw new Error('Erreur lors de la recherche');
-            }
-            const results = await response.json();
-            setSearchResults(results);
-        } catch (err) {
-            console.error('Erreur :', err);
-        }
-    };
-
-    const debouncedSearch = debounce(performSearch, 300);
+    const debouncedSearch = React.useMemo(
+        () => debounce((query) => dispatch(fetchSearchResultsNav({ query })), 300),
+        [dispatch]
+    );
 
     React.useEffect(() => {
-        debouncedSearch(searchQuery);
+        if (searchQuery.trim() !== '') {
+            debouncedSearch(searchQuery);
+        }
         return () => debouncedSearch.cancel();
     }, [searchQuery]);
 
@@ -61,15 +50,9 @@ const NavBar = () => {
         if (searchQuery.trim() === '') return;
 
         setSearchQuery('')
-        setSearchResults([])
+        dispatch(clearNavSearch())
         setSearchActive(false);
         navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
-    };
-
-    const clearSearch = () => {
-        setSearchQuery('');
-        setSearchResults([])
-        setSearchActive(false);
     };
 
     const toggleSearch = () => {
@@ -98,7 +81,8 @@ const NavBar = () => {
                 !searchRef.current.contains(event.target)
             ) {
                 setSearchActive(false);
-                setSearchResults([])
+                setSearchQuery('')
+                dispatch(clearNavSearch())
             }
             if (
                 menuRef.current &&
@@ -150,7 +134,6 @@ const NavBar = () => {
                     className="search-results"
                     results={searchResults}
                     searchRef={searchRef}
-                    clearSearch={clearSearch}
                 />
                 <div className="menu-login">
                     {!user ? (

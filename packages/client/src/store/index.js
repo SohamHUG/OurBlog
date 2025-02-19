@@ -6,6 +6,7 @@ import photosReducer from './slice/photoSlice';
 import categoriesReducer from './slice/categoriesSlice';
 import authReducer from './slice/authSlice';
 import commentReducer from './slice/commentSlice'
+import searchReducer from './slice/searchSlice'
 
 const store = configureStore({
     reducer: {
@@ -16,6 +17,7 @@ const store = configureStore({
         categories: categoriesReducer,
         auth: authReducer,
         comments: commentReducer,
+        search: searchReducer,
     },
 
     // middleware: (getDefaultMiddleware) =>

@@ -1,29 +1,51 @@
 import * as React from 'react';
 import * as Redux from 'react-redux';
-import { useNavigate, Navigate } from 'react-router-dom';
-import { updateUser, deleteUser } from '../../store/slice/userSlice';
-import { uploadProfilPic } from '../../store/slice/photoSlice';
-import Modal from '../../components/Modal/Modal';
-import UserForm from '../../components/UserForm/UserForm';
+import { useNavigate, Navigate, useParams } from 'react-router-dom';
+import { uploadProfilPic } from '../../../store/slice/photoSlice';
+import Modal from '../../../components/Modal/Modal';
+import UserForm from '../../../components/UserForm/UserForm';
+import { getProfil, updateUser, deleteUser } from '../../../store/slice/userSlice';
+import { getPosts } from '../../../store/slice/articleSlice';
 
-const MyProfilPage = () => {
-    const { user } = Redux.useSelector((state) => state.auth);
+const UserPageAdmin = () => {
+    const user = Redux.useSelector((state) => state.users.profil);
+    const { id } = useParams()
 
     const dispatch = Redux.useDispatch();
     const navigate = useNavigate();
     const [openModalInfo, setOpenModalInfo] = React.useState(false);
     const [openModalConfirm, setOpenModalConfirm] = React.useState(false);
     const { status, error } = Redux.useSelector((state) => state.users);
+    const posts = Redux.useSelector((state) => state.posts.authorPosts.items)
+
+    React.useEffect(() => {
+        dispatch(getProfil(id))
+    }, [dispatch, id])
+
+    console.log(posts)
 
     const [formUser, setFormUser] = React.useState({
-        firstName: user.first_name || '',
-        lastName: user.last_name || '',
-        pseudo: user.pseudo,
-        email: user.email,
-        newEmail: '',
-        oldPassword: '',
-        newPassword: '',
+        firstName: '',
+        lastName: '',
+        pseudo: '',
+        email: '',
     });
+
+    React.useEffect(() => {
+        if (user) {
+            setFormUser({
+                firstName: user.first_name || '',
+                lastName: user.last_name || '',
+                pseudo: user.pseudo,
+                email: user.email,
+            })
+            dispatch(getPosts({
+                context: 'author',
+                userId: user.user_id
+            }))
+        }
+
+    }, [setFormUser, user])
 
     const [profilPicture, setProfilPicture] = React.useState(null);
     const [previewImage, setPreviewImage] = React.useState(null);
@@ -64,7 +86,7 @@ const MyProfilPage = () => {
 
     const closeModalInfo = () => {
         setOpenModalInfo(false);
-        navigate('/')
+        // navigate('/')
     }
 
     const toggleModalConfirm = () => {
@@ -84,15 +106,13 @@ const MyProfilPage = () => {
 
     return (
         <section>
-            <h2 className='user-title'>Votre profil</h2>
+            <h2 className='user-title'>Profil de {user?.pseudo}</h2>
             <UserForm
                 user={user}
                 formUser={formUser}
                 handleSubmit={handleSubmit}
                 handleChange={handleChange}
                 errorMessage={error}
-                // toggleUpdatePassword={toggleUpdatePassword}
-                // updatePassword={updatePassword}
                 isLoading={status === 'loading'}
                 toggleModalConfirm={toggleModalConfirm}
                 previewImage={previewImage}
@@ -101,7 +121,7 @@ const MyProfilPage = () => {
             {openModalInfo &&
                 <Modal
                     title="Informations sauvegardées"
-                    content={<p>Votre profil à bien été modifié :</p>}
+                    content={<p>Le profil à bien été modifié :</p>}
                     validButton='Ok'
                     open={openModalInfo}
                     cancel={closeModalInfo}
@@ -115,7 +135,7 @@ const MyProfilPage = () => {
                     content={
                         <div>
                             {error && <p style={{ color: 'red' }}>{error}</p>}
-                            <p>Voulez-vous vraiment <strong style={{ color: 'red' }}>supprimer</strong> votre compte de manière <strong style={{ color: 'red' }}>définitive</strong> ?</p>
+                            <p>Voulez-vous vraiment <strong style={{ color: 'red' }}>supprimer</strong> le compte de manière <strong style={{ color: 'red' }}>définitive</strong> ?</p>
                             <strong style={{ color: 'red' }}>Cet action est irréversible !</strong>
                         </div>
                     }
@@ -130,4 +150,4 @@ const MyProfilPage = () => {
     );
 }
 
-export default MyProfilPage;
+export default UserPageAdmin;

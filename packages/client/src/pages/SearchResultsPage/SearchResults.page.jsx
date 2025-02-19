@@ -3,36 +3,23 @@ import { useLocation, NavLink } from 'react-router-dom';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import PostContentResum from '../../components/PostContent/PostContentResum';
 import './SearchResultsPage.scss';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchSearchResults } from '../../store/slice/searchSlice';
 
 const SearchResultsPage = () => {
     const location = useLocation();
-    const [results, setResults] = useState([]);
-
-    const fetchResults = async (query) => {
-        if (query.trim() === '') {
-            setResults([]);
-            return;
-        }
-
-        try {
-            const response = await fetch(`http://localhost:3000/search?q=${encodeURIComponent(query)}`, { method: 'GET' });
-            if (!response.ok) {
-                throw new Error('Erreur lors de la recherche');
-            }
-            const results = await response.json();
-            setResults(results);
-        } catch (err) {
-            console.error('Erreur :', err);
-        }
-    };
+    const results = useSelector((state) => state.search.results)
+    const dispatch = useDispatch()
 
     const query = new URLSearchParams(location.search).get('q');
 
     useEffect(() => {
         if (query) {
-            fetchResults(query);
+            dispatch(fetchSearchResults({query}))
         }
-    }, [query]);
+    }, [query, dispatch]);
+
+    
 
     if (results.length === 0) {
         return <div className="no-results">Aucun résultat trouvé pour <strong>"{query}"</strong>.</div>;

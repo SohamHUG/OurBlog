@@ -143,8 +143,10 @@ html {
             h3,
             .avatar,
             .default-avatar,
-            .ql-editor.ql-blank::before {
-                color: vars.$primary-white ;
+            .ql-editor.ql-blank::before,
+            .article-page.ql-editor,
+            strong {
+                color: vars.$primary-white!important ;
             }
 
             .quill .ql-toolbar button .ql-stroke,
