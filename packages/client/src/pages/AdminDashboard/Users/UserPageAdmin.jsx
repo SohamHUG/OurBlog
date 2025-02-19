@@ -22,13 +22,14 @@ const UserPageAdmin = () => {
         dispatch(getProfil(id))
     }, [dispatch, id])
 
-    console.log(posts)
+    // console.log(posts)
 
     const [formUser, setFormUser] = React.useState({
         firstName: '',
         lastName: '',
         pseudo: '',
         email: '',
+        newEmail: '',
     });
 
     React.useEffect(() => {
@@ -38,6 +39,7 @@ const UserPageAdmin = () => {
                 lastName: user.last_name || '',
                 pseudo: user.pseudo,
                 email: user.email,
+                newEmail: '',
             })
             dispatch(getPosts({
                 context: 'author',
@@ -78,8 +80,6 @@ const UserPageAdmin = () => {
 
         if (updateUser.fulfilled.match(data)) {
             setOpenModalInfo(true)
-            formUser.oldPassword = '';
-            formUser.newPassword = '';
         }
 
     };
@@ -108,7 +108,7 @@ const UserPageAdmin = () => {
         <section>
             <h2 className='user-title'>Profil de {user?.pseudo}</h2>
             <UserForm
-                user={user}
+                user={user ? user : []}
                 formUser={formUser}
                 handleSubmit={handleSubmit}
                 handleChange={handleChange}

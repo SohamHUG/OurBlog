@@ -7,6 +7,26 @@ section {
         padding-bottom: 1em;
     }
 
+    .verif-email-infos {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        max-width: 90%;
+        margin: .5em auto;
+
+        @media screen and (min-width: 515px) {
+            max-width: 80%;
+        }
+
+        @media screen and (min-width: 1024px) {
+            max-width: 50%;
+        }
+
+        .alert {
+            font-size: 1.2em;
+        }
+    }
+
     .user-form {
         max-width: 90%;
         margin: .5em auto;
@@ -20,15 +40,15 @@ section {
         }
 
         form {
-            .verif-email-infos {
-                display: flex;
-                flex-wrap: wrap;
-                align-items: center;
+            // .verif-email-infos {
+            //     display: flex;
+            //     flex-wrap: wrap;
+            //     align-items: center;
 
-                .alert {
-                    font-size: 1.2em;
-                }
-            }
+            //     .alert {
+            //         font-size: 1.2em;
+            //     }
+            // }
 
             label {
                 font-size: 1.1em;

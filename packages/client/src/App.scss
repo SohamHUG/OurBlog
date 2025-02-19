@@ -99,7 +99,7 @@ html {
         }
 
         .alert {
-            color: red;
+            color: vars.$alert-color;
         }
 
         .link:hover {
@@ -143,9 +143,16 @@ html {
             h3,
             .avatar,
             .default-avatar,
-            .ql-editor.ql-blank::before,
-            .article-page.ql-editor,
-            strong {
+            .ql-editor.ql-blank::before {
+                color: vars.$primary-white ;
+            }
+
+            .article-page .ql-editor,
+            .article-page .ql-editor h2,
+            .article-page .ql-editor h2 span,
+            .article-page .ql-editor p,
+            .article-page .ql-editor p span,
+            .article-page .ql-editor strong {
                 color: vars.$primary-white!important ;
             }
 
@@ -192,11 +199,11 @@ html {
             }
 
             .link {
-                color: #7796eb;
+                color: vars.$secondary-color;
             }
 
             .alert {
-                color: red;
+                color: vars.$alert-color;
             }
 
             .logo {

@@ -5,6 +5,10 @@ import { updateUser, deleteUser } from '../../store/slice/userSlice';
 import { uploadProfilPic } from '../../store/slice/photoSlice';
 import Modal from '../../components/Modal/Modal';
 import UserForm from '../../components/UserForm/UserForm';
+import { sendEmailConfirm } from '../../store/slice/authSlice';
+import CircularProgress from '@mui/material/CircularProgress';
+import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
+
 
 const MyProfilPage = () => {
     const { user } = Redux.useSelector((state) => state.auth);
@@ -14,6 +18,7 @@ const MyProfilPage = () => {
     const [openModalInfo, setOpenModalInfo] = React.useState(false);
     const [openModalConfirm, setOpenModalConfirm] = React.useState(false);
     const { status, error } = Redux.useSelector((state) => state.users);
+    const statusEmail = Redux.useSelector((state) => state.auth.status);
 
     const [formUser, setFormUser] = React.useState({
         firstName: user.first_name || '',
@@ -82,9 +87,38 @@ const MyProfilPage = () => {
 
     }
 
+    const handleEmailConfirm = () => {
+        // if (statusEmail === 'idle') {
+        dispatch(sendEmailConfirm());
+        // }
+
+    }
+
     return (
         <section>
             <h2 className='user-title'>Votre profil</h2>
+            {user && user.is_verified === 0 &&
+                <p className='verif-email-infos'>
+                    <span className='alert'>Si vous souhaitez modifier votre profil, merci de verifier votre adresse email. </span>
+                    <small style={{ textDecoration: 'underline' }} onClick={handleEmailConfirm} className='link'>Renvoyer l'email de confirmation</small>
+                    {statusEmail === 'loading' &&
+                        <span>
+                            <CircularProgress size="25px" />
+                        </span>
+                    }
+                    {statusEmail === 'succeeded' &&
+                        <span style={{ color: 'green' }}>
+                            <CheckCircleRoundedIcon fontSize="medium" />
+                        </span>
+                    }
+                    {statusEmail === 'failed' &&
+                        <span className='alert'>
+                            Error
+                        </span>
+                    }
+                </p>
+
+            }
             <UserForm
                 user={user}
                 formUser={formUser}
