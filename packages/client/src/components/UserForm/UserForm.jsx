@@ -6,6 +6,7 @@ import ProfilPictureUpload from './ProfilPictureUpload';
 import ConfirmEmailPassword from './ConfirmEmailPassword';
 import UpdateEmail from './UpdateEmail';
 import UpdatePassword from './UpdatePassword';
+import UpdateRole from './UpdateRole';
 
 const UserForm = (props) => {
     const location = useLocation()
@@ -17,15 +18,19 @@ const UserForm = (props) => {
             ? 'update'
             : 'signup';
 
-    // console.log(formType)
+    // console.log(props.user)
     return (
         <div className='user-form'>
             <form onSubmit={props.handleSubmit}>
-                {props.errorMessage && <p className='alert'>{props.errorMessage}</p>}
+                
                 {(formType === 'update' || formType === 'admin') &&
                     <ProfilPictureUpload {...props} />
                 }
-                <small>Entrez vos noms et prénoms pour publier des articles</small>
+                {!props.user || (props.user && !props.user.first_name && !props.user.last_name) ?
+                    <small>Entrez votre <strong>nom ET prénom</strong> pour demander à devenir auteur</small>
+                    : props.user && props.user.first_name && props.user.last_name && props.user.role_name !== 'author' && props.user.role_name !== 'admin' && 
+                    <small>Votre demande pour devenir auteur est en cours de traitement, revenez plus tard</small>
+                }
                 <div className='names-container'>
                     <div className='input-label-container'>
 
@@ -79,6 +84,10 @@ const UserForm = (props) => {
                     <UpdatePassword {...props} />
                 }
 
+                {formType === 'admin' &&
+                    <UpdateRole {...props} />
+                }
+
                 {(formType === 'update' || formType === 'admin') &&
                     <p className='link alert' onClick={props.toggleModalConfirm}>
                         Supprimer le compte
@@ -89,14 +98,15 @@ const UserForm = (props) => {
                     {props.isLoading &&
                         <CircularProgress />
                     }
+                    {props.errorMessage && <p className='alert'>{props.errorMessage}</p>}
                     <button type="submit"
-                        disabled={
-                            (props.user && props.user.is_verified === 0 && !location.pathname.startsWith('/admin/user')) ||
-                            !props.formUser.pseudo ||
-                            !props.formUser.email ||
-                            props.isLoading ||
-                            (!props.user && (!props.formUser.email2 || !props.formUser.password || !props.formUser.password2))
-                        }
+                        // disabled={
+                        //     (props.user && props.user.is_verified === 0 && !location.pathname.startsWith('/admin/user')) ||
+                        //     !props.formUser.pseudo ||
+                        //     !props.formUser.email ||
+                        //     props.isLoading ||
+                        //     (!props.user && (!props.formUser.email2 || !props.formUser.password || !props.formUser.password2))
+                        // }
                     >
                         {props.user ? 'Enregistrer' : "S'inscrire"}
                     </button>

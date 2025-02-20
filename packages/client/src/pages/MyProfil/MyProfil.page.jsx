@@ -8,6 +8,8 @@ import UserForm from '../../components/UserForm/UserForm';
 import { sendEmailConfirm } from '../../store/slice/authSlice';
 import CircularProgress from '@mui/material/CircularProgress';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
+import { getComments } from '../../store/slice/commentSlice';
+import CommentsList from '../../components/CommentsList/CommentsList';
 
 
 const MyProfilPage = () => {
@@ -19,6 +21,7 @@ const MyProfilPage = () => {
     const [openModalConfirm, setOpenModalConfirm] = React.useState(false);
     const { status, error } = Redux.useSelector((state) => state.users);
     const statusEmail = Redux.useSelector((state) => state.auth.status);
+    const comments = Redux.useSelector((state) => state.comments.comments)
 
     const [formUser, setFormUser] = React.useState({
         firstName: user.first_name || '',
@@ -32,6 +35,15 @@ const MyProfilPage = () => {
 
     const [profilPicture, setProfilPicture] = React.useState(null);
     const [previewImage, setPreviewImage] = React.useState(null);
+
+    React.useEffect(() => {
+        if (user) {
+            dispatch(getComments({
+                userId: user.user_id
+            }))
+        }
+
+    }, [user, dispatch])
 
     const handleChange = (e) => {
         if (e.target.name === 'profilPicture') {
@@ -132,6 +144,13 @@ const MyProfilPage = () => {
                 previewImage={previewImage}
 
             />
+            {comments && comments.length > 0 &&
+                <div>
+                    <h3>Vos commentaires :</h3>
+                    <CommentsList comments={comments} />
+                </div>
+
+            }
             {openModalInfo &&
                 <Modal
                     title="Informations sauvegardées"

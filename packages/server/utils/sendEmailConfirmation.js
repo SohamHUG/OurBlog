@@ -27,3 +27,12 @@ export const sendConfirmationEmail = async (email, token) => {
         `,
     });
 }
+
+export const sendInfoEmail = async ({email, subject, html}) => {
+    await transporter.sendMail({
+        from: '"OurBlog" <noreply@ourblog.com>',
+        to: email,
+        subject: subject,
+        html: html,
+    });
+}

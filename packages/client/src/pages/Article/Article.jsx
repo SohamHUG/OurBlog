@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate, Link, NavLink } from 'react-router-dom';
 import { getPost } from '../../store/slice/articleSlice';
 import PostContent from '../../components/PostContent/PostContent';
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -61,17 +61,22 @@ const Article = () => {
                             fontSize="large"
                         />
                         <h1 className='post-title'>{post.title}</h1>
-                        <p className="author">
+                        <NavLink className="author link"
+                            to={user && user.role_name === 'admin' ?
+                                `/admin/user/${post.user_id}`
+                                : `/profil/${post.user_id}`
+                            }
+                        >
                             {!post.user_picture ?
                                 <AccountCircleIcon className='default-avatar' fontSize="large" />
                                 :
                                 <img className="avatar" src={post.user_picture} alt={`Photo de profil de ${post.user_pseudo}`} />
                             }
                             {post.user_pseudo}
-                        </p>
-                        <Link to={`../../category/${post.category_id}`} className="post-category link">
+                        </NavLink>
+                        <NavLink to={`/category/${post.category_id}`} className="post-category link">
                             {post.category_name}
-                        </Link>
+                        </NavLink>
                     </div>
 
                     <PostContent
@@ -97,7 +102,7 @@ const Article = () => {
                             </form>
                         }
 
-                        {statusComments === "succeeded" &&
+                        {comments && comments.length > 0 &&
                             <CommentsList comments={comments} />
                         }
                     </div>

@@ -42,7 +42,7 @@ const ProfilPage = () => {
 
             {posts && posts.length > 0 ?
                 <PostsList posts={posts} />
-                : <h3>Aucun article</h3>
+                : <h3>Aucun contenu publié</h3>
             }
 
         </section>

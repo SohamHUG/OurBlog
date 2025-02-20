@@ -1,4 +1,4 @@
-import { deleteCommentById, findAllComments, saveComment } from "../models/comment.model.js";
+import { deleteCommentById, findAllComments, findCommentById, saveComment } from "../models/comment.model.js";
 
 export const createComment = async (req, res) => {
     const comment = req.body.comment;
@@ -15,6 +15,7 @@ export const getComments = async (req, res) => {
     try {
         const filters = {
             articleId: req.query.articleId,
+            userId: req.query.userId,
         };
 
         const comments = await findAllComments(filters);
@@ -32,10 +33,12 @@ export const deleteComment = async (req, res) => {
     const { id } = req.params;
     const user = req.user;
 
+    const comment = await findCommentById(id)
+
     if (
-        parseInt(id) !== user.user_id &&
-        req.user.role_name !== "admin" &&
-        req.user.role_name !== 'moderator'
+        comment[0].user_id !== user.user_id &&
+        req.user.role_id !== 4 &&
+        req.user.role_id !== 2
     ) {
         return res.status(403).json({ message: "Vous n'êtes pas autorisé" });
     }

@@ -17,12 +17,12 @@ export const register = async (req, res) => {
             return res.status(400).json({ message: "Cet email est déja utilisé", });
         }
 
-        if (firstName.length <= 0 || lastName.length <= 0) {
-            firstName = null;
-            lastName = null;
-        } else {
-            roleId = 3; //Author
-        }
+        // if (firstName.length <= 0 || lastName.length <= 0) {
+        //     firstName = null;
+        //     lastName = null;
+        // } else {
+        //     roleId = 3; //Author
+        // }
 
         const hash = bcrypt.hashSync(password, 10);
 

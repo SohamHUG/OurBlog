@@ -9,17 +9,18 @@ import { fetchSearchResults } from '../../store/slice/searchSlice';
 const SearchResultsPage = () => {
     const location = useLocation();
     const results = useSelector((state) => state.search.results)
+    const user = useSelector((state) => state.auth.user)
     const dispatch = useDispatch()
 
     const query = new URLSearchParams(location.search).get('q');
 
     useEffect(() => {
         if (query) {
-            dispatch(fetchSearchResults({query}))
+            dispatch(fetchSearchResults({ query }))
         }
     }, [query, dispatch]);
 
-    
+
 
     if (results.length === 0) {
         return <div className="no-results">Aucun résultat trouvé pour <strong>"{query}"</strong>.</div>;
@@ -35,7 +36,9 @@ const SearchResultsPage = () => {
                         className="result-card"
                         to={result.type === 'article' ?
                             `/article/${result.id}`
-                            : `/profil/${result.id}`
+                            : user && user.role_name === 'admin' ?
+                                `/admin/user/${result.id}`
+                                : `/profil/${result.id}`
                         }
                     >
                         {result.type === 'user' && (

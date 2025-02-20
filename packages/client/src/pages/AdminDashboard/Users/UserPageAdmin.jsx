@@ -6,6 +6,9 @@ import Modal from '../../../components/Modal/Modal';
 import UserForm from '../../../components/UserForm/UserForm';
 import { getProfil, updateUser, deleteUser } from '../../../store/slice/userSlice';
 import { getPosts } from '../../../store/slice/articleSlice';
+import { getComments } from '../../../store/slice/commentSlice';
+import CommentsList from '../../../components/CommentsList/CommentsList'
+import PostsLists from '../../../components/PostsList/PostsList'
 
 const UserPageAdmin = () => {
     const user = Redux.useSelector((state) => state.users.profil);
@@ -17,12 +20,13 @@ const UserPageAdmin = () => {
     const [openModalConfirm, setOpenModalConfirm] = React.useState(false);
     const { status, error } = Redux.useSelector((state) => state.users);
     const posts = Redux.useSelector((state) => state.posts.authorPosts.items)
+    const comments = Redux.useSelector((state) => state.comments.comments)
 
     React.useEffect(() => {
         dispatch(getProfil(id))
     }, [dispatch, id])
 
-    // console.log(posts)
+    // console.log(user)
 
     const [formUser, setFormUser] = React.useState({
         firstName: '',
@@ -39,15 +43,19 @@ const UserPageAdmin = () => {
                 lastName: user.last_name || '',
                 pseudo: user.pseudo,
                 email: user.email,
+                role: user.role_id,
                 newEmail: '',
             })
             dispatch(getPosts({
                 context: 'author',
                 userId: user.user_id
             }))
+            dispatch(getComments({
+                userId: user.user_id
+            }))
         }
 
-    }, [setFormUser, user])
+    }, [setFormUser, user, dispatch])
 
     const [profilPicture, setProfilPicture] = React.useState(null);
     const [previewImage, setPreviewImage] = React.useState(null);
@@ -118,6 +126,19 @@ const UserPageAdmin = () => {
                 previewImage={previewImage}
 
             />
+            {comments && comments.length > 0 &&
+                <div>
+                    <h3>Commentaires de l'utilisateur :</h3>
+                    <CommentsList comments={comments} />
+                </div>
+            }
+            {posts && posts.length > 0 &&  
+            <div>
+                <h3>Articles de l'utilisateur :</h3>
+                <PostsLists posts={posts}/>
+            </div>
+
+            }
             {openModalInfo &&
                 <Modal
                     title="Informations sauvegardées"

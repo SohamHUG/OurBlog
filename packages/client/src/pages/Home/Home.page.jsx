@@ -9,7 +9,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import KeyboardArrowUpRoundedIcon from '@mui/icons-material/KeyboardArrowUpRounded';
 import './Home.scss';
 import { getPosts, setSortBy, resetAllPosts } from '../../store/slice/articleSlice';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, NavLink } from 'react-router-dom';
 import ScrollToTopButton from '../../components/ScrollToTopButton/ScrollToTopButton';
 import { getPopularUsers } from '../../store/slice/userSlice';
 import InfiniteScroll from '../../components/InfiniteScroll/InfiniteScroll';
@@ -91,15 +91,20 @@ const HomePage = () => {
                             title={'RÉDACTEURS POPULAIRES'}
                             limit={5}
                             seeMoreType={'expand'}
-                            renderItem={(user) => (
-                                <div className='popular-authors'>
-                                    {!user.profil_picture ?
+                            renderItem={(author) => (
+                                <NavLink className='popular-authors'
+                                    to={user && user.role_name === 'admin' ?
+                                        `/admin/user/${author.id}`
+                                        : `/profil/${author.id}`
+                                    }
+                                >
+                                    {!author.profil_picture ?
                                         <AccountCircleIcon className='default-avatar' fontSize="large" />
                                         :
-                                        <img className="avatar" src={user.profil_picture} alt={`Photo de profil de ${user.user_pseudo}`} />
+                                        <img className="avatar" src={author.profil_picture} alt={`Photo de profil de ${author.user_pseudo}`} />
                                     }
-                                    <p className='author-pseudo'>{user.first_name} {user.last_name} </p>
-                                </div>
+                                    <p className='author-pseudo'>{author.first_name} {author.last_name} </p>
+                                </NavLink>
                             )}
                         />
                     }

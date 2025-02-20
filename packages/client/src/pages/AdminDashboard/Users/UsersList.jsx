@@ -37,6 +37,7 @@ const UsersList = () => {
                                     </div>
                                     <p>{user.pseudo}</p>
                                     <p>{user.first_name} {user.last_name}</p>
+                                    <p>{user.role_name}</p>
                                     <p>
                                         {user.is_verified === 1 ?
                                             'yes'

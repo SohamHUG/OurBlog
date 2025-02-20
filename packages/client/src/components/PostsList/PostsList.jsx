@@ -39,14 +39,19 @@ const PostsList = ({ posts }) => {
             {posts.map((post) => (
                 <div key={post.id} className="post">
                     <div className="post-head">
-                        <p className="author">
+                        <NavLink className="author"
+                            to={user && user.role_name === 'admin' ?
+                                `/admin/user/${post.user_id}`
+                                : `/profil/${post.user_id}`
+                            }
+                        >
                             {!post.user_picture ? (
                                 <AccountCircleIcon className='default-avatar' fontSize="large" />
                             ) : (
                                 <img className="avatar" src={post.user_picture} alt={`Photo de profil de ${post.user_pseudo}`} />
                             )}
                             <span>{post.user_pseudo}</span>
-                        </p>
+                        </NavLink>
                         <h4 className="post-title">
                             {post.title.charAt(0).toUpperCase() + post.title.slice(1)}
                         </h4>

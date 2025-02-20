@@ -39,13 +39,18 @@ export const findAllComments = async (filters = {}) => {
             params.push(filters.articleId)
         }
 
-        sql += ` ORDER BY comment.created_at ASC` 
+        if (filters.userId) {
+            sql += ` AND comment.user_id = ?`
+            params.push(filters.userId)
+        }
+
+        sql += ` ORDER BY comment.created_at ASC`
 
         db.query(sql, params, async (err, result) => {
             if (err) {
                 reject(err)
             }
-            
+
             resolve(result);
         })
     })
@@ -71,7 +76,7 @@ export const findCommentById = async (id) => {
             if (err) {
                 reject(err)
             }
-            
+
             resolve(result);
         })
     })
@@ -85,7 +90,7 @@ export const deleteCommentById = async (id) => {
             if (err) {
                 reject(err)
             }
-            
+
             resolve(result);
         })
     })

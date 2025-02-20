@@ -93,7 +93,7 @@ function App() {
                     <Route
                         path={'/profil'}
                         element={
-                            <PrivateRoute role={["author", "admin", "user", "moderator"]}>
+                            <PrivateRoute roles={["author", "admin", "user", "moderator"]}>
                                 <MyProfilPage />
                             </PrivateRoute>
                         }
@@ -102,7 +102,7 @@ function App() {
                     <Route
                         path="/articles"
                         element={
-                            <PrivateRoute role={["author", "admin"]}>
+                            <PrivateRoute roles={["author", "admin"]}>
                                 <DashBoardAuthor />
                             </PrivateRoute>
                         }
@@ -111,7 +111,7 @@ function App() {
                     <Route
                         path="/article/create"
                         element={
-                            <PrivateRoute role={["author", "admin"]}>
+                            <PrivateRoute roles={["author", "admin"]}>
                                 <CreateArticle />
                             </PrivateRoute>
                         }
@@ -120,7 +120,7 @@ function App() {
                     <Route
                         path="/articles/update/:id"
                         element={
-                            <PrivateRoute role={["author", "admin"]} >
+                            <PrivateRoute roles={["author", "admin"]} >
                                 <UpdateArticlePage />
                             </PrivateRoute>
                         }

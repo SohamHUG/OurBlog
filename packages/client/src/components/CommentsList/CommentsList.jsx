@@ -3,13 +3,14 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useDispatch, useSelector } from "react-redux";
 import Modal from "../Modal/Modal";
 import { deleteComment } from "../../store/slice/commentSlice";
+import { NavLink, useLocation } from "react-router-dom";
 
 const CommentsList = ({ comments }) => {
     const user = useSelector((state) => state.auth.user);
     const dispatch = useDispatch();
-
+    const location = useLocation()
     const [openModalConfirm, setOpenModalConfirm] = useState(false);
-    const [commentToDelete, setCommentToDelete] = useState(null); 
+    const [commentToDelete, setCommentToDelete] = useState(null);
 
     const toggleModalConfirm = (id) => {
         setCommentToDelete(id);
@@ -24,7 +25,7 @@ const CommentsList = ({ comments }) => {
     const confirmDeleteComment = async () => {
         if (commentToDelete) {
             dispatch(deleteComment(commentToDelete));
-            closeModalConfirm(); 
+            closeModalConfirm();
         }
     };
 
@@ -42,13 +43,18 @@ const CommentsList = ({ comments }) => {
                             {comm.user_pseudo}
                         </div>
                         <p>{comm.content}</p>
+                        {(location.pathname.startsWith('/admin/user') || location.pathname.startsWith('/profil')) &&
+                            <NavLink className='link' to={`/article/${comm.article_id}`}>
+                                Voir l'article
+                            </NavLink>
+                        }
 
                         {user &&
                             (user.user_id === comm.user_id ||
                                 user.role_name === 'admin' ||
                                 user.role_name === 'moderator') && (
                                 <>
-                                    <button onClick={() => toggleModalConfirm(comm.id)}> 
+                                    <button onClick={() => toggleModalConfirm(comm.id)}>
                                         <span>Supprimer</span>
                                     </button>
                                 </>
@@ -73,7 +79,7 @@ const CommentsList = ({ comments }) => {
                     cancelButton='Annuler'
                     open={openModalConfirm}
                     cancel={closeModalConfirm}
-                    valid={confirmDeleteComment} 
+                    valid={confirmDeleteComment}
                 />
             )}
         </div>

@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import './SearchResultsNav.scss'
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { clearNavSearch, clearSearch } from "../../store/slice/searchSlice";
 
 const SearchResultsNav = ({ results, searchRef, }) => {
@@ -10,6 +10,7 @@ const SearchResultsNav = ({ results, searchRef, }) => {
     //     return null;
     // }
     const dispatch = useDispatch()
+    const user = useSelector((state) => state.auth.user)
 
     const onClickItem = () => {
         dispatch(clearNavSearch())
@@ -23,7 +24,9 @@ const SearchResultsNav = ({ results, searchRef, }) => {
             <ul className="search-results-list">
                 {results.map((result) => (
                     <NavLink
-                        to={result.type === "article" ? `/article/${result.id}` : `/profil/${result.id}`}
+                        to={result.type === "article" ? `/article/${result.id}` : user && user.role_name === 'admin' ?
+                            `/admin/user/${result.id}`
+                            : `/profil/${result.id}`}
                         className="search-result-item"
                         onClick={onClickItem}
                         key={result.id + Math.random()}

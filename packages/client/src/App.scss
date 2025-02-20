@@ -143,8 +143,13 @@ html {
             h3,
             .avatar,
             .default-avatar,
-            .ql-editor.ql-blank::before {
+            .ql-editor.ql-blank::before,
+            .categories-nav .category {
                 color: vars.$primary-white ;
+            }
+
+            .categories-nav .category {
+                border: 1px solid vars.$primary-white;
             }
 
             .article-page .ql-editor,
@@ -152,6 +157,8 @@ html {
             .article-page .ql-editor h2 span,
             .article-page .ql-editor p,
             .article-page .ql-editor p span,
+            .article-page .ql-editor h1,
+            .article-page .ql-editor h1 span,
             .article-page .ql-editor strong {
                 color: vars.$primary-white!important ;
             }

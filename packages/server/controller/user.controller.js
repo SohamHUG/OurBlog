@@ -1,7 +1,11 @@
 import { deleteUserById, findAllUsers, findByCredentials, findPopularUsers, findUserById, updateUserById } from "../models/user.model.js";
 import bcrypt from 'bcrypt';
 import jwt from "jsonwebtoken";
-import { sendConfirmationEmail } from "../utils/index.js";
+import { sendConfirmationEmail, sendInfoEmail } from "../utils/index.js";
+import { findAllRoles } from "../models/roles.model.js";
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 
 export const getMine = async (req, res) => {
@@ -25,7 +29,13 @@ export const getUserById = async (req, res) => {
 
         const user = await findUserById(id)
 
-        return res.status(201).json({ user });
+        if (!user) {
+            return res.status(404).json({ message: "Utilisateur non trouvé" });
+        }
+
+        const { refresh_token, ...userData } = user;
+
+        return res.status(201).json({ user: userData });
     } catch (err) {
         console.error(err)
         return res.status(500).json({ message: err });
@@ -88,13 +98,33 @@ export const updateUser = async (req, res) => {
 
     let roleId = user.role_id
 
-    if (user.role_name !== "admin") {
+    if (user.role_name !== "admin" && user.role_name !== "moderator") {
         if (firstName.length <= 0 || lastName.length <= 0) {
             firstName = null;
             lastName = null;
             roleId = 1; // User
-        } else {
-            roleId = 3; // Author
+        }
+        //  else {
+        //     roleId = 3; // Author
+        // }
+    }
+
+    if (req.user.role_id === 4) {
+        if (parseInt(req.body.role) !== roleId) {
+            roleId = parseInt(req.body.role);
+
+            if (parseInt(req.body.role) === 3)
+                sendInfoEmail({
+                    email: user.email,
+                    subject: 'Demande de publication d\'article',
+                    html: `
+                        <p>Bonjour,</p>
+                        <p>Votre demande d'autorisation de publication d'articles a été validée par nos administrateurs.</p>
+                        <p>Vous pouvez désormais publier des articles sur notre plateforme.</p>
+                        <p>Veuillez consulter nos <a href="${process.env.FRONTEND_URL}/user-agreement">conditions d'utilisation</a>.</p>
+                        
+                    `
+                });
         }
     }
 
@@ -148,4 +178,15 @@ export const deleteUser = async (req, res) => {
     await deleteUserById(id);
 
     return res.status(200).json({ message: "Utilisateur supprimé" });
+}
+
+export const getRoles = async (req, res) => {
+    try {
+        const roles = await findAllRoles()
+        return res.status(200).json({ roles });
+    } catch (err) {
+        console.error(err)
+        return res.status(500).json({ message: err });
+    }
+
 }
