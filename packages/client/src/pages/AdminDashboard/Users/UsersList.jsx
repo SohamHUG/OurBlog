@@ -3,7 +3,7 @@ import * as Redux from 'react-redux';
 import { Navigate, NavLink } from 'react-router-dom';
 import { selectCategories, selectCategoriesStatus, selectCategoriesError } from '../../../store/selectors';
 import { fetchCategories, createCategory, deleteCategory } from '../../../store/slice/categoriesSlice';
-import { getAllUsers } from '../../../store/slice/userSlice';
+import { getAllUsers, resetUsers } from '../../../store/slice/userSlice';
 import { useLocation } from 'react-router-dom';
 
 const UsersList = () => {
@@ -12,13 +12,10 @@ const UsersList = () => {
     const status = Redux.useSelector((state) => state.users.status);
 
     React.useEffect(() => {
-        if (status === 'idle') {
-            dispatch(getAllUsers())
-        }
+        dispatch(getAllUsers())
+    }, [dispatch]);
 
-    }, [dispatch, status]);
-
-    // console.log(users)
+    console.log(users)
 
 
     return (
@@ -27,7 +24,7 @@ const UsersList = () => {
                 <div className=''>
                     {users.map((user) => {
                         return (
-                            <div key={user.user_id}>
+                            <div key={user.user_id || user.id}>
                                 <NavLink to={`/admin/user/${user.user_id}`} >
                                     <div>
                                         {user.profil_picture ?

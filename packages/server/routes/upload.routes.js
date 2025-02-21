@@ -6,7 +6,9 @@ import { isVerified, isAuthor } from '../middlewares/role.middleware.js';
 
 const router = Router();
 
-router.post('/profil-picture', [authMiddleware, isVerified, upload.single('profilPicture')], uploadProfilPic);
+router.use(authMiddleware, isVerified)
+
+router.post('/profil-picture', [upload.single('profilPicture')], uploadProfilPic);
 
 // router.post('/profil-picture', authMiddleware, isVerified, (req, res, next) => {
 //     console.log("Headers:", req.headers);
@@ -16,7 +18,7 @@ router.post('/profil-picture', [authMiddleware, isVerified, upload.single('profi
 //     next();
 // }, upload.single('profilPicture'), uploadProfilPic);
 
-router.post('/article-files', [authMiddleware, isAuthor, isVerified, upload.single('articleFile')], uploadArticleFiles);
+router.post('/article-files', [isAuthor, upload.single('articleFile')], uploadArticleFiles);
 
 // router.post('/article-files', authMiddleware, isVerified, (req, res, next) => {
 //     console.log("Headers:", req.headers);
@@ -27,6 +29,6 @@ router.post('/article-files', [authMiddleware, isAuthor, isVerified, upload.sing
 // }, upload.single('articleFile'), uploadArticleFiles);
 
 
-router.delete('/profil-picture/:id', [authMiddleware, isVerified], deleteProfilPicture)
+router.delete('/profil-picture/:id', deleteProfilPicture)
 
 export default router;

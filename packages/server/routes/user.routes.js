@@ -8,13 +8,9 @@ const router = Router();
 // router.get('/', getMine);
 
 router.get('/me', [authMiddleware], getMine);
-
 router.get('/popular', getPopularUsers);
-
 router.get('/:id', getUserById);
-
 router.put('/update/:id', [authMiddleware, isVerified], updateUser);
-
 router.delete('/:id', [authMiddleware], deleteUser)
 
 

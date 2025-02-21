@@ -6,12 +6,11 @@ import { getRoles, getUsers } from '../controller/user.controller.js';
 
 const router = Router();
 
-router.post('/create-category', [authMiddleware, isAdmin], createCategory);
+router.use(authMiddleware, isAdmin)
 
-router.delete('/delete-category/:id', [authMiddleware, isAdmin], deleteCategory);
-
-router.get('/users', [authMiddleware, isAdmin], getUsers)
-
-router.get('/roles', [authMiddleware, isAdmin], getRoles)
+router.post('/create-category', createCategory);
+router.delete('/delete-category/:id', deleteCategory);
+router.get('/users', getUsers)
+router.get('/roles', getRoles)
 
 export default router;

@@ -37,6 +37,7 @@ export const getProfil = createAsyncThunk('user/getProfil', async (id, { rejectW
     try {
         const response = await fetch(`${BASE_URL}/${id}`, {
             method: 'GET',
+            credentials: 'include',
         });
         return handleResponse(response).then((data) => data.user);
     } catch (error) {

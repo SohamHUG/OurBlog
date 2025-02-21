@@ -8,13 +8,9 @@ import { authLimiter } from '../middlewares/limiter.middleware.js';
 const router = Router();
 
 router.post('/register', [validateSchema(userValidation), authLimiter], register);
-
 router.post('/login',[authLimiter], loginUser);
-
 router.get('/logout', logOutUser);
-
 router.get('/confirm/:token', confirmEmail)
-
 router.get('/confirm-email',[authMiddleware], sendEmail)
 
 export default router;

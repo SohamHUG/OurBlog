@@ -26,7 +26,7 @@ const ProfilPage = () => {
         }
     }, [dispatch, profil?.user_id]);
 
-    // console.log(profil)
+    console.log(profil)
 
     return (
         <section>

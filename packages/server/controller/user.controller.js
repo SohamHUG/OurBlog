@@ -12,7 +12,7 @@ export const getMine = async (req, res) => {
     try {
         const user = req.user;
 
-        const { refresh_token, ...userData } = user;
+        const { refresh_token, role_id, ...userData } = user;
 
         // console.log(userData)
 
@@ -26,16 +26,32 @@ export const getMine = async (req, res) => {
 export const getUserById = async (req, res) => {
     try {
         const { id } = req.params;
+        const { accessToken } = req.cookies;
+        let requestingUser;
+
+        if (accessToken) {
+            try {
+                const decoded = jwt.verify(accessToken, process.env.JWT_SECRET);
+                requestingUser = await findUserById(decoded.id); 
+            } catch (err) {
+                console.log('Token invalide');
+            }
+        }
 
         const user = await findUserById(id)
-
         if (!user) {
             return res.status(404).json({ message: "Utilisateur non trouvé" });
         }
 
-        const { refresh_token, ...userData } = user;
+        if (requestingUser && requestingUser.role_id === 4) {
+            return res.status(201).json({ user });
+        } else {
+            const { refresh_token, email, role_id, role_name, is_verified, ...userData } = user;
 
-        return res.status(201).json({ user: userData });
+            return res.status(201).json({ user: userData });
+        }
+
+
     } catch (err) {
         console.error(err)
         return res.status(500).json({ message: err });
