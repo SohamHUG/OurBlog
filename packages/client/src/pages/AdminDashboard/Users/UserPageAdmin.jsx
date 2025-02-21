@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as Redux from 'react-redux';
 import { useNavigate, Navigate, useParams } from 'react-router-dom';
-import { uploadProfilPic } from '../../../store/slice/photoSlice';
+import { deleteProfilPic } from '../../../store/slice/photoSlice';
 import Modal from '../../../components/Modal/Modal';
 import UserForm from '../../../components/UserForm/UserForm';
 import { getProfil, updateUser, deleteUser } from '../../../store/slice/userSlice';
@@ -19,6 +19,7 @@ const UserPageAdmin = () => {
     const [openModalInfo, setOpenModalInfo] = React.useState(false);
     const [openModalConfirm, setOpenModalConfirm] = React.useState(false);
     const { status, error } = Redux.useSelector((state) => state.users);
+    const statusPhoto = Redux.useSelector((state) => state.photos.status)
     const posts = Redux.useSelector((state) => state.articles.authorPosts.items)
     const comments = Redux.useSelector((state) => state.comments.comments)
 
@@ -57,43 +58,21 @@ const UserPageAdmin = () => {
 
     }, [setFormUser, user, dispatch])
 
-    const [profilPicture, setProfilPicture] = React.useState(null);
-    const [previewImage, setPreviewImage] = React.useState(null);
-
     const handleChange = (e) => {
-        if (e.target.name === 'profilPicture') {
-            const file = e.target.files[0];
-            if (file) {
-                // Génère un URL temporaire pour l'aperçu
-                const preview = URL.createObjectURL(file);
-                setPreviewImage(preview);
-            }
-            setProfilPicture(file);
-        } else {
-            setFormUser({ ...formUser, [e.target.name]: e.target.value });
-        }
+        setFormUser({ ...formUser, [e.target.name]: e.target.value });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const data = await dispatch(updateUser({ id: user.user_id, userData: formUser }));
-
-        if (profilPicture) {
-            const formData = new FormData();
-            formData.append('profilPicture', profilPicture);
-            console.log("FormData content:", formData.get('profilPicture'));
-            dispatch(uploadProfilPic(formData));
-            // setPreviewImage(null);
-        }
-
-        if (updateUser.fulfilled.match(data)) {
-            setOpenModalInfo(true)
-        }
+        await dispatch(updateUser({ id: user.user_id, userData: formUser })).unwrap();
+        setOpenModalInfo(true)
 
     };
 
     const closeModalInfo = () => {
         setOpenModalInfo(false);
+        window.location.reload();
+
         // navigate('/')
     }
 
@@ -109,7 +88,10 @@ const UserPageAdmin = () => {
     }
 
     const deleteProfilPicture = async () => {
+        await dispatch(deleteProfilPic(user.user_id)).unwrap()
+        window.location.reload();
 
+        // navigate('/')
     }
 
     return (
@@ -121,9 +103,9 @@ const UserPageAdmin = () => {
                 handleSubmit={handleSubmit}
                 handleChange={handleChange}
                 errorMessage={error}
-                isLoading={status === 'loading'}
+                isLoading={status === 'loading' || statusPhoto === 'loading'}
                 toggleModalConfirm={toggleModalConfirm}
-                previewImage={previewImage}
+                deleteProfilPicture={deleteProfilPicture}
 
             />
             {comments && comments.length > 0 &&
@@ -132,11 +114,11 @@ const UserPageAdmin = () => {
                     <CommentsList comments={comments} />
                 </div>
             }
-            {posts && posts.length > 0 &&  
-            <div>
-                <h3>Articles de l'utilisateur :</h3>
-                <PostsLists posts={posts}/>
-            </div>
+            {posts && posts.length > 0 &&
+                <div>
+                    <h3>Articles de l'utilisateur :</h3>
+                    <PostsLists posts={posts} />
+                </div>
 
             }
             {openModalInfo &&

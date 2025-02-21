@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { deleteUser, updateUser } from './userSlice';
+import { deleteProfilPic } from './photoSlice';
 
 const BASE_URL = 'http://localhost:3000/auth';
 
@@ -160,7 +161,7 @@ const authSlice = createSlice({
                 // console.log(action)
                 // state.error = action.error.message
                 state.user = null;
-                // localStorage.removeItem('user');
+                localStorage.removeItem('user');
             })
             .addCase(deleteUser.fulfilled, (state, action) => {
                 if (state.userConnected && state.user.user_id === action.meta.arg) {
@@ -169,14 +170,6 @@ const authSlice = createSlice({
                     localStorage.removeItem('user');
                     state.status = 'succeeded';
                 }
-            })
-            // .addCase(deleteUser.rejected, (state, action) => {
-            //     state.status = 'failed';
-            //     state.error = action.error.message;
-            // })
-            .addCase(updateUser.fulfilled, (state, action) => {
-                state.status = 'succeeded';
-                state.user = action.payload;
             })
     },
 });

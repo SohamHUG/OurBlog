@@ -29,9 +29,9 @@ const Menu = ({ menuActive, menuRef }) => {
         dispatch(openModalLogin());
     };
 
-    const handleLogout = () => {
-        dispatch(logout());
-        // navigate('/');
+    const handleLogout = async () => {
+        await dispatch(logout()).unwrap();
+        navigate('/');
     };
 
     return (

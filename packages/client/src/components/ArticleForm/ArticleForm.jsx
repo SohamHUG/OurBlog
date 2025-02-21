@@ -84,6 +84,7 @@ const ArticleForm = ({
                 <input
                     type="text"
                     id='tags'
+                    autoComplete='off'
                     placeholder="ex: recette#à faire#dessert"
                     value={formData.tags.join('#')}
                     onChange={handleTagsChange}

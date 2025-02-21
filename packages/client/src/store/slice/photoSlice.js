@@ -146,6 +146,18 @@ const photosSlice = createSlice({
                 state.status = 'failed';
                 state.error = action.error.message;
             })
+            .addCase(deleteProfilPic.pending, (state) => {
+                state.status = 'loading';
+                state.error = null;
+            })
+            .addCase(deleteProfilPic.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                // console.log(action)
+            })
+            .addCase(deleteProfilPic.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message;
+            })
             .addCase(uploadArticlePic.pending, (state) => {
                 state.status = 'loading';
                 state.error = null;

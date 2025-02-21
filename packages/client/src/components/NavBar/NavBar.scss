@@ -50,6 +50,7 @@
             display: flex;
             align-items: center;
             width: 0%;
+            height: .8em;
 
             @media screen and (min-width: 538px) {
                 width: 100%;
@@ -61,11 +62,7 @@
                 opacity: 0;
                 padding: .6em;
                 flex-grow: 1;
-                // border-radius: 50px;
-                border-top-left-radius: 50px;
-                border-bottom-left-radius: 50px;
-                border-top-right-radius: 0%;
-                border-bottom-right-radius: 0%;
+                border-radius: 50px 0 0 50px;
                 position: absolute;
                 left: 4vh;
                 transition: all 0.3s ease;
@@ -86,11 +83,8 @@
             }
 
             .submit-search {
-                border-top-right-radius: 50px;
-                border-bottom-right-radius: 50px;
-                border-top-left-radius: 0%;
-                border-bottom-left-radius: 0%;
-                height: 2.8em;
+                border-radius: 0 50px 50px 0;
+                height: 2.78em;
                 position: absolute;
                 right: .3em;
                 transition: all 0.3s ease;

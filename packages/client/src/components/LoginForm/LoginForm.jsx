@@ -24,7 +24,7 @@ const LoginForm = ({ closeModal }) => {
             dispatch(getMe());
             closeModal();
         } catch (error) {
-            console.error('Erreur lors l\'authentification');
+            console.error(error.message);
         }
 
     };

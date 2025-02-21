@@ -37,8 +37,7 @@ const ArticlePage = () => {
             await dispatch(createComment({ comment: comment, id: post.id })).unwrap();
             setComment('')
         } catch (error) {
-            console.error(error)
-
+            console.error(error.message)
         }
 
     }

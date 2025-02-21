@@ -29,7 +29,8 @@ const PostContentResum = ({ content }) => {
 
     // image par défaut si l'article n'en a pas 
     if (!imageFound) {
-        image = `<img src="https://res.cloudinary.com/dni6ctpie/image/upload/v1737720475/files/xawevym4ryigg3oufwoh.png" alt="Default" />`;
+        // image = `<img src="https://res.cloudinary.com/dni6ctpie/image/upload/v1737720475/files/xawevym4ryigg3oufwoh.png" alt="Default" />`;
+        image = `<img src="/img/default-article.png" alt="image d'article par défaut" />`;
     }
 
     // réduis le contenu 

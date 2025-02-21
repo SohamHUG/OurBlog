@@ -106,11 +106,17 @@ section {
                         object-fit: cover;
                         overflow: hidden;
                         border: 2px solid vars.$main-color;
+                        flex-shrink: 0;
                     }
                 }
 
                 .input-file {
                     display: none;
+                }
+
+                span {
+                    display: inline-block;
+                    margin: 1.2em 0;
                 }
             }
 

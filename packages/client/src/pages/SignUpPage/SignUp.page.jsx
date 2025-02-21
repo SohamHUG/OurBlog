@@ -56,7 +56,7 @@ const SignUpPage = () => {
             await dispatch(registerUser(formUser)).unwrap();
             setOpenModal(true); 
         } catch (error) {
-            console.error("Erreur lors de l'inscription :", error);
+            console.error(error.message);
             // setErrorMessage("Une erreur est survenue lors de l'inscription.");
         }
     };

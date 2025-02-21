@@ -5,7 +5,8 @@ import { useLocation } from 'react-router-dom';
 const ProfilPictureUpload = ({
     user,
     previewImage,
-    handleChange
+    handleChange,
+    deleteProfilPicture
 }) => {
     const location = useLocation()
 
@@ -22,7 +23,9 @@ const ProfilPictureUpload = ({
                     : <AccountCircleIcon fontSize='large' />
                 }
                 Choisir une photo de profil
+
             </label>
+
             <input
                 id='profil-file'
                 className='input-file'
@@ -30,8 +33,13 @@ const ProfilPictureUpload = ({
                 name="profilPicture"
                 accept="image/png, image/jpeg"
                 onChange={handleChange}
-                disabled={!location.pathname.startsWith('/admin/user') && user && user.is_verified === 0 ? true : false}
+                disabled={location.pathname.startsWith('/admin/user') || user && user.is_verified === 0 ? true : false}
             />
+            {user.profil_picture &&
+                <span onClick={deleteProfilPicture} className='link alert'>
+                    Supprimer la photo de profil
+                </span>
+            }
         </div>
 
     );

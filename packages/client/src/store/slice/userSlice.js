@@ -136,7 +136,6 @@ const usersSlice = createSlice({
             })
             .addCase(getProfil.rejected, (state, action) => {
                 state.status = 'failed';
-                console.log(action.error)
                 state.error = action.error.message;
             })
     },

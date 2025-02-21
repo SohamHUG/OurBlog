@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as Redux from 'react-redux';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { updateUser, deleteUser } from '../../store/slice/userSlice';
-import { uploadProfilPic } from '../../store/slice/photoSlice';
+import { deleteProfilPic, uploadProfilPic } from '../../store/slice/photoSlice';
 import Modal from '../../components/Modal/Modal';
 import UserForm from '../../components/UserForm/UserForm';
 import { sendEmailConfirm } from '../../store/slice/authSlice';
@@ -68,13 +68,15 @@ const MyProfilPage = () => {
                 const formData = new FormData();
                 formData.append('profilPicture', profilPicture);
                 await dispatch(uploadProfilPic(formData)).unwrap();
+            } else if (previewImage === null) {
+                await dispatch(updateUser({ id: user.user_id, userData: { ...formUser, deleteProfilPicture: true } })).unwrap();
             }
 
-            const data = await dispatch(updateUser({ id: user.user_id, userData: formUser })).unwrap();
+            await dispatch(updateUser({ id: user.user_id, userData: formUser })).unwrap();
             setOpenModalInfo(true)
             formUser.oldPassword = '';
             formUser.newPassword = '';
-            
+
         } catch (error) {
             console.error(error.message)
         }
@@ -82,11 +84,10 @@ const MyProfilPage = () => {
 
     };
 
-    // console.log(status)
-
     const closeModalInfo = () => {
         setOpenModalInfo(false);
-        navigate('/')
+        window.location.reload();
+        // navigate('/')
     }
 
     const toggleModalConfirm = () => {
@@ -94,20 +95,20 @@ const MyProfilPage = () => {
     }
 
     const confirmDeleteUser = async () => {
-        dispatch(deleteUser(user.user_id));
+        await dispatch(deleteUser(user.user_id)).unwrap();
         navigate('/');
         setOpenModalConfirm(false);
 
     }
 
     const deleteProfilPicture = async () => {
-
+        await dispatch(deleteProfilPic(user.user_id)).unwrap()
+        window.location.reload();
+        // navigate('/')
     }
 
     const handleEmailConfirm = () => {
-        // if (statusEmail === 'idle') {
         dispatch(sendEmailConfirm());
-        // }
 
     }
 
@@ -145,7 +146,7 @@ const MyProfilPage = () => {
                 isLoading={status === 'loading' || statusUpload === 'loading'}
                 toggleModalConfirm={toggleModalConfirm}
                 previewImage={previewImage}
-
+                deleteProfilPicture={deleteProfilPicture}
             />
             {comments && comments.length > 0 &&
                 <div>
@@ -170,9 +171,9 @@ const MyProfilPage = () => {
                     title="Êtes vous sûr ?"
                     content={
                         <div>
-                            {error && <p style={{ color: 'red' }}>{error}</p>}
-                            <p>Voulez-vous vraiment <strong style={{ color: 'red' }}>supprimer</strong> votre compte de manière <strong style={{ color: 'red' }}>définitive</strong> ?</p>
-                            <strong style={{ color: 'red' }}>Cet action est irréversible !</strong>
+                            {error && <p className='alert'>{error}</p>}
+                            <p>Voulez-vous vraiment <strong className='alert'>supprimer</strong> votre compte de manière <strong className='alert'>définitive</strong> ?</p>
+                            <strong className='alert'>Cet action est irréversible !</strong>
                         </div>
                     }
                     validButton='Oui je suis sûr'

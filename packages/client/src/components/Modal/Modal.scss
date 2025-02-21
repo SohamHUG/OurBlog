@@ -12,39 +12,27 @@
     .modal-content {
         position: fixed;
         background-color: vars.$secondary-bckground;
-        top: 0;
-        left: 0%;
-        right: 50%;
-        width: 100%;
-        max-width: 100%;
-        height: 100%;
+        width: 90%;
+        max-width: 600px; // Ajuste selon le design
+        height: fit-content;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%); // Centre parfaitement
         display: flex;
         flex-direction: column;
         border-radius: 15px;
         box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 
-        @media screen and (min-width: 529px) {
-            // width: 80%;
-            height: fit-content;
-            left: 0%;
-            top: 5%;
-        }
-
         @media screen and (min-width: 617px) {
             width: 60%;
-            height: fit-content;
-            left: 20%;
-            top: 10%;
         }
 
         @media screen and (min-width: 1024px) {
             width: 50%;
-            left: 25%;
         }
 
         @media screen and (min-width: 1440px) {
             width: 35%;
-            left: 32.5%;
         }
 
         .modal-header {
@@ -69,17 +57,16 @@
         }
 
         .modal-main {
-            padding: .6em;
+            padding: 1em;
+            text-align: center;
 
             @media screen and (min-width: 760px) {
-                padding-left: 3em;
-                padding-right: 3em;
+                padding: 0 3em;
 
             }
 
             @media screen and (min-width: 1024px) {
-                padding-left: 5em;
-                padding-right: 5em;
+                padding: 0 5em;
 
             }
         }
@@ -89,16 +76,31 @@
             text-align: center;
             display: flex;
             justify-content: center;
+            flex-direction: column;
+
+            @media screen and (min-width: 760px) {
+                padding: 0 3em;
+
+            }
+
+            @media screen and (min-width: 1024px) {
+                padding: 0 5em;
+
+            }
 
             button {
                 width: 90%;
                 height: 3rem;
                 font-size: 1em;
-                margin-top: 50%;
+                margin: 1.1em auto;
 
-                @media screen and (min-width: 760px) {
-                    margin-top: 20%;
-                }
+                // @media screen and (min-width: 760px) {
+                //     margin-top: 20%;
+                // }
+            }
+
+            .cancel-btn {
+                background-color: vars.$alert-color;
             }
         }
     }

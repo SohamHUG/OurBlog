@@ -41,7 +41,7 @@ const Modal = (props) => {
 
                     {
                         props.cancelButton &&
-                        <button onClick={props.cancel}>
+                        <button className='cancel-btn' onClick={props.cancel}>
                             {props.cancelButton}
                         </button>
                     }
