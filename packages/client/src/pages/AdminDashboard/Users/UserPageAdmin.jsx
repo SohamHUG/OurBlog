@@ -5,7 +5,7 @@ import { uploadProfilPic } from '../../../store/slice/photoSlice';
 import Modal from '../../../components/Modal/Modal';
 import UserForm from '../../../components/UserForm/UserForm';
 import { getProfil, updateUser, deleteUser } from '../../../store/slice/userSlice';
-import { getPosts } from '../../../store/slice/articleSlice';
+import { getArticles } from '../../../store/slice/articleSlice';
 import { getComments } from '../../../store/slice/commentSlice';
 import CommentsList from '../../../components/CommentsList/CommentsList'
 import PostsLists from '../../../components/PostsList/PostsList'
@@ -19,7 +19,7 @@ const UserPageAdmin = () => {
     const [openModalInfo, setOpenModalInfo] = React.useState(false);
     const [openModalConfirm, setOpenModalConfirm] = React.useState(false);
     const { status, error } = Redux.useSelector((state) => state.users);
-    const posts = Redux.useSelector((state) => state.posts.authorPosts.items)
+    const posts = Redux.useSelector((state) => state.articles.authorPosts.items)
     const comments = Redux.useSelector((state) => state.comments.comments)
 
     React.useEffect(() => {
@@ -46,7 +46,7 @@ const UserPageAdmin = () => {
                 role: user.role_id,
                 newEmail: '',
             })
-            dispatch(getPosts({
+            dispatch(getArticles({
                 context: 'author',
                 userId: user.user_id
             }))

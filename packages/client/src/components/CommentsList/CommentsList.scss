@@ -1,0 +1,49 @@
+@use '../../variables' as vars;
+
+.comments-list {
+    width: 100%;
+    margin: 0 auto;
+    max-height: 28em;
+    overflow: auto;
+
+    &::-webkit-scrollbar {
+        height: 4px;
+        width: .8em;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.3);
+        border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .comment {
+        border-top: 2px solid vars.$primary-black;
+        max-width: 100%;
+        word-wrap: break-word;
+        padding: 1em 0;
+        margin: 1em 0;
+
+        .comment-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            .author {
+                display: flex;
+                align-items: center;
+
+                .avatar {
+                    margin-right: .3em;
+                }
+
+                .default-avatar {
+                    font-size: 2.7em;
+                }
+            }
+        }
+    }
+}

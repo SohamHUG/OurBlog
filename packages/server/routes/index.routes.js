@@ -7,8 +7,8 @@ import articleRoutes from './articles.routes.js';
 import userRoutes from './user.routes.js';
 import tagRoutes from './tags.routes.js';
 import commentRoutes from './comment.routes.js'
+import uploadRoutes from './upload.routes.js'
 import { search } from "../controller/search.controller.js";
-
 
 const router= Router();
 
@@ -25,6 +25,8 @@ router.use('/articles', articleRoutes);
 router.use('/comments', commentRoutes);
 
 router.use('/users', userRoutes);
+
+router.use('/upload', uploadRoutes);
 
 router.get('/search', search)
 

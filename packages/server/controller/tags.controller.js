@@ -8,7 +8,7 @@ export const getTags = async (req, res) => {
 
         return res.status(201).json({ tags })
     } catch (err) {
-        console.error(err)
-        return res.status(500).json({ message: err });
+        console.error(err);
+        return res.status(500).json({ message: "Erreur interne du serveur." });
     }
 }

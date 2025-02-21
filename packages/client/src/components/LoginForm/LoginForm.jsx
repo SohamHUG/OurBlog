@@ -19,11 +19,14 @@ const LoginForm = ({ closeModal }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const resultAction = await dispatch(loginUser({ email, password }));
-        if (loginUser.fulfilled.match(resultAction)) {
+        try {
+            await dispatch(loginUser({ email, password })).unwrap();
             dispatch(getMe());
             closeModal();
+        } catch (error) {
+            console.error('Erreur lors l\'authentification');
         }
+
     };
 
     const borderBot = {

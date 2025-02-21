@@ -1,19 +1,19 @@
 import * as React from 'react';
 import * as Redux from 'react-redux';
-import { selectCategories, selectCategoriesStatus, selectCategoriesError } from '../../../store/selectors';
-import { fetchCategories } from '../../../store/slice/categoriesSlice';
-import { createPost } from '../../../store/slice/articleSlice';
-import RichTextEditor from '../../../components/RichTextEditor/RichTextEditor';
-import Modal from '../../../components/Modal/Modal';
+import { selectCategories, selectCategoriesStatus, selectCategoriesError } from '../../../store/selectors/index.js';
+import { fetchCategories } from '../../../store/slice/categoriesSlice.js';
+import { createArticle } from '../../../store/slice/articleSlice.js';
+import RichTextEditor from '../../../components/RichTextEditor/RichTextEditor.jsx';
+import Modal from '../../../components/Modal/Modal.jsx';
 import { useNavigate, Navigate } from 'react-router-dom';
 import ArticleForm from '../../../components/ArticleForm/ArticleForm.jsx';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { uploadImagesAndUpdateContent } from '../../../store/slice/photoSlice.js';
 
 
-const CreateArticle = () => {
+const CreateArticlePage = () => {
     const dispatch = Redux.useDispatch();
-    const error = Redux.useSelector((state) => state.posts.error)
+    const articleError = Redux.useSelector((state) => state.articles.error)
     const [openModal, setOpenModal] = React.useState(false);
     const [newId, setNewId] = React.useState(null);
     const navigate = useNavigate();
@@ -62,15 +62,14 @@ const CreateArticle = () => {
             const updatedContent = await dispatch(uploadImagesAndUpdateContent({ content: formData.content })).unwrap();
             const updatedFormData = { ...formData, content: updatedContent };
 
-            const article = await dispatch(createPost(updatedFormData));
+            const article = await dispatch(createArticle(updatedFormData)).unwrap();;
 
-            if (createPost.fulfilled.match(article)) {
-                setNewId(article.payload.article.id);
-                setOpenModal(true);
-            }
+            setNewId(article.article.id);
+            setOpenModal(true);
         } catch (error) {
-            console.error('Erreur lors du téléchargement des images :', error);
-            setErrorMessage("Une erreur s'est produite lors du téléchargement des images.");
+            if (!articleError) {
+                setErrorMessage("Une erreur s'est produite lors de la modification de votre article.");
+            }
         }
 
     };
@@ -103,7 +102,7 @@ const CreateArticle = () => {
                 handleContentChange={handleContentChange}
                 handleTagsChange={handleTagsChange}
                 handleSubmit={handleSubmit}
-                errorMessage={error || errorMessage}
+                errorMessage={articleError || errorMessage}
             />
 
             {openModal &&
@@ -120,5 +119,5 @@ const CreateArticle = () => {
     );
 };
 
-export default CreateArticle;
+export default CreateArticlePage;
 

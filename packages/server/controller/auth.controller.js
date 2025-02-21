@@ -41,8 +41,8 @@ export const register = async (req, res) => {
 
         return res.status(201).json({ message: "User created", newUser });
     } catch (err) {
-        console.error(err)
-        return res.status(500).json({ message: err });
+        console.error(err);
+        return res.status(500).json({ message: "Erreur interne du serveur." });
     }
 }
 
@@ -57,8 +57,8 @@ export const sendEmail = async (req, res) => {
 
         return res.status(200).json({ message: "Mail envoyé" });
     } catch (err) {
-        console.error(err)
-        return res.status(500).json({ message: err });
+        console.error(err);
+        return res.status(500).json({ message: "Erreur interne du serveur." });
     }
 
 }
@@ -74,8 +74,8 @@ export const confirmEmail = async (req, res) => {
         res.status(200).json({ message: 'Votre email a été confirmé avec succès !' });
 
     } catch (err) {
-        console.error(err)
-        res.status(400).json({ message: err });
+        console.error(err);
+        return res.status(500).json({ message: "Erreur interne du serveur." });
     }
 }
 
@@ -120,8 +120,8 @@ export const loginUser = async (req, res) => {
         return res.status(200).json({ message: "Connexion réussi !" });
 
     } catch (err) {
-        console.error(err)
-        return res.status(500).json({ message: err });
+        console.error(err);
+        return res.status(500).json({ message: "Erreur interne du serveur." });
     }
 }
 

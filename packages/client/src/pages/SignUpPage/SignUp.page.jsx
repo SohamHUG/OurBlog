@@ -5,7 +5,7 @@ import { useNavigate, Navigate } from 'react-router-dom';
 import Modal from '../../components/Modal/Modal';
 import UserForm from '../../components/UserForm/UserForm';
 
-const RegisterPage = () => {
+const SignUpPage = () => {
     const { user } = Redux.useSelector((state) => state.auth);
     // console.log(user)
     // if (user && user.user_id) {
@@ -52,11 +52,12 @@ const RegisterPage = () => {
         }
 
         setErrorMessage('')
-        const result = await dispatch(registerUser(formUser));
-
-        if (registerUser.fulfilled.match(result)) {
-            // dispatch(loginUser({ email: formUser.email, password: formUser.password }));
-            setOpenModal(true);
+        try {
+            await dispatch(registerUser(formUser)).unwrap();
+            setOpenModal(true); 
+        } catch (error) {
+            console.error("Erreur lors de l'inscription :", error);
+            // setErrorMessage("Une erreur est survenue lors de l'inscription.");
         }
     };
 
@@ -95,4 +96,4 @@ const RegisterPage = () => {
     );
 }
 
-export default RegisterPage;
+export default SignUpPage;

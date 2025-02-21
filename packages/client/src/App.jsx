@@ -10,15 +10,15 @@ import TermsOfService from './pages/legal/TermsOfService.page';
 import CategoryPage from './pages/CategoryPage/Category.page';
 import AllCategories from './pages/AllCategories/AllCategories.page';
 import './App.scss'
-import RegisterPage from './pages/RegisterPage/Register.page';
+import SignUp from './pages/SignUpPage/SignUp.page';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
-import AdminDashboard from './pages/AdminDashboard/AdminDashboard';
+import AdminDashboard from './pages/AdminDashboard/AdminDashboard.page';
 import ConfirmEmail from './pages/ConfirmEmail/ConfirmEmail';
-import CreateArticle from './pages/Author/CreateArticle/CreateArticle';
+import CreateArticle from './pages/Author/CreateArticle/CreateArticle.page';
 import MyProfilPage from './pages/MyProfil/MyProfil.page';
-import Article from './pages/Article/Article';
-import DashBoardAuthor from './pages/Author/AuthorDashboard/DashboardAuthor';
-import UpdateArticlePage from './pages/Author/UpdateArticle/UpdateArticle';
+import Article from './pages/Article/Article.page';
+import DashBoardAuthor from './pages/Author/AuthorDashboard/DashboardAuthor.page';
+import UpdateArticlePage from './pages/Author/UpdateArticle/UpdateArticle.page';
 import ProfilPage from './pages/Profil/Profil.page';
 import SearchResultsPage from './pages/SearchResultsPage/SearchResults.page';
 import { getMe, logoutUser } from './store/slice/authSlice';
@@ -52,7 +52,7 @@ function App() {
                     <Route path="/categories" element={<AllCategories />} />
                     <Route path={'/user-agreement'} element={<TermsOfService />} />
                     <Route path={'/privacy-policy'} element={<PrivacyPolicy />} />
-                    <Route path={'/register'} element={<RegisterPage />} />
+                    <Route path={'/register'} element={<SignUp />} />
                     <Route path={'/confirm/:token'} element={<ConfirmEmail />} />
                     <Route path={'/search'} element={<SearchResultsPage />} />
                     <Route path={'/article/:id'} element={<Article />} />

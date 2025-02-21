@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as Redux from 'react-redux';
-import { getPosts, resetAuthorPosts } from '../../../store/slice/articleSlice';
+import { getArticles, resetAuthorPosts } from '../../../store/slice/articleSlice';
 import PostsList from '../../../components/PostsList/PostsList';
 import ScrollToTopButton from '../../../components/ScrollToTopButton/ScrollToTopButton';
 import InfiniteScroll from '../../../components/InfiniteScroll/InfiniteScroll';
@@ -8,12 +8,12 @@ import InfiniteScroll from '../../../components/InfiniteScroll/InfiniteScroll';
 
 const DashBoardAuthor = () => {
     const user = Redux.useSelector((state) => state.auth.user);
-    const posts = Redux.useSelector((state) => state.posts.authorPosts.items);
-    const status = Redux.useSelector((state) => state.posts.authorPosts.status);
+    const posts = Redux.useSelector((state) => state.articles.authorPosts.items);
+    const status = Redux.useSelector((state) => state.articles.authorPosts.status);
     const dispatch = Redux.useDispatch();
     // const [page, setPage] = React.useState(1);
-    const hasMore = Redux.useSelector((state) => state.posts.authorPosts.hasMore)
-    const page = Redux.useSelector((state) => state.posts.authorPosts.page)
+    const hasMore = Redux.useSelector((state) => state.articles.authorPosts.hasMore)
+    const page = Redux.useSelector((state) => state.articles.authorPosts.page)
 
     // console.log(status)
     React.useEffect(() => {
@@ -21,7 +21,7 @@ const DashBoardAuthor = () => {
     }, [dispatch])
 
     React.useEffect(() => {
-        dispatch(getPosts({
+        dispatch(getArticles({
             userId: user.user_id,
             // limit: 10,
             // page,

@@ -6,6 +6,7 @@ import routes from './routes/index.routes.js';
 import dotenv from 'dotenv';
 import { refreshTokenMiddleware } from './middlewares/refreshToken.middleware.js';
 import uploadRoutes from './routes/upload.routes.js';
+import { speedLimiter, speedLimiterOnSensitive } from './middlewares/limiter.middleware.js';
 
 dotenv.config();
 
@@ -25,10 +26,12 @@ app.use(cookieParser());
 
 app.use(refreshTokenMiddleware);
 
-app.use('/upload', uploadRoutes)
+// app.use(speedLimiterOnSensitive);
+
+// app.use('/upload', uploadRoutes)
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true })); // lire le body lorsque le payload sera de type form-data-urlencoded (formulaire)
+// app.use(express.urlencoded({ extended: true })); // lire le body lorsque le payload sera de type form-data-urlencoded (formulaire)
 
 // app.use('/uploads', express.static('uploads'));
 

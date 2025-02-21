@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { getPost, updateArticle } from '../../../store/slice/articleSlice';
-import ArticleForm from '../../../components/ArticleForm/ArticleForm';
+import { getArticle, updateArticle } from '../../../store/slice/articleSlice.js';
+import ArticleForm from '../../../components/ArticleForm/ArticleForm.jsx';
 import { uploadImagesAndUpdateContent } from '../../../store/slice/photoSlice.js';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -11,7 +11,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 const UpdateArticlePage = () => {
     const { id } = useParams();
     const { user } = useSelector((state) => state.auth);
-    const { post, status, error } = useSelector((state) => state.posts)
+    const { post, status, error } = useSelector((state) => state.articles)
     const [errorMessage, setErrorMessage] = React.useState("");
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -19,7 +19,7 @@ const UpdateArticlePage = () => {
     const goBack = () => navigate(-1);
 
     React.useEffect(() => {
-        dispatch(getPost(id));
+        dispatch(getArticle(id));
     }, [id, dispatch]);
 
     // console.log(status)
@@ -79,14 +79,14 @@ const UpdateArticlePage = () => {
             const updatedContent = await dispatch(uploadImagesAndUpdateContent({ content: formData.content })).unwrap();
             const updatedFormData = { ...formData, content: updatedContent };
 
-            const articleUp = await dispatch(updateArticle({ id: post.id, articleData: updatedFormData }))
+            const articleUp = await dispatch(updateArticle({ id: post.id, articleData: updatedFormData })).unwrap();
+            navigate(`/article/${articleUp.article.id}`);
 
-            if (updateArticle.fulfilled.match(articleUp)) {
-                navigate(`/article/${articleUp.payload.article.id}`)
-            }
         } catch (error) {
-            console.error('Erreur lors du téléchargement des images :', error);
-            setErrorMessage("Une erreur s'est produite lors du téléchargement des images.");
+            if (status !== 'failed') {
+                setErrorMessage("Une erreur s'est produite lors de la modification de votre article.");
+            }
+
         }
 
     };
@@ -96,7 +96,7 @@ const UpdateArticlePage = () => {
     }
 
     if (status === 'failed') {
-        return <div className='alert'>Post introuvable </div>
+        return <Navigate to="/not-allowed" />;
     }
 
     if (post && user && (post.user_id !== user.user_id && user.role_name !== 'admin')) {

@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import Modal from "../Modal/Modal";
 import { deleteComment } from "../../store/slice/commentSlice";
 import { NavLink, useLocation } from "react-router-dom";
+import DeleteIcon from '@mui/icons-material/Delete';
+import './CommentsList.scss'
 
 const CommentsList = ({ comments }) => {
     const user = useSelector((state) => state.auth.user);
@@ -30,17 +32,34 @@ const CommentsList = ({ comments }) => {
     };
 
     return (
-        <div>
+        <div className="comments-list">
             {comments && comments.length > 0 ? (
                 comments.map((comm) => (
-                    <div key={comm.id}>
-                        <div>
-                            {!comm.user_picture ? (
-                                <AccountCircleIcon className='default-avatar' fontSize="large" />
-                            ) : (
-                                <img className="avatar" src={comm.user_picture} alt={`Photo de profil de ${comm.user_pseudo}`} />
-                            )}
-                            {comm.user_pseudo}
+                    <div key={comm.id} className="comment">
+                        <div className="comment-header">
+                            <NavLink className="author link"
+                                to={user && user.role_name === 'admin' ?
+                                    `/admin/user/${comm.user_id}`
+                                    : `/profil/${comm.user_id}`
+                                }
+                            >
+                                {!comm.user_picture ? (
+                                    <AccountCircleIcon className='default-avatar' fontSize="large" />
+                                ) : (
+                                    <img className="avatar" src={comm.user_picture} alt={`Photo de profil de ${comm.user_pseudo}`} />
+                                )}
+                                {comm.user_pseudo}
+                            </NavLink>
+                            {user &&
+                                (user.user_id === comm.user_id ||
+                                    user.role_name === 'admin' ||
+                                    user.role_name === 'moderator') && (
+                                    <>
+                                        <DeleteIcon className="delete-btn" onClick={() => toggleModalConfirm(comm.id)} />
+
+                                    </>
+                                )
+                            }
                         </div>
                         <p>{comm.content}</p>
                         {(location.pathname.startsWith('/admin/user') || location.pathname.startsWith('/profil')) &&
@@ -49,16 +68,7 @@ const CommentsList = ({ comments }) => {
                             </NavLink>
                         }
 
-                        {user &&
-                            (user.user_id === comm.user_id ||
-                                user.role_name === 'admin' ||
-                                user.role_name === 'moderator') && (
-                                <>
-                                    <button onClick={() => toggleModalConfirm(comm.id)}>
-                                        <span>Supprimer</span>
-                                    </button>
-                                </>
-                            )}
+
 
                     </div>
                 ))

@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import themeReducer from './slice/themeSlice';
-import postsReducer from './slice/articleSlice';
+import articlesReducer from './slice/articleSlice';
 import usersReducer from './slice/userSlice';
 import photosReducer from './slice/photoSlice';
 import categoriesReducer from './slice/categoriesSlice';
@@ -11,7 +11,7 @@ import searchReducer from './slice/searchSlice'
 const store = configureStore({
     reducer: {
         theme: themeReducer,
-        posts: postsReducer,
+        articles: articlesReducer,
         users: usersReducer,
         photos: photosReducer,
         categories: categoriesReducer,

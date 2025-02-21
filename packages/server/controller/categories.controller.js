@@ -7,8 +7,8 @@ export const getCategories = async (req, res) => {
         
         return res.status(201).json({data})
     } catch (err) {
-        console.error(err)
-        return res.status(500).json({message: err});
+        console.error(err);
+        return res.status(500).json({ message: "Erreur interne du serveur." });
     }
 }
 
@@ -19,8 +19,8 @@ export const getCategory = async (req, res) => {
 
         return res.status(201).json({data})
     } catch (err) {
-        console.error(err)
-        return res.status(500).json({message: err});
+        console.error(err);
+        return res.status(500).json({ message: "Erreur interne du serveur." });
     }
 }
 
@@ -31,8 +31,8 @@ export const createCategory = async (req, res) => {
 
         return res.status(201).json({data})
     } catch (err) {
-        console.error(err)
-        return res.status(500).json({message: err});
+        console.error(err);
+        return res.status(500).json({ message: "Erreur interne du serveur." });
     }
 }
 
@@ -43,7 +43,7 @@ export const deleteCategory = async (req, res) => {
 
         return res.status(201).json({message: "category deleted !", data})
     } catch (err) {
-        console.error(err)
-        return res.status(500).json({message: err});
+        console.error(err);
+        return res.status(500).json({ message: "Erreur interne du serveur." });
     }
 }

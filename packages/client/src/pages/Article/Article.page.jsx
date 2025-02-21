@@ -1,27 +1,27 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate, Link, NavLink } from 'react-router-dom';
-import { getPost } from '../../store/slice/articleSlice';
+import { getArticle } from '../../store/slice/articleSlice';
 import PostContent from '../../components/PostContent/PostContent';
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import './Article.scss'
 import { createComment, getComments } from '../../store/slice/commentSlice';
-import ScrollToTopButton from '../../components/ScrollToTopButton/ScrollToTopButton';
 import CommentsList from '../../components/CommentsList/CommentsList';
 
-const Article = () => {
+const ArticlePage = () => {
     const { id } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { post, status } = useSelector((state) => state.posts)
+    const { post, status } = useSelector((state) => state.articles)
     const { user } = useSelector((state) => state.auth);
     const { comments } = useSelector((state) => state.comments)
     const statusComments = useSelector((state) => state.comments.status)
+    const errorComments = useSelector((state) => state.comments.error)
     const [comment, setComment] = React.useState('')
 
     React.useEffect(() => {
-        dispatch(getPost(id));
+        dispatch(getArticle(id));
     }, [id, dispatch]);
 
     React.useEffect(() => {
@@ -32,10 +32,13 @@ const Article = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const newComm = await dispatch(createComment({ comment: comment, id: post.id }));
-        if (createComment.fulfilled.match(newComm)) {
-            dispatch(getComments({ articleId: post.id }))
+
+        try {
+            await dispatch(createComment({ comment: comment, id: post.id })).unwrap();
             setComment('')
+        } catch (error) {
+            console.error(error)
+
         }
 
     }
@@ -85,11 +88,11 @@ const Article = () => {
 
                     <div className='comments-container'>
                         <h3>Commentaires :</h3>
-
+                        {errorComments && <p className='alert'>{errorComments}</p>}
                         {user && user.is_verified === 1 &&
                             <form onSubmit={handleSubmit}>
-                                <label htmlFor="comment">Ajouter un commentaire</label>
-                                <input
+                                <label htmlFor="comment">Ajouter un commentaire :</label>
+                                <textarea
                                     id='comment'
                                     name='comment'
                                     autoComplete='off'
@@ -99,6 +102,9 @@ const Article = () => {
                                     onChange={(e) => setComment(e.target.value)}
                                     required
                                 />
+                                <button type='submit'>
+                                    Publier
+                                </button>
                             </form>
                         }
 
@@ -112,4 +118,4 @@ const Article = () => {
     );
 };
 
-export default Article;
+export default ArticlePage;

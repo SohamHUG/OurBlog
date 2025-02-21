@@ -8,24 +8,24 @@ import { openModalLogin } from '../../store/slice/authSlice';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import KeyboardArrowUpRoundedIcon from '@mui/icons-material/KeyboardArrowUpRounded';
 import './Home.scss';
-import { getPosts, setSortBy, resetAllPosts } from '../../store/slice/articleSlice';
+import { getArticles, setSortBy, resetAllPosts } from '../../store/slice/articleSlice';
 import { useNavigate, NavLink } from 'react-router-dom';
 import ScrollToTopButton from '../../components/ScrollToTopButton/ScrollToTopButton';
 import { getPopularUsers } from '../../store/slice/userSlice';
 import InfiniteScroll from '../../components/InfiniteScroll/InfiniteScroll';
 
 const HomePage = () => {
-    const filters = Redux.useSelector((state) => state.posts.filters)
+    const filters = Redux.useSelector((state) => state.articles.filters)
     const dispatch = Redux.useDispatch();
     const navigate = useNavigate()
-    const status = Redux.useSelector((state) => state.posts.allPosts.status);
-    const error = Redux.useSelector((state) => state.posts.allPosts.error);
+    const status = Redux.useSelector((state) => state.articles.allPosts.status);
+    const error = Redux.useSelector((state) => state.articles.allPosts.error);
     const users = Redux.useSelector(((state) => state.users.users));
     const usersStatus = Redux.useSelector(((state) => state.users.status));
     const { user } = Redux.useSelector((state) => state.auth);
-    const posts = Redux.useSelector((state) => state.posts.allPosts.items);
-    const hasMore = Redux.useSelector((state) => state.posts.allPosts.hasMore)
-    const page = Redux.useSelector((state) => state.posts.allPosts.page)
+    const posts = Redux.useSelector((state) => state.articles.allPosts.items);
+    const hasMore = Redux.useSelector((state) => state.articles.allPosts.hasMore)
+    const page = Redux.useSelector((state) => state.articles.allPosts.page)
 
     React.useEffect(() => {
         if (usersStatus === 'succeeded' || users.length === 0) {
@@ -37,7 +37,7 @@ const HomePage = () => {
     // console.log(user)
 
     React.useEffect(() => {
-        dispatch(getPosts({
+        dispatch(getArticles({
             sortBy: filters.sortBy,
             page,
             limit: 10,

@@ -8,19 +8,22 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        border-bottom: 2px solid black;
+        border-bottom: 2px solid vars.$primary-black;
 
-        
+
 
         .post-title {
             font-size: 2em;
             // max-width: 50%;
             white-space: nowrap;
             overflow: auto;
+            text-align: center;
+            flex: 1;
 
             @media screen and (min-width: 800px) {
                 white-space: wrap;
                 overflow: auto;
+                flex: initial;
             }
         }
 
@@ -32,15 +35,16 @@
 
             @media screen and (min-width: 800px) {
                 display: flex;
-                
+
             }
 
             img {
                 margin-right: .5em;
+
                 // display: none;
                 @media screen and (min-width: 800px) {
                     // display: initial;
-                
+
                 }
             }
         }
@@ -73,6 +77,19 @@
 
         h2 {
             font-size: 1.8em;
+        }
+    }
+
+    .comments-container {
+        // border-top: 2px solid vars.$primary-black;
+        textarea {
+            height: 5em;
+            max-width: 100%;
+            border-radius: 10px;
+            border: 1px solid black;
+            margin: 1em 0;
+            padding: .5em;
+            font-size: 1.1em;
         }
     }
 }

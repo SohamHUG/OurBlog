@@ -46,25 +46,64 @@
             }
         }
 
-        .search-bar {
-            width: 0px;
-            height: .8em;
-            opacity: 0;
-            padding: .6em;
-            border-radius: 50px;
-            position: absolute;
-            left: 4vh;
-            transition: all 0.3s ease;
-            border: 1px solid vars.$primary-black;
-            margin-left: 20px;
+        div {
+            display: flex;
+            align-items: center;
+            width: 0%;
 
             @media screen and (min-width: 538px) {
-                width: 80%;
-                opacity: 1;
-                position: unset;
-                margin-left: 1em;
+                width: 100%;
+            }
+
+            .search-bar {
+                width: 0px;
+                height: .8em;
+                opacity: 0;
+                padding: .6em;
+                flex-grow: 1;
+                // border-radius: 50px;
+                border-top-left-radius: 50px;
+                border-bottom-left-radius: 50px;
+                border-top-right-radius: 0%;
+                border-bottom-right-radius: 0%;
+                position: absolute;
+                left: 4vh;
+                transition: all 0.3s ease;
+                border: 1px solid vars.$primary-black;
+                margin-left: 20px;
+                outline: none;
+
+                // &:focus {
+                //     border: 1px solid vars.$main-color;
+                // }
+
+                @media screen and (min-width: 538px) {
+                    width: 80%;
+                    opacity: 1;
+                    position: unset;
+                    margin-left: 1em;
+                }
+            }
+
+            .submit-search {
+                border-top-right-radius: 50px;
+                border-bottom-right-radius: 50px;
+                border-top-left-radius: 0%;
+                border-bottom-left-radius: 0%;
+                height: 2.8em;
+                position: absolute;
+                right: .3em;
+                transition: all 0.3s ease;
+                display: none;
+
+                @media screen and (min-width: 538px) {
+                    display: flex;
+                    position: initial;
+                }
             }
         }
+
+
 
 
     }
@@ -109,8 +148,12 @@
             width: 100%;
 
             .search-bar {
-                width: calc(100% - (35px + 1.2em + 20px + 0.3em));
+                width: calc(100% - (35px + 1.2em + 20px + 0.3em + 2.2em));
                 opacity: 1;
+            }
+
+            .submit-search {
+                display: flex;
             }
         }
 

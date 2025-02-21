@@ -18,11 +18,42 @@ export const createArticle = async (req, res) => {
 
         const sanitizedContent = sanitizeHtml(content, {
             allowedTags: [
-                'p', 'strong', 'em', 'u', 'a', 'ul', 'ol', 'li', 'br', 'img', 'blockquote'
+                'p', 'h1', 'h2', 'strong', 'em', 'u', 'a', 'ul', 'ol', 'li', 'br', 'img', 'blockquote', 'span'
             ],
             allowedAttributes: {
-                a: ['href', 'target', 'rel'],
-                img: ['src', 'alt']
+                a: ['href', 'target', 'rel', 'class', 'style'],
+                img: ['src', 'alt', 'class', 'style'],
+                span: ['class', 'style'],
+                strong: ['class', 'style'],
+                p: ['class', 'style'],
+                u: ['class', 'style'],
+                h1: ['class', 'style'],
+                h2: ['class', 'style'],
+                em: ['class', 'style'],
+                li: ['class', 'style'],
+                blockquote: ['class', 'style'],
+            },
+            allowedStyles: {
+                '*': {
+                    // Limiter les styles autorisés
+                    'color': [/^#([0-9a-f]{3}){1,2}$/i, /^rgb\(/, /^rgba\(/, /^(red)$/i], // Autorise uniquement les couleurs valides
+                    'font-size': [/^\d+(px|em|rem|%)$/], // Évite les valeurs arbitraires
+                    'text-align': [/^(left|right|center|justify)$/],
+                    'font-weight': [/^(normal|bold|lighter|bolder|[1-9]00)$/],
+                    'text-decoration': [/^(none|underline|line-through|overline)$/],
+                }
+            },
+            transformTags: {
+                'a': (tagName, attribs) => {
+                    if (attribs.href && !attribs.href.startsWith('#') && !attribs.href.startsWith('/')) {
+                        attribs.rel = 'noopener noreferrer'; // Sécurise les liens externes
+                        attribs.target = '_blank'; // Ouvre les liens externes dans un nouvel onglet
+                    }
+                    return {
+                        tagName,
+                        attribs
+                    };
+                }
             },
             disallowedTagsMode: 'discard',
         });
@@ -31,8 +62,7 @@ export const createArticle = async (req, res) => {
 
         const existingTags = await findTags();
         const existingTagMap = new Map(existingTags.map(tag => [tag.name, tag.id]));
-        // map transforme l'obj en paire [name, id]
-        // new Map()
+
         // Map {
         //     "name" => id,
         //     "recette" => 2,
@@ -55,14 +85,14 @@ export const createArticle = async (req, res) => {
                 existingTagMap.set(tagName.toLowerCase().trim(), tagId);
             }
 
-            await linkArticleToTag(article, tagId);
+            await linkArticleToTag(article.id, tagId);
         }
 
         return res.status(201).json({ message: "Article created", article })
 
     } catch (err) {
         console.error(err);
-        return res.status(500).json({ message: err })
+        return res.status(500).json({ message: "Erreur interne du serveur." });
     }
 }
 
@@ -93,12 +123,43 @@ export const updateArticle = async (req, res) => {
 
         const sanitizedContent = sanitizeHtml(content, {
             allowedTags: [
-                'p', 'strong', 'em', 'u', 'a', 'ul', 'ol', 'li', 'br', 'img', 'blockquote'
+                'p', 'h1', 'h2', 'strong', 'em', 'u', 'a', 'ul', 'ol', 'li', 'br', 'img', 'blockquote', 'span'
             ],
             allowedAttributes: {
-                a: ['href', 'target', 'rel'],
-                img: ['src', 'alt']
+                a: ['href', 'target', 'rel', 'class', 'style'],
+                img: ['src', 'alt', 'class', 'style'],
+                span: ['class', 'style'],
+                strong: ['class', 'style'],
+                p: ['class', 'style'],
+                u: ['class', 'style'],
+                h1: ['class', 'style'],
+                h2: ['class', 'style'],
+                em: ['class', 'style'],
+                li: ['class', 'style'],
+                blockquote: ['class', 'style'],
             },
+            allowedStyles: {
+                '*': {
+                    // Limiter les styles autorisés
+                    'color': [/^#([0-9a-f]{3}){1,2}$/i, /^rgb\(/, /^rgba\(/, /^(red)$/i], // Autorise uniquement les couleurs valides
+                    'font-size': [/^\d+(px|em|rem|%)$/], // Évite les valeurs arbitraires
+                    'text-align': [/^(left|right|center|justify)$/],
+                    'font-weight': [/^(normal|bold|lighter|bolder|[1-9]00)$/],
+                    'text-decoration': [/^(none|underline|line-through|overline)$/],
+                }
+            },
+            // transformTags: {
+            //     'a': (tagName, attribs) => {
+            //         if (attribs.href && !attribs.href.startsWith('#') && !attribs.href.startsWith('/')) {
+            //             attribs.rel = 'noopener noreferrer'; // Sécurise les liens externes
+            //             attribs.target = '_blank'; // Ouvre les liens externes dans un nouvel onglet
+            //         }
+            //         return {
+            //             tagName,
+            //             attribs
+            //         };
+            //     }
+            // },
             disallowedTagsMode: 'discard',
         });
 
@@ -133,7 +194,7 @@ export const updateArticle = async (req, res) => {
 
     } catch (err) {
         console.error(err);
-        return res.status(500).json({ message: err })
+        return res.status(500).json({ message: "Erreur interne du serveur." });
     }
 }
 
@@ -154,7 +215,7 @@ export const getArticles = async (req, res) => {
         return res.status(200).json({ articles })
     } catch (err) {
         console.error(err);
-        return res.status(500).json({ message: err })
+        return res.status(500).json({ message: "Erreur interne du serveur." });
     }
 }
 
@@ -171,25 +232,30 @@ export const getArticleById = async (req, res) => {
         return res.status(200).json({ article })
     } catch (err) {
         console.error(err);
-        return res.status(500).json({ message: err })
+        return res.status(500).json({ message: "Erreur interne du serveur." });
     }
 }
 
 export const deleteArticle = async (req, res) => {
     const { id } = req.params;
     const user = req.user;
+    try {
+        const article = await findArticleById(id);
 
-    const article = await findArticleById(id);
+        if (!article || article.length <= 0) {
+            return res.status(404).json({ message: "Article introuvable" });
+        }
 
-    if (!article || article.length <= 0) {
-        return res.status(404).json({ message: "Article introuvable" });
+        if (article.user_id !== user.user_id && req.user.role_name !== "admin") {
+            return res.status(403).json({ message: "Vous n'êtes pas autorisé" });
+        }
+
+        await deleteArticleById(id);
+
+        return res.status(200).json({ message: "Article supprimé" });
+
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: "Erreur interne du serveur." });
     }
-
-    if (article.user_id !== user.user_id && req.user.role_name !== "admin") {
-        return res.status(403).json({ message: "Vous n'êtes pas autorisé" });
-    }
-
-    await deleteArticleById(id);
-
-    return res.status(200).json({ message: "Article supprimé" });
 }

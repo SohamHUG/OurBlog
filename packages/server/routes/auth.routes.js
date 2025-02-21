@@ -3,12 +3,13 @@ import { register, loginUser, logOutUser, confirmEmail, sendEmail } from '../con
 import { validateSchema } from '../middlewares/validationSchemas.js';
 import { userValidation } from '../validations/users.validation.js';
 import { authMiddleware } from '../middlewares/auth.middleware.js';
+import { authLimiter } from '../middlewares/limiter.middleware.js';
 
 const router = Router();
 
-router.post('/register', [validateSchema(userValidation),], register);
+router.post('/register', [validateSchema(userValidation), authLimiter], register);
 
-router.post('/login', loginUser);
+router.post('/login',[authLimiter], loginUser);
 
 router.get('/logout', logOutUser);
 

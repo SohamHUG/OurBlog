@@ -11,7 +11,7 @@ import {
 } from '../../store/selectors';
 import { fetchCategories, getTags } from '../../store/slice/categoriesSlice';
 import {
-    getPosts,
+    getArticles,
     setTagsFilter,
     setSortBy,
     resetCategoryPosts,
@@ -26,11 +26,11 @@ const CategoryPage = () => {
         (cat) => cat.id === Number(categoryId)
     );
     const status = Redux.useSelector(selectCategoriesStatus);
-    const posts = Redux.useSelector((state) => state.posts.categoryPosts.items);
+    const posts = Redux.useSelector((state) => state.articles.categoryPosts.items);
     const tags = Redux.useSelector((state) => state.categories.tags);
-    const filters = Redux.useSelector((state) => state.posts.filters);
-    const hasMore = Redux.useSelector((state) => state.posts.categoryPosts.hasMore);
-    const page = Redux.useSelector((state) => state.posts.categoryPosts.page)
+    const filters = Redux.useSelector((state) => state.articles.filters);
+    const hasMore = Redux.useSelector((state) => state.articles.categoryPosts.hasMore);
+    const page = Redux.useSelector((state) => state.articles.categoryPosts.page)
     const [selectedTags, setSelectedTags] = useState([]);
 
     useEffect(() => {
@@ -46,7 +46,7 @@ const CategoryPage = () => {
 
     useEffect(() => {
         if (status === 'succeeded') {
-            dispatch(getPosts({
+            dispatch(getArticles({
                 category: category.name,
                 tags: selectedTags.join(','),
                 sortBy: filters.sortBy,

@@ -1,11 +1,33 @@
-import React from 'react';
-import { Navigate, useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { Navigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { getMe } from '../../store/slice/authSlice';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const PrivateRoute = ({ children, roles }) => {
     const user = useSelector((state) => state.auth.user);
+    const userConnected = useSelector((state) => state.auth.userConnected);
+    const dispatch = useDispatch();
+    const [loading, setLoading] = useState(true);
 
-    if (!user || roles && !roles.includes(user.role_name)) {
+    useEffect(() => {
+        if (userConnected) {
+            dispatch(getMe()).finally(() => setLoading(false));
+        } else {
+            setLoading(false);
+        }
+    }, [userConnected, dispatch]);
+
+    if (loading) {
+        return <div style={{
+            textAlign: 'center',
+            width: '100%'
+        }}>
+            <CircularProgress />
+        </div>;
+    }
+
+    if (!user || (roles && !roles.includes(user?.role_name))) {
         return <Navigate to="/not-allowed" />;
     }
 

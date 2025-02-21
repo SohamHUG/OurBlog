@@ -20,6 +20,7 @@ const MyProfilPage = () => {
     const [openModalInfo, setOpenModalInfo] = React.useState(false);
     const [openModalConfirm, setOpenModalConfirm] = React.useState(false);
     const { status, error } = Redux.useSelector((state) => state.users);
+    const statusUpload = Redux.useSelector((state) => state.photos.status)
     const statusEmail = Redux.useSelector((state) => state.auth.status);
     const comments = Redux.useSelector((state) => state.comments.comments)
 
@@ -61,23 +62,27 @@ const MyProfilPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const data = await dispatch(updateUser({ id: user.user_id, userData: formUser }));
 
-        if (profilPicture) {
-            const formData = new FormData();
-            formData.append('profilPicture', profilPicture);
-            console.log("FormData content:", formData.get('profilPicture'));
-            dispatch(uploadProfilPic(formData));
-            // setPreviewImage(null);
-        }
+        try {
+            if (profilPicture) {
+                const formData = new FormData();
+                formData.append('profilPicture', profilPicture);
+                await dispatch(uploadProfilPic(formData)).unwrap();
+            }
 
-        if (updateUser.fulfilled.match(data)) {
+            const data = await dispatch(updateUser({ id: user.user_id, userData: formUser })).unwrap();
             setOpenModalInfo(true)
             formUser.oldPassword = '';
             formUser.newPassword = '';
+            
+        } catch (error) {
+            console.error(error.message)
         }
 
+
     };
+
+    // console.log(status)
 
     const closeModalInfo = () => {
         setOpenModalInfo(false);
@@ -137,9 +142,7 @@ const MyProfilPage = () => {
                 handleSubmit={handleSubmit}
                 handleChange={handleChange}
                 errorMessage={error}
-                // toggleUpdatePassword={toggleUpdatePassword}
-                // updatePassword={updatePassword}
-                isLoading={status === 'loading'}
+                isLoading={status === 'loading' || statusUpload === 'loading'}
                 toggleModalConfirm={toggleModalConfirm}
                 previewImage={previewImage}
 

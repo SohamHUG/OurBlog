@@ -35,7 +35,10 @@ const NavBar = () => {
     );
 
     React.useEffect(() => {
-        if (searchQuery.trim() !== '') {
+        if (searchQuery.trim() === '') {
+
+            dispatch(clearNavSearch());
+        } else {
             debouncedSearch(searchQuery);
         }
         return () => debouncedSearch.cancel();
@@ -48,11 +51,12 @@ const NavBar = () => {
     const handleSearchSubmit = (event) => {
         event.preventDefault();
         if (searchQuery.trim() === '') return;
-
+        
+        navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
         setSearchQuery('')
         dispatch(clearNavSearch())
         setSearchActive(false);
-        navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
+
     };
 
     const toggleSearch = () => {
@@ -78,7 +82,8 @@ const NavBar = () => {
         const handleClickOutside = (event) => {
             if (
                 searchRef.current &&
-                !searchRef.current.contains(event.target)
+                !searchRef.current.contains(event.target) && 
+                !event.target.closest("form")
             ) {
                 setSearchActive(false);
                 setSearchQuery('')
@@ -117,18 +122,22 @@ const NavBar = () => {
                         <SearchIcon fontSize="large" />
                     </label>
 
-                    <input
-                        type="text"
-                        id="search-bar"
-                        autoComplete="off"
-                        className="search-bar"
-                        placeholder="Rechercher..."
-                        ref={searchRef}
-                        value={searchQuery}
-                        onChange={handleSearchChange}
+                    <div>
+                        <input
+                            type="text"
+                            id="search-bar"
+                            autoComplete="off"
+                            className="search-bar"
+                            placeholder="Rechercher..."
+                            ref={searchRef}
+                            value={searchQuery}
+                            onChange={handleSearchChange}
 
-                    />
-
+                        />
+                        <button className="submit-search" type="submit">
+                            <SearchIcon fontSize="medium" />
+                        </button>
+                    </div>
                 </form>
                 <SearchResultsNav
                     className="search-results"

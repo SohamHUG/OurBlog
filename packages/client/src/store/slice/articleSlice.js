@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 // Thunks
-export const getPosts = createAsyncThunk(
-    "posts/getPosts",
+export const getArticles = createAsyncThunk(
+    "articles/getArticles",
     async (filters, { rejectWithValue }) => {
         try {
             const response = await fetch(`http://localhost:3000/articles?${new URLSearchParams(filters)}`);
@@ -16,7 +16,7 @@ export const getPosts = createAsyncThunk(
     }
 );
 
-export const getPost = createAsyncThunk("posts/getPost", async (id, { rejectWithValue }) => {
+export const getArticle = createAsyncThunk("articles/getArticle", async (id, { rejectWithValue }) => {
     try {
         const response = await fetch(`http://localhost:3000/articles/${id}`);
         if (!response.ok) throw new Error("Erreur lors du chargement du post.");
@@ -26,7 +26,7 @@ export const getPost = createAsyncThunk("posts/getPost", async (id, { rejectWith
     }
 });
 
-export const createPost = createAsyncThunk("posts/createPost", async (articleData, { rejectWithValue }) => {
+export const createArticle = createAsyncThunk("articles/createArticle", async (articleData, { rejectWithValue }) => {
     try {
         const response = await fetch("http://localhost:3000/articles/create-article", {
             method: "POST",
@@ -44,7 +44,7 @@ export const createPost = createAsyncThunk("posts/createPost", async (articleDat
     }
 });
 
-export const updateArticle = createAsyncThunk("posts/updateArticle", async ({ id, articleData }, { rejectWithValue }) => {
+export const updateArticle = createAsyncThunk("articles/updateArticle", async ({ id, articleData }, { rejectWithValue }) => {
     try {
         const response = await fetch(`http://localhost:3000/articles/update/${id}`, {
             method: "PUT",
@@ -62,7 +62,7 @@ export const updateArticle = createAsyncThunk("posts/updateArticle", async ({ id
     }
 });
 
-export const deleteArticle = createAsyncThunk("posts/deleteArticle", async (id, { rejectWithValue }) => {
+export const deleteArticle = createAsyncThunk("articles/deleteArticle", async (id, { rejectWithValue }) => {
     try {
         const response = await fetch(`http://localhost:3000/articles/delete/${id}`, {
             method: "DELETE",
@@ -81,8 +81,8 @@ export const deleteArticle = createAsyncThunk("posts/deleteArticle", async (id, 
 });
 
 // Slice
-const postsSlice = createSlice({
-    name: "posts",
+const articlesSlice = createSlice({
+    name: "articles",
     initialState: {
         allPosts: { items: [], status: "idle", page: 1, hasMore: true, error: null },
         categoryPosts: { items: [], status: "idle", page: 1, hasMore: true, error: null },
@@ -119,13 +119,13 @@ const postsSlice = createSlice({
     extraReducers: (builder) => {
         builder
             // GET POSTS
-            .addCase(getPosts.pending, (state, action) => {
+            .addCase(getArticles.pending, (state, action) => {
                 const { context } = action.meta.arg;
                 if (context === "category") state.categoryPosts.status = "loading";
                 else if (context === "author") state.authorPosts.status = "loading";
                 else if (context === "all") state.allPosts.status = "loading";
             })
-            .addCase(getPosts.fulfilled, (state, action) => {
+            .addCase(getArticles.fulfilled, (state, action) => {
                 const { context } = action.meta.arg;
                 const newPosts = action.payload.articles;
                 if (context === "category") {
@@ -159,7 +159,7 @@ const postsSlice = createSlice({
                     else state.allPosts.hasMore = true;
                 }
             })
-            .addCase(getPosts.rejected, (state, action) => {
+            .addCase(getArticles.rejected, (state, action) => {
                 const { context } = action.meta.arg;
                 if (context === "category") {
                     state.categoryPosts.status = "failed";
@@ -174,32 +174,32 @@ const postsSlice = createSlice({
             })
 
             // GET SINGLE POST
-            .addCase(getPost.pending, (state) => {
+            .addCase(getArticle.pending, (state) => {
                 state.status = 'loading';
                 state.post = null;
             })
-            .addCase(getPost.fulfilled, (state, action) => {
+            .addCase(getArticle.fulfilled, (state, action) => {
                 state.status = 'succeeded';
                 state.post = action.payload.article;
             })
-            .addCase(getPost.rejected, (state, action) => {
+            .addCase(getArticle.rejected, (state, action) => {
                 state.status = 'failed';
                 state.post = null;
                 state.error = action.error.message
             })
 
             // CREATE POST
-            .addCase(createPost.pending, (state) => {
+            .addCase(createArticle.pending, (state) => {
                 state.allPosts.status = "loading";
             })
-            .addCase(createPost.fulfilled, (state, action) => {
+            .addCase(createArticle.fulfilled, (state, action) => {
                 state.allPosts.status = "succeeded";
                 if (state.filters.sortBy === 'recent') {
                     state.allPosts.items.unshift(action.payload.article);
                 }
                 // state.allPosts.items.unshift(action.payload.article);
             })
-            .addCase(createPost.rejected, (state, action) => {
+            .addCase(createArticle.rejected, (state, action) => {
                 state.allPosts.status = "failed";
                 // state.allPosts.error = action.payload;
                 state.error = action.error.message
@@ -244,5 +244,5 @@ const postsSlice = createSlice({
     },
 });
 
-export const { setTagsFilter, setSortBy, resetCategoryPosts, resetAuthorPosts, resetAllPosts, incrementPage } = postsSlice.actions;
-export default postsSlice.reducer;
+export const { setTagsFilter, setSortBy, resetCategoryPosts, resetAuthorPosts, resetAllPosts, incrementPage } = articlesSlice.actions;
+export default articlesSlice.reducer;
