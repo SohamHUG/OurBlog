@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { getArticle, updateArticle } from '../../../store/slice/articleSlice.js';
+import { deleteArticle, getArticle, updateArticle } from '../../../store/slice/articleSlice.js';
 import ArticleForm from '../../../components/ArticleForm/ArticleForm.jsx';
 import { uploadImagesAndUpdateContent } from '../../../store/slice/photoSlice.js';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DeleteIcon from '@mui/icons-material/Delete';
+import Modal from "../../../components/Modal/Modal.jsx";
 
 
 const UpdateArticlePage = () => {
@@ -13,6 +14,7 @@ const UpdateArticlePage = () => {
     const { user } = useSelector((state) => state.auth);
     const { post, status, error } = useSelector((state) => state.articles)
     const [errorMessage, setErrorMessage] = React.useState("");
+    const [openModalConfirm, setOpenModalConfirm] = React.useState(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -60,6 +62,24 @@ const UpdateArticlePage = () => {
     const handleContentChange = React.useCallback((content) => {
         setFormData((prevFormData) => ({ ...prevFormData, content }));
     }, [formData, setFormData]);
+
+    const toggleModalConfirm = () => {
+        setOpenModalConfirm(true);
+    };
+
+    const closeModalConfirm = () => {
+        setOpenModalConfirm(false);
+    };
+
+    const confirmDeleteArticle = async () => {
+        try {
+            await dispatch(deleteArticle(id)).unwrap();
+            closeModalConfirm();
+            navigate('/')
+        } catch (error) {
+            console.error('Erreur lors de la suppression de l\'article')
+        }
+    };
 
 
     const handleSubmit = async (e) => {
@@ -118,6 +138,7 @@ const UpdateArticlePage = () => {
                     >
                         <ArrowBackIcon className='link back-btn' onClick={goBack} />
                         <h2 style={{ textAlign: 'center', flex: '1' }}>Modifier l'article : {post.title}</h2>
+                        <DeleteIcon className="delete-btn" onClick={() => toggleModalConfirm()} />
                     </div>
                     <ArticleForm
                         formData={formData}
@@ -127,6 +148,24 @@ const UpdateArticlePage = () => {
                         handleSubmit={handleSubmit}
                         errorMessage={error || errorMessage}
                     />
+                    {openModalConfirm && (
+                        <Modal
+                            title="Êtes-vous sûr ?"
+                            content={
+                                <div>
+                                    <p>
+                                        Voulez-vous vraiment <strong style={{ color: 'red' }}>supprimer</strong> cet article de manière <strong style={{ color: 'red' }}>définitive</strong> ?
+                                    </p>
+                                    <strong style={{ color: 'red' }}>Cette action est irréversible !</strong>
+                                </div>
+                            }
+                            validButton='Oui, je suis sûr'
+                            cancelButton='Annuler'
+                            open={openModalConfirm}
+                            cancel={closeModalConfirm}
+                            valid={confirmDeleteArticle}
+                        />
+                    )}
                 </section>
             }
         </>)

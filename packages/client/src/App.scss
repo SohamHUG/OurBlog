@@ -163,7 +163,21 @@ html {
             .article-page .ql-editor p span,
             .article-page .ql-editor h1,
             .article-page .ql-editor h1 span,
-            .article-page .ql-editor strong {
+            .article-page .ql-editor strong,
+            .article-form-container .ql-editor,
+            .article-form-container .ql-editor ul,
+            .article-form-container .ql-editor ul li,
+            .article-form-container .ql-editor ul li span,
+            .article-form-container .ql-editor ol,
+            .article-form-container .ql-editor ol li,
+            .article-form-container .ql-editor ol li span,
+            .article-form-container .ql-editor h2,
+            .article-form-container .ql-editor h2 span,
+            .article-form-container .ql-editor p,
+            .article-form-container .ql-editor p span,
+            .article-form-container .ql-editor h1,
+            .article-form-container .ql-editor h1 span,
+            .article-form-container .ql-editor strong  {
                 color: vars.$primary-white!important ;
             }
 
@@ -205,7 +219,8 @@ html {
             }
 
             .user-title,
-            .article-page .post-head {
+            .article-page .post-head,
+            .profil-header {
                 border-bottom: 2px solid vars.$primary-white;
             }
 

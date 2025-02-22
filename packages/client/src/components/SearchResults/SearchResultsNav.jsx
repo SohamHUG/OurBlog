@@ -4,7 +4,7 @@ import './SearchResultsNav.scss'
 import { useDispatch, useSelector } from "react-redux";
 import { clearNavSearch, clearSearch } from "../../store/slice/searchSlice";
 
-const SearchResultsNav = ({ results, searchRef, }) => {
+const SearchResultsNav = ({ results, searchRef, clearSearch }) => {
     // const isFocused = searchRef.current === document.activeElement;
     // if (isFocused && results.length === 0) {
     //     return null;
@@ -13,7 +13,8 @@ const SearchResultsNav = ({ results, searchRef, }) => {
     const user = useSelector((state) => state.auth.user)
 
     const onClickItem = () => {
-        dispatch(clearNavSearch())
+        // dispatch(clearNavSearch());
+        clearSearch();
     }
 
     if (results.length === 0) return null;

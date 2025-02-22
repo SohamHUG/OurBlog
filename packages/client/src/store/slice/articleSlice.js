@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-// Thunks
 export const getArticles = createAsyncThunk(
     "articles/getArticles",
     async (filters, { rejectWithValue }) => {
         try {
+            // console.log(filters)
             const response = await fetch(`http://localhost:3000/articles?${new URLSearchParams(filters)}`);
             if (!response.ok) {
                 throw new Error("Erreur lors du chargement des posts.");
@@ -129,6 +129,7 @@ const articlesSlice = createSlice({
                 const { context } = action.meta.arg;
                 const newPosts = action.payload.articles;
                 if (context === "category") {
+                    // console.log(newPosts)
                     newPosts.forEach(post => {
                         if (!state.categoryPosts.items.find(existingPost => existingPost.id === post.id)) {
                             state.categoryPosts.items.push(post);
@@ -138,12 +139,12 @@ const articlesSlice = createSlice({
                     if (newPosts.length < 10) state.categoryPosts.hasMore = false;
                     else state.categoryPosts.hasMore = true;
                 } else if (context === "author") {
-                    // newPosts.forEach(post => {
-                    //     if (!state.authorPosts.items.find(existingPost => existingPost.id === post.id)) {
-                    //         state.authorPosts.items.push(post);
-                    //     }
-                    // });
-                    state.authorPosts.items = newPosts
+                    newPosts.forEach(post => {
+                        if (!state.authorPosts.items.find(existingPost => existingPost.id === post.id)) {
+                            state.authorPosts.items.push(post);
+                        }
+                    });
+                    // state.authorPosts.items = newPosts
                     state.authorPosts.status = "succeeded";
                     if (newPosts.length < 10) state.authorPosts.hasMore = false;
                     else state.authorPosts.hasMore = true;
@@ -196,6 +197,8 @@ const articlesSlice = createSlice({
                 state.allPosts.status = "succeeded";
                 if (state.filters.sortBy === 'recent') {
                     state.allPosts.items.unshift(action.payload.article);
+                } else if (!state.allPosts.hasMore) {
+                    state.allPosts.items.push(action.payload.article);
                 }
                 // state.allPosts.items.unshift(action.payload.article);
             })

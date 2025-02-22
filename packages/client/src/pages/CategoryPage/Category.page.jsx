@@ -27,7 +27,9 @@ const CategoryPage = () => {
     );
     const status = Redux.useSelector(selectCategoriesStatus);
     const posts = Redux.useSelector((state) => state.articles.categoryPosts.items);
+    const postsStatus = Redux.useSelector((state) => state.articles.categoryPosts.status);
     const tags = Redux.useSelector((state) => state.categories.tags);
+    const tagsStatus = Redux.useSelector((state) => state.categories.tagStatus);
     const filters = Redux.useSelector((state) => state.articles.filters);
     const hasMore = Redux.useSelector((state) => state.articles.categoryPosts.hasMore);
     const page = Redux.useSelector((state) => state.articles.categoryPosts.page)
@@ -39,13 +41,15 @@ const CategoryPage = () => {
         }
 
         if (category && category.name) {
-            dispatch(getTags({ category: category.name }))
+            dispatch(getTags({ category: category.name }));
+            dispatch(resetCategoryPosts())
         }
 
     }, [status, dispatch, category]);
 
     useEffect(() => {
-        if (status === 'succeeded') {
+        if (tagsStatus === 'succeeded') {
+            // console.log(filters)
             dispatch(getArticles({
                 category: category.name,
                 tags: selectedTags.join(','),
@@ -56,13 +60,13 @@ const CategoryPage = () => {
             }))
         }
 
-    }, [dispatch, status, category, page, posts]);
+    }, [dispatch, category, page, posts, tagsStatus]);
 
 
     const handleTagChange = (tag) => {
         const newTags = selectedTags.includes(tag)
-            ? selectedTags.filter((t) => t !== tag) 
-            : [...selectedTags, tag]; 
+            ? selectedTags.filter((t) => t !== tag)
+            : [...selectedTags, tag];
         setSelectedTags(newTags);
         dispatch(setTagsFilter(newTags));
     };
@@ -72,7 +76,7 @@ const CategoryPage = () => {
         dispatch(setSortBy(sortBy));
     };
 
-    // console.log(selectedTags)
+    // console.log(hasMore)
 
     useEffect(() => {
         // setPage(1);
@@ -87,7 +91,7 @@ const CategoryPage = () => {
             </div>
 
             <div className="filter-section">
-                <select value={filters.sortBy} onChange={(e) => dispatch(setSortBy(e.target.value))}>
+                <select value={filters.sortBy} onChange={(e) => handleSortChange(e)}>
                     <option value="recent">Les plus récents</option>
                     <option value="famous">Les plus populaires</option>
                 </select>
@@ -104,8 +108,13 @@ const CategoryPage = () => {
                 </div>
             </div>
 
-            <PostsList posts={posts} />
-            <InfiniteScroll context="category" isLoading={status === 'loading'} hasMore={hasMore} />
+            {posts && posts.length > 0 &&
+                <>
+                    <PostsList posts={posts} />
+                    <InfiniteScroll context="category" isLoading={postsStatus === 'loading'} hasMore={hasMore} />
+                </>
+            }
+
         </section>
     );
 };

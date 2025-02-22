@@ -34,7 +34,7 @@ const HomePage = () => {
 
     }, [dispatch, usersStatus, users]);
 
-    // console.log(user)
+    // console.log(posts)
 
     React.useEffect(() => {
         dispatch(getArticles({

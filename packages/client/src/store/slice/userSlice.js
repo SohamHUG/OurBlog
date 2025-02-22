@@ -75,6 +75,9 @@ const usersSlice = createSlice({
     reducers: {
         resetUsers: (state) => {
             state.users = [];
+        },
+        resetProfil: (state) => {
+            state.profil = null;
         }
     },
     extraReducers: (builder) => {
@@ -142,5 +145,5 @@ const usersSlice = createSlice({
     },
 });
 
-export const { resetUsers } = usersSlice.actions;
+export const { resetUsers, resetProfil } = usersSlice.actions;
 export default usersSlice.reducer;

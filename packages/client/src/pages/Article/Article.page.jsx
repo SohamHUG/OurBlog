@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams, useNavigate, Link, NavLink } from 'react-router-dom';
+import { useParams, useNavigate, Link, NavLink, useLocation } from 'react-router-dom';
 import { getArticle } from '../../store/slice/articleSlice';
 import PostContent from '../../components/PostContent/PostContent';
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -8,11 +8,13 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import './Article.scss'
 import { createComment, getComments } from '../../store/slice/commentSlice';
 import CommentsList from '../../components/CommentsList/CommentsList';
+import EastIcon from "@mui/icons-material/East";
 
 const ArticlePage = () => {
     const { id } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const location = useLocation()
     const { post, status } = useSelector((state) => state.articles)
     const { user } = useSelector((state) => state.auth);
     const { comments } = useSelector((state) => state.comments)
@@ -29,6 +31,8 @@ const ArticlePage = () => {
             dispatch(getComments({ articleId: post.id }))
         }
     }, [post]);
+
+    // console.log(location)
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -84,6 +88,16 @@ const ArticlePage = () => {
                     <PostContent
                         content={post.content}
                     />
+                    {user && (user.user_id === post.user_id || user.role_name === 'admin') && (
+                        <div className='update-action'>
+                            <NavLink className="update-link" to={`/articles/update/${post.id}`}>
+                                <button>
+                                    <span>Modifier</span>
+                                    <EastIcon fontSize="small" />
+                                </button>
+                            </NavLink>
+                        </div>
+                    )}
 
                     <div className='comments-container'>
                         <h3>Commentaires :</h3>

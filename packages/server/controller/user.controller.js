@@ -32,7 +32,7 @@ export const getUserById = async (req, res) => {
         if (accessToken) {
             try {
                 const decoded = jwt.verify(accessToken, process.env.JWT_SECRET);
-                requestingUser = await findUserById(decoded.id); 
+                requestingUser = await findUserById(decoded.id);
             } catch (err) {
                 console.log('Token invalide');
             }
@@ -185,7 +185,7 @@ export const deleteUser = async (req, res) => {
     const { id } = req.params;
     const user = req.user;
     try {
-        if (parseInt(id) !== user.user_id && req.user.role_name !== "admin") {
+        if (parseInt(id) !== user.user_id && req.user.role_id !== 4) {
             return res.status(403).json({ message: "Vous n'êtes pas autorisé" });
         }
 

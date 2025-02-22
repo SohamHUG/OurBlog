@@ -48,14 +48,21 @@ const NavBar = () => {
         setSearchQuery(event.target.value);
     };
 
+    const clearSearch = () => {
+        setSearchQuery('');
+        setSearchActive(false);
+        dispatch(clearNavSearch())
+    };
+
     const handleSearchSubmit = (event) => {
         event.preventDefault();
         if (searchQuery.trim() === '') return;
-        
+
         navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
-        setSearchQuery('')
-        dispatch(clearNavSearch())
-        setSearchActive(false);
+        // setSearchQuery('')
+        // dispatch(clearNavSearch())
+        // setSearchActive(false);
+        clearSearch();
 
     };
 
@@ -65,6 +72,8 @@ const NavBar = () => {
             setMenuActive(false);
         }
     };
+
+
 
     const toggleMenu = () => {
         setMenuActive(!menuActive);
@@ -82,8 +91,8 @@ const NavBar = () => {
         const handleClickOutside = (event) => {
             if (
                 searchRef.current &&
-                !searchRef.current.contains(event.target) && 
-                !event.target.closest("form")
+                !searchRef.current.contains(event.target)
+                // !event.target.closest("form")
             ) {
                 setSearchActive(false);
                 setSearchQuery('')
@@ -143,6 +152,7 @@ const NavBar = () => {
                     className="search-results"
                     results={searchResults}
                     searchRef={searchRef}
+                    clearSearch={clearSearch}
                 />
                 <div className="menu-login">
                     {!user ? (

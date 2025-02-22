@@ -15,7 +15,7 @@ const UsersList = () => {
         dispatch(getAllUsers())
     }, [dispatch]);
 
-    console.log(users)
+    // console.log(users)
 
 
     return (

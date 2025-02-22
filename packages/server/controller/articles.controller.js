@@ -43,18 +43,18 @@ export const createArticle = async (req, res) => {
                     'text-decoration': [/^(none|underline|line-through|overline)$/],
                 }
             },
-            transformTags: {
-                'a': (tagName, attribs) => {
-                    if (attribs.href && !attribs.href.startsWith('#') && !attribs.href.startsWith('/')) {
-                        attribs.rel = 'noopener noreferrer'; // Sécurise les liens externes
-                        attribs.target = '_blank'; // Ouvre les liens externes dans un nouvel onglet
-                    }
-                    return {
-                        tagName,
-                        attribs
-                    };
-                }
-            },
+            // transformTags: {
+            //     'a': (tagName, attribs) => {
+            //         if (attribs.href && !attribs.href.startsWith('#') && !attribs.href.startsWith('/')) {
+            //             attribs.rel = 'noopener noreferrer'; // Sécurise les liens externes
+            //             attribs.target = '_blank'; // Ouvre les liens externes dans un nouvel onglet
+            //         }
+            //         return {
+            //             tagName,
+            //             attribs
+            //         };
+            //     }
+            // },
             disallowedTagsMode: 'discard',
         });
 
@@ -117,7 +117,7 @@ export const updateArticle = async (req, res) => {
             return res.status(404).json({ message: "Article introuvable" });
         }
 
-        if (article.user_id !== user && req.user.role_name !== "admin") {
+        if (article.user_id !== user && req.user.role_id !== 4) {
             return res.status(403).json({ message: "Vous n'êtes pas autorisé" });
         }
 
@@ -246,7 +246,7 @@ export const deleteArticle = async (req, res) => {
             return res.status(404).json({ message: "Article introuvable" });
         }
 
-        if (article.user_id !== user.user_id && req.user.role_name !== "admin") {
+        if (article.user_id !== user.user_id && req.user.role_id !== 4) {
             return res.status(403).json({ message: "Vous n'êtes pas autorisé" });
         }
 

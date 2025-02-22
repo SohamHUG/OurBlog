@@ -84,7 +84,7 @@ const CreateArticlePage = () => {
     }
 
     return (
-        <>
+        <section>
             <div className='header'
                 style={{
                     display: 'flex',
@@ -115,7 +115,7 @@ const CreateArticlePage = () => {
                     valid={closeModal}
                 />
             }
-        </>
+        </section>
     );
 };
 

@@ -4,6 +4,10 @@
     max-width: 90%;
     margin: 0 auto;
 
+    // @media screen and (min-width: 800px) {
+    //     width: 60%;
+    // }
+
     .post-head {
         display: flex;
         justify-content: space-between;
@@ -80,7 +84,37 @@
         }
     }
 
+    .update-action {
+        width: 100%;
+        display: flex;
+        // justify-content: flex-end;
+
+        @media screen and (min-width: 800px) {
+            justify-content: flex-end;
+        }
+
+        .update-link {
+            width: 80%;
+            margin: 0 auto;
+
+            @media screen and (min-width: 800px) {
+                width: 30%;
+                margin: 0;
+            }
+            
+
+            button {
+                width: 100%;
+
+                @media screen and (min-width: 800px) {
+                    width: 80%;
+                }
+            }
+        }
+    }
+
     .comments-container {
+
         // border-top: 2px solid vars.$primary-black;
         textarea {
             height: 5em;
