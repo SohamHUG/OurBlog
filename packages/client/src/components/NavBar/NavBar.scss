@@ -49,8 +49,8 @@
         div {
             display: flex;
             align-items: center;
-            width: 0%;
-            height: .8em;
+            // width: 0%;
+            // height: .8em;
 
             @media screen and (min-width: 538px) {
                 width: 100%;
@@ -84,7 +84,7 @@
 
             .submit-search {
                 border-radius: 0 50px 50px 0;
-                height: 2.78em;
+                height:37.17px;
                 position: absolute;
                 right: .3em;
                 transition: all 0.3s ease;

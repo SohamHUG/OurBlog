@@ -10,6 +10,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import { getComments } from '../../store/slice/commentSlice';
 import CommentsList from '../../components/CommentsList/CommentsList';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 
 const MyProfilPage = () => {
@@ -120,9 +121,25 @@ const MyProfilPage = () => {
 
     }
 
+    const header = {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        borderBottom: '2px solid #ddd',
+        width: '100%'
+    }
+
+    const h2Style = {
+        textAlign: 'center',
+        flex: '1',
+    }
+
     return (
         <section>
-            <h2 className='user-title'>Votre profil</h2>
+            <div style={header}>
+                <ArrowBackIcon className="back-btn link" onClick={() => navigate(-1)} />
+                <h2 style={h2Style}>Votre profil</h2>
+            </div>
             {user && user.is_verified === 0 &&
                 <p className='verif-email-infos'>
                     <span className='alert'>Si vous souhaitez modifier votre profil, merci de verifier votre adresse email. </span>
