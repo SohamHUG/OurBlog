@@ -10,6 +10,7 @@ import { getComments } from '../../../store/slice/commentSlice';
 import CommentsList from '../../../components/CommentsList/CommentsList'
 import PostsLists from '../../../components/PostsList/PostsList'
 import InfiniteScroll from '../../../components/InfiniteScroll/InfiniteScroll';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const UserPageAdmin = () => {
     const user = Redux.useSelector((state) => state.users.profil);
@@ -75,8 +76,12 @@ const UserPageAdmin = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await dispatch(updateUser({ id: user.user_id, userData: formUser })).unwrap();
-        setOpenModalInfo(true)
+        try {
+            await dispatch(updateUser({ id: user.user_id, userData: formUser })).unwrap();
+            setOpenModalInfo(true)
+        } catch (error) {
+            console.error(error.message)
+        }
 
     };
 
@@ -92,22 +97,33 @@ const UserPageAdmin = () => {
     }
 
     const confirmDeleteUser = async () => {
-        dispatch(deleteUser(user.user_id));
-        navigate('/');
-        setOpenModalConfirm(false);
+        try {
+            dispatch(deleteUser(user.user_id)).unwrap();
+            navigate(-1);
+            setOpenModalConfirm(false);
+        } catch (error) {
+            console.error(error.message)
+        }
 
     }
 
     const deleteProfilPicture = async () => {
-        await dispatch(deleteProfilPic(user.user_id)).unwrap()
-        window.location.reload();
+        try {
+            await dispatch(deleteProfilPic(user.user_id)).unwrap()
+            window.location.reload();
 
-        // navigate('/')
+        } catch (error) {
+            console.error(error.message)
+        }
+
     }
 
     return (
-        <section>
-            <h2 className='user-title'>Profil de {user?.pseudo}</h2>
+        <section className='page-admin'>
+            <div className='header-page'>
+                <ArrowBackIcon className="back-btn link" onClick={() => navigate(-1)} />
+                <h2 className='user-title'>Profil de {user?.pseudo}</h2>
+            </div>
             <UserForm
                 user={user ? user : []}
                 formUser={formUser}

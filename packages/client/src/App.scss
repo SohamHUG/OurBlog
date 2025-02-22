@@ -121,7 +121,7 @@ html {
                 padding: .5em;
                 font-size: 1.1em;
 
-                
+
             }
 
             input:disabled,
@@ -152,7 +152,8 @@ html {
                 color: vars.$primary-white ;
             }
 
-            .categories-nav .category {
+            .categories-nav .category,
+            .page-admin .links .link {
                 border: 1px solid vars.$primary-white;
             }
 
@@ -177,13 +178,13 @@ html {
             .article-form-container .ql-editor p span,
             .article-form-container .ql-editor h1,
             .article-form-container .ql-editor h1 span,
-            .article-form-container .ql-editor strong  {
+            .article-form-container .ql-editor strong {
                 color: vars.$primary-white!important ;
             }
 
             .quill .ql-toolbar button .ql-stroke,
             .quill .ql-toolbar span .ql-stroke {
-                stroke: vars.$primary-white !important; 
+                stroke: vars.$primary-white !important;
             }
 
             .quill .ql-toolbar button .ql-fill {
@@ -192,7 +193,7 @@ html {
 
             .quill .ql-toolbar button:hover .ql-stroke,
             .quill .ql-toolbar button.ql-active .ql-stroke {
-                stroke: vars.$main-color !important; 
+                stroke: vars.$main-color !important;
             }
 
             .quill .ql-toolbar button:hover .ql-fill,
@@ -218,9 +219,17 @@ html {
                 }
             }
 
-            .user-title,
+            .page-admin .users-table .clickable-row ,
+            .categories-page .categories-container .category .link{
+                &:hover {
+                    background-color: vars.$dark-secondary-bck-color;
+                }
+            }
+
+            // .user-title,
             .article-page .post-head,
-            .profil-header {
+            // .profil-header,
+            .header-page {
                 border-bottom: 2px solid vars.$primary-white;
             }
 

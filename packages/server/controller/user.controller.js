@@ -90,6 +90,10 @@ export const updateUser = async (req, res) => {
             return res.status(403).json({ message: "Vous n'êtes pas autorisé." });
         }
 
+        if (pseudo.length < 2) {
+            return res.status(400).json({ message: "Pseudo requis", });
+        }
+
         const userLog = await findByCredentials(email);
         if (!userLog || userLog.length <= 0) {
             return res.status(404).json({ message: "Utilisateur introuvable." });

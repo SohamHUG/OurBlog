@@ -101,7 +101,7 @@ export const loginUser = async (req, res) => {
 
         res.cookie('accessToken', accessToken, {
             httpOnly: true,
-            secure: true, 
+            secure: true,
             sameSite: 'strict', // Limite les cookies aux mêmes origines
             maxAge: 3600000, // 1 heure
             // maxAge: 30 * 1000, // 10 sec
@@ -109,7 +109,7 @@ export const loginUser = async (req, res) => {
 
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
-            secure: true, 
+            secure: true,
             sameSite: 'strict', // Limite les cookies aux mêmes origines
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 jours
             // maxAge: 30 * 1000, // 10 sec
@@ -126,8 +126,14 @@ export const loginUser = async (req, res) => {
 }
 
 export const logOutUser = async (req, res) => {
-    res.clearCookie('accessToken')
-    res.clearCookie('refreshToken');
-    // await updateUserById(req.user.user_id, { refresh_token: null });
-    res.status(200).json({ message: 'Logout successfull' });
-}
+    try {
+        res.clearCookie('accessToken');
+        res.clearCookie('refreshToken');
+        // await updateUserById(req.user.user_id, { refresh_token: null });
+
+        res.status(200).json({ message: 'Logout successful' });
+    } catch (error) {
+        console.error("Erreur lors de la déconnexion :", error);
+        res.status(500).json({ message: "Erreur lors de la déconnexion" });
+    }
+};

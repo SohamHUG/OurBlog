@@ -1,28 +1,38 @@
 import * as React from 'react';
 import * as Redux from 'react-redux';
-import { Navigate, NavLink } from 'react-router-dom';
+import { useNavigate, NavLink } from 'react-router-dom';
 import { selectCategories, selectCategoriesStatus, selectCategoriesError } from '../../store/selectors';
 import { fetchCategories, createCategory, deleteCategory } from '../../store/slice/categoriesSlice';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import CategoryIcon from "@mui/icons-material/Category";
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+import './AdminDashboard.scss'
 
 const AdminDashboard = () => {
-    const dispatch = Redux.useDispatch();
+    const navigate = useNavigate();
 
     return (
-        <div className="page-admin">
-            <h1>Admin Dashboard</h1>
+        <section className="page-admin">
+            <div className='header-page'>
+                <ArrowBackIcon className="back-btn link" onClick={() => navigate(-1)} />
+                <h2>Admin Dashboard</h2>
+            </div>
 
-            <div>
+
+            <div className='links'>
                 <NavLink className={'link'} to={'/admin/categories'}>
-                    Catégories
+                    <span>Gérer les catégories</span>
+                    <CategoryIcon className='icon' />
                 </NavLink>
-                <br/>
+                <br />
                 <NavLink className={'link'} to={'/admin/users'}>
-                    Utilisateurs
+                    <span>Gérer les utilisateurs</span>
+                    <PeopleAltIcon className='icon' />
                 </NavLink>
             </div>
-            
 
-        </div>
+
+        </section>
     );
 };
 

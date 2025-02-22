@@ -108,11 +108,12 @@ const CategoryPage = () => {
                 </div>
             </div>
 
-            {posts && posts.length > 0 &&
+            {posts && posts.length > 0 ?
                 <>
                     <PostsList posts={posts} />
                     <InfiniteScroll context="category" isLoading={postsStatus === 'loading'} hasMore={hasMore} />
                 </>
+                : <h3>Aucun article pour la catégorie {category.name}</h3>
             }
 
         </section>

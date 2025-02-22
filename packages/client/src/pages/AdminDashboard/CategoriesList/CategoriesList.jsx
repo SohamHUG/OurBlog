@@ -1,8 +1,10 @@
 import * as React from 'react';
 import * as Redux from 'react-redux';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { selectCategories, selectCategoriesStatus, selectCategoriesError } from '../../../store/selectors';
 import { fetchCategories, createCategory, deleteCategory } from '../../../store/slice/categoriesSlice';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const CategoriesList = () => {
     const dispatch = Redux.useDispatch();
@@ -10,6 +12,7 @@ const CategoriesList = () => {
     const status = Redux.useSelector(selectCategoriesStatus);
     const error = Redux.useSelector(selectCategoriesError);
     const [newCategory, setNewCategory] = React.useState('')
+    const navigate = useNavigate();
 
     React.useEffect(() => {
         if (status === 'idle') {
@@ -17,9 +20,20 @@ const CategoriesList = () => {
         }
     }, [status, dispatch]);
 
-    const handleNewCategory = (e) => {
+    const handleNewCategory = async (e) => {
         e.preventDefault();
-        dispatch(createCategory(newCategory));
+        try {
+            await dispatch(createCategory(newCategory)).unwrap()
+            setNewCategory('')
+        } catch (error) {
+            console.error(error.message)
+        }
+    }
+
+    const handleChangeNewCategory = async (e) => {
+        e.preventDefault();
+        setNewCategory(e.target.value)
+
     }
 
     const handleRemoveCategory = (id) => {
@@ -27,35 +41,41 @@ const CategoriesList = () => {
     }
 
     return (
-        <div className="page">
+        <section className="page-admin">
+            <div className='header-page'>
+                <ArrowBackIcon className="back-btn link" onClick={() => navigate(-1)} />
+                <h2>Les catégories</h2>
+            </div>
             {status === 'loading' &&
                 <div>Loading</div>
             }
 
             {status === 'failed' &&
-                <div>{error}</div>
+                <div style={{ textAlign: 'center' }} className='alert'>{error}</div>
             }
 
-            {status === 'succeeded' &&
-                <div className=''>
+            {categories && categories.length > 0 &&
+                <div className='categories-container'>
+                    <form onSubmit={handleNewCategory}>
+                        <label htmlFor="cate">Ajouter une nouvelle catégorie :</label>
+                        <input autoComplete='off' placeholder='...' id='cate' type='text' onChange={handleChangeNewCategory} value={newCategory} />
+                        <button type='submit'>Ajouter</button>
+                    </form>
                     {categories.map((category) => {
                         return (
                             <div key={category.id} className='category'>
-                                {category.name}
-                                <button onClick={() => handleRemoveCategory(category.id)}>-</button>
+                                <span>{category.name}</span>
+                                <DeleteIcon className="delete-btn" onClick={() => handleRemoveCategory(category.id)} />
                             </div>
 
                         )
 
                     })}
-                    <form onSubmit={handleNewCategory}>
-                        <input type='text' style={{border: 'solid'}} onChange={(e) => setNewCategory(e.target.value)}/>
-                        <button type='submit'>+</button>
-                    </form>
+
                 </div>
             }
 
-        </div>
+        </section>
     );
 };
 

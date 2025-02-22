@@ -9,9 +9,15 @@ export const saveArticle = async (user, category, title, content) => {
                 reject(err)
             }
 
+            try {
+                const article = await findArticleById(result.insertId)
+                resolve(article);
+            } catch (error) {
+                reject(error)
+            }
+
             // console.log(result.insertId)
-            const article = await findArticleById(result.insertId)
-            resolve(article);
+
         })
     })
 }
@@ -44,9 +50,14 @@ export const updateArticleById = async (id, article) => {
             if (result.affectedRows === 0) {
                 return resolve(null);
             }
-            const newArticleData = await findArticleById(id);
+            try {
+                const newArticleData = await findArticleById(id);
 
-            resolve(newArticleData);
+                return resolve(newArticleData);
+            } catch (error) {
+                reject(error)
+            }
+
         })
     })
 }
@@ -163,12 +174,8 @@ export const deleteArticleById = async (id) => {
     return new Promise((resolve, reject) => {
         const sql = 'DELETE FROM article WHERE id = ?';
         db.query(sql, [id], (err, result) => {
-            if (err) {
-                return reject(err);
-            }
-            if (result) {
-                return resolve(result)
-            }
-        })
+            if (err) return reject(err);
+            resolve(result || null);
+        });
     })
 }

@@ -1,0 +1,38 @@
+@use '../../variables' as vars;
+
+.categories-page {
+    .header-page {
+        display: flex;
+        align-items: center;
+        border-bottom: 2px solid vars.$primary-black;
+
+        h2 {
+            flex: 1;
+            text-align: center;
+        }
+    }
+
+    .categories-container {
+        .category {
+            // padding: 1em;
+            // margin: 1em auto;
+            border-bottom: 1px solid #ddd;
+            // height: fit-content;
+            display: block;
+
+
+
+            .link {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 1em;
+
+                &:hover {
+                    cursor: pointer;
+                    background-color: #ddd;
+                }
+            }
+        }
+    }
+}

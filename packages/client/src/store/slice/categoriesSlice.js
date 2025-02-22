@@ -38,7 +38,7 @@ export const deleteCategory = createAsyncThunk('categories/deleteCategory', asyn
 
         if (!response.ok) {
             const errorData = await response.json();
-            console.log(errorData)
+            // console.log(errorData)
             return rejectWithValue(errorData.message);
         }
 

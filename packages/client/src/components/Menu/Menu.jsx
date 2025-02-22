@@ -30,8 +30,13 @@ const Menu = ({ menuActive, menuRef }) => {
     };
 
     const handleLogout = async () => {
-        await dispatch(logout()).unwrap();
-        navigate('/');
+        try {
+            await dispatch(logout()).unwrap();
+            navigate('/');
+        } catch (error) {
+            console.error(error.message)
+        }
+
     };
 
     return (

@@ -2,7 +2,7 @@ import db from '../config/db.js';
 
 export const fetchCategories = async () => {
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT id, name FROM category';
+        const sql = 'SELECT id, name FROM category ORDER BY name';
         db.query(sql, (err, result) => {
             if (err) {
                 return reject(err)

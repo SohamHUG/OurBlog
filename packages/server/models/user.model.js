@@ -34,8 +34,10 @@ export const findAllUsers = async () => {
             FROM user 
             INNER JOIN role ON user.role_id = role.id
             ORDER BY 
-                (user.first_name IS NOT NULL AND user.last_name IS NOT NULL AND user.role_id = 1) DESC,
-                is_verified DESC
+                (user.first_name IS NOT NULL AND user.last_name IS NOT NULL AND user.is_verified = 1 AND user.role_id = 1) DESC,
+                (user.is_verified = 0) DESC,
+                (user.role_id = 2) DESC,
+                user.role_id ASC;
         `;
 
         db.query(sql, (err, result) => {

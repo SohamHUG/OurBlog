@@ -95,15 +95,23 @@ const MyProfilPage = () => {
     }
 
     const confirmDeleteUser = async () => {
-        await dispatch(deleteUser(user.user_id)).unwrap();
-        navigate('/');
-        setOpenModalConfirm(false);
+        try {
+            await dispatch(deleteUser(user.user_id)).unwrap();
+            navigate('/');
+            setOpenModalConfirm(false);
+        } catch (error) {
+            console.error(error.message)
+        }
 
     }
 
     const deleteProfilPicture = async () => {
-        await dispatch(deleteProfilPic(user.user_id)).unwrap()
-        window.location.reload();
+        try {
+            await dispatch(deleteProfilPic(user.user_id)).unwrap()
+            window.location.reload();
+        } catch (error) {
+            console.error(error.message)
+        }
         // navigate('/')
     }
 
