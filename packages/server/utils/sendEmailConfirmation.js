@@ -8,7 +8,7 @@ const transporter = nodemailer.createTransport({
         user: process.env.EMAIL_USER, // email d'envoi
         pass: process.env.EMAIL_PASSWORD, // clé d'application
     },
-    // logger: true, 
+    // logger: true,
     // debug: true,
 });
 
@@ -16,7 +16,7 @@ const transporter = nodemailer.createTransport({
 export const sendConfirmationEmail = async (email, token) => {
     const confirmationUrl = `${process.env.FRONTEND_URL}/confirm/${token}`;
     await transporter.sendMail({
-        from: '"OurBlog" <noreply@ourblog.com>',
+        from: 'OurBlog <noreply@ourblog.com>',
         to: email,
         subject: "Confirmez votre adresse email",
         html: `
@@ -24,13 +24,14 @@ export const sendConfirmationEmail = async (email, token) => {
             <p>Merci de vous être inscrit sur OurBlog. Cliquez sur le lien ci-dessous pour confirmer votre adresse email :</p>
             <a href="${confirmationUrl}">Confirmer mon email</a>
             <p>Ce lien expire dans une heure.</p>
+            <a href="${process.env.FRONTEND_URL}" style="text-decoration: none; color:#000; font-size: 33px; font-family: pridi; font-weight: 300;">OurBlog</a>
         `,
     });
 }
 
-export const sendInfoEmail = async ({email, subject, html}) => {
+export const sendInfoEmail = async ({ email, subject, html }) => {
     await transporter.sendMail({
-        from: '"OurBlog" <noreply@ourblog.com>',
+        from: 'OurBlog <noreply@ourblog.com>',
         to: email,
         subject: subject,
         html: html,

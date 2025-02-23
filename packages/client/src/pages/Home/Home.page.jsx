@@ -71,7 +71,7 @@ const HomePage = () => {
                         <h3>
                             {filters.sortBy === 'recent' ? 'Les derniers articles' : 'Les articles tendances'}
                         </h3>
-                        <select value={filters.sortBy} onChange={handleSortChange}>
+                        <select name='sortBy' value={filters.sortBy} onChange={handleSortChange}>
                             <option value="recent">Les plus récents</option>
                             <option value="famous">Les plus populaires</option>
                         </select>

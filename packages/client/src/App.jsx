@@ -22,9 +22,10 @@ import UpdateArticlePage from './pages/Author/UpdateArticle/UpdateArticle.page';
 import ProfilPage from './pages/Profil/Profil.page';
 import SearchResultsPage from './pages/SearchResultsPage/SearchResults.page';
 import { getMe, logoutUser } from './store/slice/authSlice';
-import CategoriesList from './pages/AdminDashboard/CategoriesList/CategoriesList';
-import UsersList from './pages/AdminDashboard/Users/UsersList';
-import UserPageAdmin from './pages/AdminDashboard/Users/UserPageAdmin';
+import CategoriesList from './pages/AdminDashboard/CategoriesList';
+import UsersList from './pages/AdminDashboard/UsersList';
+import UserPageAdmin from './pages/AdminDashboard/UserPageAdmin';
+import TagsList from './pages/AdminDashboard/TagsList';
 
 function App() {
 
@@ -70,6 +71,14 @@ function App() {
                         element={
                             <PrivateRoute roles={["admin"]}>
                                 <CategoriesList />
+                            </PrivateRoute>
+                        }
+                    />
+                    <Route
+                        path="/admin/tags"
+                        element={
+                            <PrivateRoute roles={["admin"]}>
+                                <TagsList />
                             </PrivateRoute>
                         }
                     />

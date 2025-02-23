@@ -18,15 +18,16 @@ export const createArticle = async (req, res) => {
 
         const sanitizedContent = sanitizeHtml(content, {
             allowedTags: [
-                'p', 'h1', 'h2', 'strong', 'em', 'u', 'a', 'ul', 'ol', 'li', 'br', 'img', 'blockquote', 'span'
+                'p', 'h1', 'h2', 'strong', 'em', 'u', 'a', 'ul', 'ol', 'li', 'br', 'img', 'blockquote', 'span', 's'
             ],
             allowedAttributes: {
                 a: ['href', 'target', 'rel', 'class', 'style'],
-                img: ['src', 'alt', 'class', 'style'],
+                img: ['src', 'alt', 'class', 'style', 'width'],
                 span: ['class', 'style'],
                 strong: ['class', 'style'],
                 p: ['class', 'style'],
                 u: ['class', 'style'],
+                s: ['class', 'style'],
                 h1: ['class', 'style'],
                 h2: ['class', 'style'],
                 em: ['class', 'style'],
@@ -123,15 +124,16 @@ export const updateArticle = async (req, res) => {
 
         const sanitizedContent = sanitizeHtml(content, {
             allowedTags: [
-                'p', 'h1', 'h2', 'strong', 'em', 'u', 'a', 'ul', 'ol', 'li', 'br', 'img', 'blockquote', 'span'
+                'p', 'h1', 'h2', 'strong', 'em', 'u', 'a', 'ul', 'ol', 'li', 'br', 'img', 'blockquote', 'span', 's'
             ],
             allowedAttributes: {
                 a: ['href', 'target', 'rel', 'class', 'style'],
-                img: ['src', 'alt', 'class', 'style'],
+                img: ['src', 'alt', 'class', 'style', 'width'],
                 span: ['class', 'style'],
                 strong: ['class', 'style'],
                 p: ['class', 'style'],
                 u: ['class', 'style'],
+                s: ['class', 'style'],
                 h1: ['class', 'style'],
                 h2: ['class', 'style'],
                 em: ['class', 'style'],

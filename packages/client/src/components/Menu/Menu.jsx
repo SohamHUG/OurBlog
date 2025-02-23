@@ -77,6 +77,7 @@ const Menu = ({ menuActive, menuRef }) => {
                         control={
                             <Switch
                                 color="primary"
+                                name="theme"
                                 onChange={handleToggleDarkMode}
                                 checked={darkMode}
                             />

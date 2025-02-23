@@ -66,7 +66,6 @@ export const deleteArticle = createAsyncThunk("articles/deleteArticle", async (i
     try {
         const response = await fetch(`http://localhost:3000/articles/delete/${id}`, {
             method: "DELETE",
-            headers: { 'Content-Type': 'application/json', },
             credentials: "include",
         });
         if (!response.ok) {

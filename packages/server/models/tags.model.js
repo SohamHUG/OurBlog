@@ -14,6 +14,8 @@ export const findTags = async (category) => {
             `
         }
 
+        sql += ` ORDER BY tag.name`;
+
         db.query(sql, category, (err, result) => {
             if (err) {
                 reject(err)
@@ -72,6 +74,18 @@ export const deleteArticleTags = (articleId) => {
     return new Promise((resolve, reject) => {
         const sql = `DELETE FROM article_tag WHERE article_id = ?`;
         db.query(sql, [articleId], (err, result) => {
+            if (err) {
+                reject(err);
+            }
+            resolve(result);
+        });
+    });
+};
+
+export const deleteTagById = (tagId) => {
+    return new Promise((resolve, reject) => {
+        const sql = `DELETE FROM tag WHERE id = ?`;
+        db.query(sql, [tagId], (err, result) => {
             if (err) {
                 reject(err);
             }

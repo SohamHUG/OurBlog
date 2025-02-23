@@ -52,7 +52,7 @@ const RichTextEditor = ({ value, onChange }) => {
                 [{ align: ["right", "center", "justify"] }],
                 [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
                 ['link', 'image'],
-                [{ color: ["red", "#235AF3"] }],
+                // [{ color: ["red", "#235AF3", '#fff'] }],
             ],
             // handlers: {
             //     // image: handleImageUpload,

@@ -3,6 +3,7 @@ import { isAdmin } from '../middlewares/role.middleware.js';
 import { authMiddleware } from '../middlewares/auth.middleware.js';
 import { createCategory, deleteCategory } from '../controller/categories.controller.js';
 import { getRoles, getUsers } from '../controller/user.controller.js';
+import { deleteTag } from '../controller/tags.controller.js';
 
 const router = Router();
 
@@ -10,6 +11,7 @@ router.use(authMiddleware, isAdmin)
 
 router.post('/create-category', createCategory);
 router.delete('/delete-category/:id', deleteCategory);
+router.delete('/delete-tag/:id', deleteTag);
 router.get('/users', getUsers)
 router.get('/roles', getRoles)
 

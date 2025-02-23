@@ -9,6 +9,7 @@ import './Article.scss'
 import { createComment, getComments } from '../../store/slice/commentSlice';
 import CommentsList from '../../components/CommentsList/CommentsList';
 import EastIcon from "@mui/icons-material/East";
+import { openModalLogin } from '../../store/slice/authSlice';
 
 const ArticlePage = () => {
     const { id } = useParams();
@@ -32,8 +33,6 @@ const ArticlePage = () => {
         }
     }, [post]);
 
-    // console.log(location)
-
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -46,7 +45,10 @@ const ArticlePage = () => {
 
     }
 
-    // console.log(post.content)
+    const handlePublishComment = () => {
+        dispatch(openModalLogin())
+    }
+
 
     return (
         <>
@@ -100,7 +102,12 @@ const ArticlePage = () => {
                     )}
 
                     <div className='comments-container'>
-                        <h3>Commentaires :</h3>
+                        <div>
+                            <h3>Commentaires :</h3>
+                            {!user &&
+                                <button onClick={handlePublishComment}>Publier un commentaire</button>
+                            }
+                        </div>
                         {errorComments && <p className='alert'>{errorComments}</p>}
                         {user && user.is_verified === 1 &&
                             <form onSubmit={handleSubmit}>

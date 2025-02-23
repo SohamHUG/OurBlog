@@ -11,6 +11,6 @@ router.post('/register', [validateSchema(userValidation), authLimiter], register
 router.post('/login',[authLimiter], loginUser);
 router.get('/logout', logOutUser);
 router.get('/confirm/:token', confirmEmail)
-router.get('/confirm-email',[authMiddleware], sendEmail)
+router.get('/confirm-email',[authMiddleware, authLimiter], sendEmail)
 
 export default router;

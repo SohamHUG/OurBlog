@@ -32,7 +32,6 @@ export const deleteCategory = createAsyncThunk('categories/deleteCategory', asyn
     try {
         const response = await fetch(`http://localhost:3000/admin/delete-category/${id}`, {
             method: 'DELETE',
-            headers: { 'Content-Type': 'application/json', },
             credentials: 'include',
         });
 
@@ -65,6 +64,25 @@ export const getTags = createAsyncThunk(
         }
     }
 );
+
+export const deleteTag = createAsyncThunk('categories/deleteTag', async (id, { rejectWithValue }) => {
+    try {
+        const response = await fetch(`http://localhost:3000/admin/delete-tag/${id}`, {
+            method: 'DELETE',
+            credentials: 'include',
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            // console.log(errorData)
+            return rejectWithValue(errorData.message);
+        }
+
+        return await response.json();
+    } catch (error) {
+        return rejectWithValue(error.message);
+    }
+});
 
 
 const categoriesSlice = createSlice({
@@ -112,7 +130,7 @@ const categoriesSlice = createSlice({
             })
             .addCase(deleteCategory.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                const deletedId = action.meta.arg; 
+                const deletedId = action.meta.arg;
                 state.items = state.items.filter((category) => category.id !== deletedId);
             })
             .addCase(deleteCategory.rejected, (state, action) => {
@@ -128,6 +146,19 @@ const categoriesSlice = createSlice({
                 state.tags = action.payload.tags;
             })
             .addCase(getTags.rejected, (state, action) => {
+                state.tagStatus = 'failed';
+                state.error = action.error.message;
+            })
+            .addCase(deleteTag.pending, (state) => {
+                state.tagStatus = 'loading';
+                state.error = null;
+            })
+            .addCase(deleteTag.fulfilled, (state, action) => {
+                state.tagStatus = 'succeeded';
+                const deletedId = action.meta.arg;
+                state.tags = state.tags.filter((tag) => tag.id !== deletedId);
+            })
+            .addCase(deleteTag.rejected, (state, action) => {
                 state.tagStatus = 'failed';
                 state.error = action.error.message;
             })

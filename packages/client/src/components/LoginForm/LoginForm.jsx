@@ -72,6 +72,8 @@ const LoginForm = ({ closeModal }) => {
                         {error && <p style={{ color: 'red' }}>{error}</p>}
                         <input
                             type="email"
+                            name='email'
+                            autoComplete='on'
                             placeholder="Adresse Email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
@@ -82,6 +84,8 @@ const LoginForm = ({ closeModal }) => {
                     <div style={flexColumn}>
                         <input
                             type="password"
+                            name='password'
+                            autoComplete='off'
                             placeholder="Mot de passe"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}

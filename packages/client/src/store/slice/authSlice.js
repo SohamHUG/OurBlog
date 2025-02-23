@@ -67,7 +67,6 @@ export const getMe = createAsyncThunk('user/getMe', async (_, { rejectWithValue 
     try {
         const response = await fetch(`http://localhost:3000/users/me`, {
             method: 'GET',
-            headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
         });
         return handleResponse(response).then((data) => data.user);

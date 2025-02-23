@@ -23,6 +23,7 @@ const MyProfilPage = () => {
     const { status, error } = Redux.useSelector((state) => state.users);
     const statusUpload = Redux.useSelector((state) => state.photos.status)
     const statusEmail = Redux.useSelector((state) => state.auth.status);
+    const errorEmail = Redux.useSelector((state) => state.auth.error);
     const comments = Redux.useSelector((state) => state.comments.comments)
 
     const [formUser, setFormUser] = React.useState({
@@ -156,7 +157,7 @@ const MyProfilPage = () => {
                     }
                     {statusEmail === 'failed' &&
                         <span className='alert'>
-                            Error
+                            {errorEmail}
                         </span>
                     }
                 </p>

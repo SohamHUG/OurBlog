@@ -76,7 +76,7 @@ const CategoryPage = () => {
         dispatch(setSortBy(sortBy));
     };
 
-    // console.log(hasMore)
+    // console.log(posts)
 
     useEffect(() => {
         // setPage(1);
@@ -91,7 +91,7 @@ const CategoryPage = () => {
             </div>
 
             <div className="filter-section">
-                <select value={filters.sortBy} onChange={(e) => handleSortChange(e)}>
+                <select name='sortBy' value={filters.sortBy} onChange={(e) => handleSortChange(e)}>
                     <option value="recent">Les plus récents</option>
                     <option value="famous">Les plus populaires</option>
                 </select>
@@ -113,7 +113,7 @@ const CategoryPage = () => {
                     <PostsList posts={posts} />
                     <InfiniteScroll context="category" isLoading={postsStatus === 'loading'} hasMore={hasMore} />
                 </>
-                : <h3>Aucun article pour la catégorie {category.name}</h3>
+                : <h3>Aucun article pour la catégorie {category?.name}</h3>
             }
 
         </section>

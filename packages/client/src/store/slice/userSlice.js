@@ -58,7 +58,6 @@ export const updateUser = createAsyncThunk('user/updateUser', async ({ id, userD
 export const deleteUser = createAsyncThunk('user/deleteUser', async (id) => {
     const response = await fetch(`${BASE_URL}/${id}`, {
         method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
     });
     return handleResponse(response).then((data) => data.user);

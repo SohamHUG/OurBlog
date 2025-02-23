@@ -12,9 +12,8 @@ export const getMine = async (req, res) => {
     try {
         const user = req.user;
 
-        const { refresh_token, role_id, ...userData } = user;
+        const { refresh_token, role_id, ...userData } = user; // filtre les infos "sensibles"
 
-        // console.log(userData)
 
         return res.status(201).json({ user: userData });
     } catch (err) {
@@ -43,10 +42,10 @@ export const getUserById = async (req, res) => {
             return res.status(404).json({ message: "Utilisateur non trouvé" });
         }
 
-        if (requestingUser && requestingUser.role_id === 4) {
+        if (requestingUser && requestingUser.role_id === 4) { // envoie toutes les infos de l'user si un admin requete
             return res.status(201).json({ user });
         } else {
-            const { refresh_token, email, role_id, role_name, is_verified, ...userData } = user;
+            const { refresh_token, email, role_id, role_name, is_verified, ...userData } = user; // Sinon on filtre
 
             return res.status(201).json({ user: userData });
         }
@@ -57,6 +56,7 @@ export const getUserById = async (req, res) => {
         return res.status(500).json({ message: err });
     }
 }
+
 
 export const getUsers = async (req, res) => {
     try {
@@ -118,7 +118,7 @@ export const updateUser = async (req, res) => {
         const user = await findUserById(id);
         let roleId = user.role_id;
 
-        if (user.role_name !== "admin" && user.role_name !== "moderator") {
+        if (user.role_id !== 4 && user.role_id !== 2) { // ? admin et moderateur peuvent être anonyme ?
             if (!firstName || !lastName) {
                 firstName = null;
                 lastName = null;
@@ -135,14 +135,17 @@ export const updateUser = async (req, res) => {
                 roleId = parseInt(req.body.role);
 
                 if (parseInt(req.body.role) === 3) { // si il devient auteur on envoie un email
-                    sendInfoEmail({
+                    await sendInfoEmail({
                         email: user.email,
-                        subject: 'Demande de publication d\'article',
+                        subject: " Validation de votre demande de publication d'articles",
                         html: `
                             <p>Bonjour,</p>
-                            <p>Votre demande d'autorisation de publication d'articles a été validée par nos administrateurs.</p>
+                            <p>Nous avons le plaisir de vous informer que votre demande d'autorisation de publication d'articles a été validée par notre équipe.</p>
                             <p>Vous pouvez désormais publier des articles sur notre plateforme.</p>
-                            <p>Veuillez consulter nos <a href="${process.env.FRONTEND_URL}/user-agreement">conditions d'utilisation</a>.</p>
+                            <p>⚠️ <strong>Important</strong> : Si vous retirez votre nom ou prénom de votre profil, votre rôle d’auteur sera automatiquement supprimé.</p>
+                            <p>Nous vous invitons à re-consulter nos <a href="${process.env.FRONTEND_URL}/user-agreement">conditions d'utilisation</a>.</p>
+                            <p>Cordialement,<p>
+                            <a href="${process.env.FRONTEND_URL}" style="text-decoration: none; color:#000; font-size: 33px; font-family: pridi; font-weight: 300;">OurBlog</a>
                     `
                     });
                 }

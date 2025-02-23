@@ -1,8 +1,8 @@
 import * as React from 'react';
 import * as Redux from 'react-redux';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { selectCategories, selectCategoriesStatus, selectCategoriesError } from '../../../store/selectors';
-import { fetchCategories, createCategory, deleteCategory } from '../../../store/slice/categoriesSlice';
+import { selectCategories, selectCategoriesStatus, selectCategoriesError } from '../../store/selectors';
+import { fetchCategories, createCategory, deleteCategory } from '../../store/slice/categoriesSlice';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DeleteIcon from '@mui/icons-material/Delete';
 

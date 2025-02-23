@@ -18,7 +18,7 @@ const PostContentResum = ({ content }) => {
     sanitizedContent.replace(/<img [^>]*>/gi, (imgTag) => {
         if (!imageFound) {
             imageFound = true;
-            image = imgTag // Conserver la première image
+            image = imgTag.replace(/\swidth=["']\d+["']/gi, ''); // Conserve la première image en enlevant le width 
             // return imgTag; 
         }
         return ''; // Supprimer les autres images

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import * as Redux from 'react-redux';
 import { Navigate, NavLink } from 'react-router-dom';
-import { selectCategories, selectCategoriesStatus, selectCategoriesError } from '../../../store/selectors';
-import { fetchCategories, createCategory, deleteCategory } from '../../../store/slice/categoriesSlice';
-import { getAllUsers, resetUsers } from '../../../store/slice/userSlice';
+import { selectCategories, selectCategoriesStatus, selectCategoriesError } from '../../store/selectors';
+import { fetchCategories, createCategory, deleteCategory } from '../../store/slice/categoriesSlice';
+import { getAllUsers, resetUsers } from '../../store/slice/userSlice';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
