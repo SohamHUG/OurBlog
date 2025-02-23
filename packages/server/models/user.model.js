@@ -95,7 +95,7 @@ export const findPopularUsers = async () => {
                 user.pseudo, 
                 user.profil_picture,
                 user.profil_picture_public_id,
-                COUNT(comment.id) AS total_comments
+                COUNT(DISTINCT comment.id) AS total_comments
             FROM user 
             INNER JOIN role ON user.role_id = role.id
             INNER JOIN article ON user.id = article.user_id

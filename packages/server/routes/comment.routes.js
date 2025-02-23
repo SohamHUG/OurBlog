@@ -9,7 +9,7 @@ router.get('/', getComments);
 
 router.use(authMiddleware)
 
-router.post('/:id', [isVerified], createComment)
+router.post('/:id', createComment)
 router.delete('/:id', deleteComment);
 
 export default router;

@@ -179,7 +179,7 @@ html {
             .article-form-container .ql-editor h1,
             .article-form-container .ql-editor h1 span,
             .article-form-container .ql-editor strong {
-                color: vars.$primary-white;
+                color: vars.$primary-white!important;
             }
 
             .quill .ql-toolbar button .ql-stroke,

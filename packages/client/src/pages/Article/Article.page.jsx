@@ -31,7 +31,13 @@ const ArticlePage = () => {
         if (post) {
             dispatch(getComments({ articleId: post.id }))
         }
-    }, [post]);
+    }, [post, dispatch]);
+
+    const handleCommentChange = async (e) => {
+        e.preventDefault();
+
+        setComment(e.target.value)
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -109,7 +115,7 @@ const ArticlePage = () => {
                             }
                         </div>
                         {errorComments && <p className='alert'>{errorComments}</p>}
-                        {user && user.is_verified === 1 &&
+                        {user &&
                             <form onSubmit={handleSubmit}>
                                 <label htmlFor="comment">Ajouter un commentaire :</label>
                                 <textarea
@@ -119,7 +125,7 @@ const ArticlePage = () => {
                                     type="text"
                                     placeholder='...'
                                     value={comment}
-                                    onChange={(e) => setComment(e.target.value)}
+                                    onChange={handleCommentChange}
                                     required
                                 />
                                 <button type='submit'>

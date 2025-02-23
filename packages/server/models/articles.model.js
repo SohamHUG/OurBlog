@@ -75,7 +75,7 @@ export const findAllArticles = (filters = {}) => {
             article.title, 
             article.content,
             article.created_at,
-            COUNT(comment.id) AS comment_count
+            COUNT(DISTINCT comment.id) AS comment_count
         FROM article
         INNER JOIN user ON article.user_id = user.id
         INNER JOIN category ON article.category_id = category.id

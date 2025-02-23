@@ -27,11 +27,13 @@ export const createArticle = async (req, res) => {
                 strong: ['class', 'style'],
                 p: ['class', 'style'],
                 u: ['class', 'style'],
+                ul: ['class', 'style'],
+                ol: ['class', 'style'],
                 s: ['class', 'style'],
                 h1: ['class', 'style'],
                 h2: ['class', 'style'],
                 em: ['class', 'style'],
-                li: ['class', 'style'],
+                li: ['class', 'style', 'data-list'],
                 blockquote: ['class', 'style'],
             },
             allowedStyles: {
@@ -44,18 +46,6 @@ export const createArticle = async (req, res) => {
                     'text-decoration': [/^(none|underline|line-through|overline)$/],
                 }
             },
-            // transformTags: {
-            //     'a': (tagName, attribs) => {
-            //         if (attribs.href && !attribs.href.startsWith('#') && !attribs.href.startsWith('/')) {
-            //             attribs.rel = 'noopener noreferrer'; // Sécurise les liens externes
-            //             attribs.target = '_blank'; // Ouvre les liens externes dans un nouvel onglet
-            //         }
-            //         return {
-            //             tagName,
-            //             attribs
-            //         };
-            //     }
-            // },
             disallowedTagsMode: 'discard',
         });
 
@@ -133,11 +123,13 @@ export const updateArticle = async (req, res) => {
                 strong: ['class', 'style'],
                 p: ['class', 'style'],
                 u: ['class', 'style'],
+                ul: ['class', 'style'],
+                ol: ['class', 'style'],
                 s: ['class', 'style'],
                 h1: ['class', 'style'],
                 h2: ['class', 'style'],
                 em: ['class', 'style'],
-                li: ['class', 'style'],
+                li: ['class', 'style', 'data-list'],
                 blockquote: ['class', 'style'],
             },
             allowedStyles: {
@@ -150,18 +142,6 @@ export const updateArticle = async (req, res) => {
                     'text-decoration': [/^(none|underline|line-through|overline)$/],
                 }
             },
-            // transformTags: {
-            //     'a': (tagName, attribs) => {
-            //         if (attribs.href && !attribs.href.startsWith('#') && !attribs.href.startsWith('/')) {
-            //             attribs.rel = 'noopener noreferrer'; // Sécurise les liens externes
-            //             attribs.target = '_blank'; // Ouvre les liens externes dans un nouvel onglet
-            //         }
-            //         return {
-            //             tagName,
-            //             attribs
-            //         };
-            //     }
-            // },
             disallowedTagsMode: 'discard',
         });
 

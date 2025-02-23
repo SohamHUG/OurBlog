@@ -12,7 +12,7 @@ export const authLimiter = rateLimit({
 
 export const speedLimiter = slowDown({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    delayAfter: 100, // Après 100 requêtes dans la fenêtre
+    delayAfter: 50, // Après 50 requêtes dans la fenêtre
     delayMs: (hits) => hits * 500, // Ajoute 500ms par requête après la 10ème
 });
 
@@ -22,5 +22,5 @@ export const speedLimiterOnSensitive = (req, res, next) => {
     if (sensitiveMethods.includes(req.method)) {
         return speedLimiter(req, res, next);
     }
-    next(); // Continue sans limitation pour GET
+    next(); 
 };
