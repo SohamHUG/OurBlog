@@ -5,7 +5,7 @@ import { updateUser, deleteUser } from '../../store/slice/userSlice';
 import { deleteProfilPic, uploadProfilPic } from '../../store/slice/photoSlice';
 import Modal from '../../components/Modal/Modal';
 import UserForm from '../../components/UserForm/UserForm';
-import { sendEmailConfirm } from '../../store/slice/authSlice';
+import { sendEmailConfirm, setErrorMessage, setStatus } from '../../store/slice/authSlice';
 import CircularProgress from '@mui/material/CircularProgress';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import { getComments } from '../../store/slice/commentSlice';
@@ -15,7 +15,6 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const MyProfilPage = () => {
     const { user } = Redux.useSelector((state) => state.auth);
-
     const dispatch = Redux.useDispatch();
     const navigate = useNavigate();
     const [openModalInfo, setOpenModalInfo] = React.useState(false);
@@ -25,7 +24,6 @@ const MyProfilPage = () => {
     const statusEmail = Redux.useSelector((state) => state.auth.status);
     const errorEmail = Redux.useSelector((state) => state.auth.error);
     const comments = Redux.useSelector((state) => state.comments.comments)
-
     const [formUser, setFormUser] = React.useState({
         firstName: user.first_name || '',
         lastName: user.last_name || '',
@@ -38,6 +36,11 @@ const MyProfilPage = () => {
 
     const [profilPicture, setProfilPicture] = React.useState(null);
     const [previewImage, setPreviewImage] = React.useState(null);
+
+    React.useEffect(() => {
+        dispatch(setErrorMessage(null))
+        dispatch(setStatus('idle'))
+    },[])
 
     React.useEffect(() => {
         if (user) {

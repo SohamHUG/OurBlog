@@ -19,10 +19,12 @@ const MainTemplate = () => {
 
         }
     }, [darkMode]);
-    
+
     return (
         <>
-            <NavBar />
+            <header>
+                <NavBar />
+            </header>
             <main>
                 <Outlet />
                 <ScrollToTopButton />

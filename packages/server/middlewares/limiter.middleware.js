@@ -10,6 +10,13 @@ export const authLimiter = rateLimit({
     legacyHeaders: false, // Désactive les headers obsolètes (X-RateLimit-*)
 });
 
+export const limiter = (req, res, next) => {
+    if (req.user && req.user.role_id === 4) {
+        return next();
+    }
+    return authLimiter(req, res, next);
+}
+
 export const speedLimiter = slowDown({
     windowMs: 15 * 60 * 1000, // 15 minutes
     delayAfter: 50, // Après 50 requêtes dans la fenêtre
@@ -18,9 +25,9 @@ export const speedLimiter = slowDown({
 
 export const speedLimiterOnSensitive = (req, res, next) => {
     const sensitiveMethods = ['POST', 'PATCH', 'PUT', 'DELETE'];
-  
+
     if (sensitiveMethods.includes(req.method)) {
         return speedLimiter(req, res, next);
     }
-    next(); 
+    next();
 };

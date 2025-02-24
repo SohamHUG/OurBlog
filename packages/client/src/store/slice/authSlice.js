@@ -38,8 +38,25 @@ export const sendEmailConfirm = createAsyncThunk(
     async (_, { rejectWithValue }) => {
         try {
             const response = await fetch(`${BASE_URL}/confirm-email`, {
-                method: 'GET',
+                method: 'POST',
                 credentials: 'include',
+            });
+            return handleResponse(response);
+        } catch (error) {
+            return rejectWithValue(error.message);
+        }
+    }
+);
+
+export const sendContact = createAsyncThunk(
+    'auth/sendContact',
+    async (formContact, { rejectWithValue }) => {
+        try {
+            const response = await fetch(`${BASE_URL}/contact`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formContact),
+                // credentials: 'include',
             });
             return handleResponse(response);
         } catch (error) {
@@ -94,6 +111,12 @@ const authSlice = createSlice({
         logoutUser: (state) => {
             state.user = null;
         },
+        setErrorMessage: (state, action) => {
+            state.error = action.payload;
+        },
+        setStatus: (state, action) => {
+            state.status = action.payload
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -132,6 +155,17 @@ const authSlice = createSlice({
                 state.status = 'failed';
                 state.error = action.error.message;
             })
+            .addCase(sendContact.pending, (state) => {
+                state.status = 'loading';
+                state.error = null;
+            })
+            .addCase(sendContact.fulfilled, (state) => {
+                state.status = 'succeeded';
+            })
+            .addCase(sendContact.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message;
+            })
             .addCase(logout.pending, (state) => {
                 state.status = 'loading';
                 state.error = null;
@@ -150,7 +184,7 @@ const authSlice = createSlice({
                 state.error = null;
             })
             .addCase(getMe.fulfilled, (state, action) => {
-                state.status = 'succeeded';
+                state.status = 'idle';
                 // console.log(action.payload)
                 state.user = action.payload;
             })
@@ -173,5 +207,5 @@ const authSlice = createSlice({
     },
 });
 
-export const { openModalLogin, closeModalLogin, logoutUser } = authSlice.actions;
+export const { openModalLogin, closeModalLogin, logoutUser, setErrorMessage, setStatus } = authSlice.actions;
 export default authSlice.reducer;

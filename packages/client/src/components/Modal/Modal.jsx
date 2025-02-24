@@ -1,5 +1,6 @@
 import * as React from 'react';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import CircularProgress from '@mui/material/CircularProgress';
 import './Modal.scss';
 
 const Modal = (props) => {
@@ -32,6 +33,9 @@ const Modal = (props) => {
                     {props.content}
                 </div>
                 <div className='modal-footer'>
+                    {props.isLoading &&
+                        <CircularProgress />
+                    }
                     {
                         props.validButton &&
                         <button onClick={props.valid}>

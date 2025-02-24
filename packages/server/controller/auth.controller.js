@@ -1,7 +1,7 @@
 import { findUserById, findByCredentials, saveUser, updateUserById } from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import bcrypt from 'bcrypt';
-import { sendConfirmationEmail } from "../utils/index.js";
+import { sendConfirmationEmail, sendInfoEmail } from "../utils/index.js";
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -77,6 +77,34 @@ export const confirmEmail = async (req, res) => {
         console.error(err);
         return res.status(500).json({ message: "Erreur interne du serveur." });
     }
+}
+
+export const contact = async (req, res) => {
+    try {
+        const { email, subject, message } = req.body;
+
+        // console.log(req.body)
+
+        if (!email || !subject || !message) {
+            return res.status(400).json({ message: "Tous les champs sont requis." });
+        }
+
+        await sendInfoEmail({
+            email: process.env.EMAIL_USER,
+            subject: `Contact : ${subject}`,
+            html: `
+                <p>Email : ${email}</p>
+                <p>Message :</p>
+                <p>${message}</p>
+            `
+        })
+
+        return res.status(200).json({ message: "Message envoyé" });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: "Erreur interne du serveur." });
+    }
+
 }
 
 export const loginUser = async (req, res) => {

@@ -1,23 +1,17 @@
 import * as React from 'react';
 import * as Redux from 'react-redux';
-import { loginUser, registerUser } from '../../store/slice/authSlice';
+import { loginUser, registerUser, setErrorMessage } from '../../store/slice/authSlice';
 import { useNavigate, Navigate } from 'react-router-dom';
 import Modal from '../../components/Modal/Modal';
 import UserForm from '../../components/UserForm/UserForm';
 
 const SignUpPage = () => {
     const { user } = Redux.useSelector((state) => state.auth);
-    // console.log(user)
-    // if (user && user.user_id) {
-    //     return <Navigate to="/" />;
-    // }
-
     const dispatch = Redux.useDispatch();
     const navigate = useNavigate();
     const [openModal, setOpenModal] = React.useState(false)
-    const [errorMessage, setErrorMessage] = React.useState('');
+    // const [errorMessage, setErrorMessage] = React.useState('');
     const { status, error } = Redux.useSelector((state) => state.auth);
-
     const [formUser, setFormUser] = React.useState({
         firstName: '',
         lastName: '',
@@ -28,6 +22,10 @@ const SignUpPage = () => {
         password2: '',
     });
 
+    React.useEffect(() =>{
+        dispatch(setErrorMessage(null))
+    },[])
+
     // console.log(status)
 
     const handleChange = (e) => {
@@ -37,21 +35,24 @@ const SignUpPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!formUser.pseudo || !formUser.email || !formUser.email2 || !formUser.password || !formUser.password2) {
-            setErrorMessage("Tous les champs marqués d'une * sont obligatoires.");
+            // setErrorMessage("Tous les champs marqués d'une * sont obligatoires.");
+            dispatch(setErrorMessage("Tous les champs marqués d'une * sont obligatoires."))
             return;
         }
 
         if (formUser.email !== formUser.email2) {
-            setErrorMessage("Les adresses email ne correspondent pas.");
+            // setErrorMessage("Les adresses email ne correspondent pas.");
+            dispatch(setErrorMessage("Les adresses email ne correspondent pas."))
             return;
         }
 
         if (formUser.password !== formUser.password2) {
-            setErrorMessage("Les mots de passe ne correspondent pas.");
+            // setErrorMessage("Les mots de passe ne correspondent pas.");
+            dispatch(setErrorMessage("Les mots de passe ne correspondent pas."))
             return;
         }
 
-        setErrorMessage('')
+        // setErrorMessage(null)
         try {
             await dispatch(registerUser(formUser)).unwrap();
             setOpenModal(true); 
@@ -78,7 +79,7 @@ const SignUpPage = () => {
                 formUser={formUser}
                 handleSubmit={handleSubmit}
                 handleChange={handleChange}
-                errorMessage={error || errorMessage}
+                errorMessage={error}
                 isLoading={status === 'loading'}
             />
 

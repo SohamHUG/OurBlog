@@ -53,10 +53,11 @@ export const uploadArticleFiles = async (req, res) => {
             return res.status(400).json({ message: 'Aucun fichier uploadé' });
         }
 
-        // console.log (req.file)
+        // console.log (req.file.filename)
         return res.status(201).json({
             message: 'Image uploadé avec succès',
-            url: req.file.path
+            url: req.file.path,
+            publicId: req.file.filename
         });
     } catch (err) {
         console.error(err);
@@ -69,7 +70,7 @@ export const deleteProfilPicture = async (req, res) => {
     const { id } = req.params;
     const user = req.user;
     try {
-        if (parseInt(id) !== user.user_id && req.user.role_id !== 4) {
+        if (parseInt(id) !== user.user_id && user.role_id !== 4) {
             return res.status(403).json({ message: "Vous n'êtes pas autorisé" });
         }
 

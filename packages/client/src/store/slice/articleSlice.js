@@ -110,6 +110,7 @@ const articlesSlice = createSlice({
         },
         incrementPage: (state, action) => {
             // console.log(state.allPosts.page)
+            // console.log(action)
             if (action.payload.context === 'all') state.allPosts.page += 1;
             else if (action.payload.context === 'category') state.categoryPosts.page += 1;
             else if (action.payload.context === 'author') state.authorPosts.page += 1;
@@ -241,7 +242,7 @@ const articlesSlice = createSlice({
             })
             .addCase(deleteArticle.rejected, (state, action) => {
                 state.allPosts.status = "failed";
-                state.allPosts.error = action.payload;
+                state.allPosts.error = action.error.message || "Une erreur est survenue";
             });
     },
 });

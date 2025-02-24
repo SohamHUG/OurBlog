@@ -59,8 +59,10 @@ const CreateArticlePage = () => {
         setErrorMessage("");
 
         try {
-            const updatedContent = await dispatch(uploadImagesAndUpdateContent({ content: formData.content })).unwrap();
-            const updatedFormData = { ...formData, content: updatedContent };
+            const { updatedContent, imagesId } = await dispatch(uploadImagesAndUpdateContent({ content: formData.content })).unwrap();
+            const updatedFormData = { ...formData, content: updatedContent, imagesId };
+
+            // console.log(updatedFormData)
 
             const article = await dispatch(createArticle(updatedFormData)).unwrap();;
 

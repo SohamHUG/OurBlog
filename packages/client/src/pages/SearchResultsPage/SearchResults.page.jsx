@@ -34,11 +34,12 @@ const SearchResultsPage = () => {
                     <NavLink
                         key={result.id + Math.random()}
                         className="result-card"
-                        to={result.type === 'article' ?
-                            `/article/${result.id}`
-                            : user && user.role_name === 'admin' ?
-                                `/admin/user/${result.id}`
-                                : `/profil/${result.id}`
+                        to={
+                            result.type === 'article' ?
+                                `/article/${result.id}`
+                                : user && user.role_name === 'admin' ?
+                                    `/admin/user/${result.id}`
+                                    : `/profil/${result.id}`
                         }
                     >
                         {result.type === 'user' && (
@@ -60,6 +61,12 @@ const SearchResultsPage = () => {
                                 <h3>{result.name}</h3>
                                 <PostContentResum content={result.description} />
                                 {/* <div className="view-button">Voir l'article</div> */}
+                            </div>
+                        )}
+                        {result.type === 'category' && (
+                            <div className="category-card">
+                                <h3 className='link'>{result.type}</h3>
+                                <p>{result.name}</p>
                             </div>
                         )}
                     </NavLink>

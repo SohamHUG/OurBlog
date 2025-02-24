@@ -1,11 +1,12 @@
-import { deleteArticleById, findAllArticles, findArticleById, saveArticle, updateArticleById } from "../models/articles.model.js";
+import { deleteArticleById, findAllArticles, findArticleById, getImagesIdsByArticleId, saveArticle, saveArticleImagesId, updateArticleById } from "../models/articles.model.js";
 import { findTagByName, findTags, saveTag, linkArticleToTag, deleteArticleTags } from "../models/tags.model.js";
 import sanitizeHtml from 'sanitize-html';
+import { v2 as cloudinary } from 'cloudinary';
 
 
 export const createArticle = async (req, res) => {
     try {
-        const { title, category, content, tags } = req.body
+        const { title, category, content, tags, imagesId } = req.body
         const user = req.user.user_id;
 
         // console.log(content)
@@ -49,20 +50,19 @@ export const createArticle = async (req, res) => {
             disallowedTagsMode: 'discard',
         });
 
-        const article = await saveArticle(user, category, title, sanitizedContent);
+        // console.log(imagesId)
+
+
+        const article = await saveArticle(user, category, title, sanitizedContent, imagesId);
+
+        // enregistre les publicId des images en db 
+        if (imagesId && imagesId.length > 0) {
+            // const imageValues = imagesId.map(img => [article.id, img]);
+            await saveArticleImagesId(article.id, imagesId)
+        }
 
         const existingTags = await findTags();
         const existingTagMap = new Map(existingTags.map(tag => [tag.name, tag.id]));
-
-        // Map {
-        //     "name" => id,
-        //     "recette" => 2,
-        //     "dessert" => 3
-        //   }
-        // existingTagMap.has("cuisine"); // renvoie un boolean
-        // existingTagMap.get("cuisine"); // renvoie l'id 
-        // existingTagMap.set(tagName, tagId); // ajoute une nouvelle valeure a l'obj 
-
 
         // Gère les tags
         for (const tagName of tags.filter(tag => tag.trim() !== '')) {
@@ -90,7 +90,7 @@ export const createArticle = async (req, res) => {
 export const updateArticle = async (req, res) => {
     try {
         const { id } = req.params
-        const { title, category, content, tags } = req.body
+        const { title, category, content, tags, imagesId } = req.body
         const user = req.user.user_id;
 
         // console.log(content)
@@ -230,6 +230,11 @@ export const deleteArticle = async (req, res) => {
 
         if (article.user_id !== user.user_id && req.user.role_id !== 4) {
             return res.status(403).json({ message: "Vous n'êtes pas autorisé" });
+        }
+
+        const imagesId = await getImagesIdsByArticleId(id)
+        for (const image of imagesId) {
+            await cloudinary.uploader.destroy(image.public_id);
         }
 
         await deleteArticleById(id);

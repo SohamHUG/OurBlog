@@ -25,9 +25,15 @@ const SearchResultsNav = ({ results, searchRef, clearSearch }) => {
             <ul className="search-results-list">
                 {results.map((result) => (
                     <NavLink
-                        to={result.type === "article" ? `/article/${result.id}` : user && user.role_name === 'admin' ?
-                            `/admin/user/${result.id}`
-                            : `/profil/${result.id}`}
+                        to={
+                            result.type === "article" ?
+                                `/article/${result.id}`
+                                : result.type === "category" ?
+                                    `/category/${result.id}`
+                                    : user && user.role_name === 'admin' ?
+                                        `/admin/user/${result.id}`
+                                        : `/profil/${result.id}`
+                        }
                         className="search-result-item"
                         onClick={onClickItem}
                         key={result.id + Math.random()}

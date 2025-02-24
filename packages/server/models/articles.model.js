@@ -1,6 +1,7 @@
 import db from '../config/db.js';
+import { v2 as cloudinary } from 'cloudinary';
 
-export const saveArticle = async (user, category, title, content) => {
+export const saveArticle = async (user, category, title, content, imagesId) => {
     return new Promise((resolve, reject) => {
         const sql = 'INSERT INTO article (user_id, category_id, title, content) VALUES (?,?,?,?)';
 
@@ -9,12 +10,35 @@ export const saveArticle = async (user, category, title, content) => {
                 reject(err)
             }
 
+            // console.log(imagesId)
+            const articleId = result.insertId;
+
             try {
-                const article = await findArticleById(result.insertId)
+                // if (imagesId && imagesId.length > 0) {
+                // const imageSql = 'INSERT INTO article_image (article_id,public_id) VALUES ?';
+
+                // const imageValues = imagesId.map(img => [articleId, img]);
+
+                // db.query(imageSql, [imageValues], (imgErr) => {
+                //     if (imgErr) {
+                //         reject(imgErr);
+                //         return;
+                //     }
+                // });
+                // }
+
+                const article = await findArticleById(articleId);
                 resolve(article);
             } catch (error) {
-                reject(error)
+                reject(error);
             }
+
+            // try {
+            //     const article = await findArticleById(result.insertId)
+            //     resolve(article);
+            // } catch (error) {
+            //     reject(error)
+            // }
 
             // console.log(result.insertId)
 
@@ -170,12 +194,48 @@ export const findArticleById = (id) => {
     })
 }
 
-export const deleteArticleById = async (id) => {
+export const deleteArticleById = async (id, imagesId) => {
     return new Promise((resolve, reject) => {
-        const sql = 'DELETE FROM article WHERE id = ?';
-        db.query(sql, [id], (err, result) => {
-            if (err) return reject(err);
-            resolve(result || null);
+
+        const deleteArticleSql = 'DELETE FROM article WHERE id = ?';
+        db.query(deleteArticleSql, [id], (articleErr, result) => {
+            if (articleErr) {
+                reject(articleErr);
+            } else {
+                resolve(result || null);
+            }
         });
     })
 }
+
+export const getImagesIdsByArticleId = async (id) => {
+    const getImagesSql = 'SELECT public_id FROM article_image WHERE article_id = ?';
+    return new Promise((resolve, reject) => {
+        db.query(getImagesSql, [id], (err, result) => {
+            if (err) {
+                reject(err);
+                return;
+            } else {
+                // console.log(result)
+                resolve(result);
+            }
+        });
+    })
+}
+
+export const saveArticleImagesId = async (articleId, imagesId) => {
+    const sql = 'INSERT INTO article_image (article_id,public_id) VALUES ?';
+    const imageValues = imagesId.map(img => [articleId, img]);
+    // console.log(imageValues, imagesId)
+    return new Promise((resolve, reject) => {
+        db.query(sql, [imageValues], (err, result) => {
+            if (err) {
+                reject(err);
+                return;
+            } else {
+                // console.log(result)
+                resolve(result);
+            }
+        });
+    })
+} 

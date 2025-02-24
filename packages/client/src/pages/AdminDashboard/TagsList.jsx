@@ -15,10 +15,10 @@ const TagsList = () => {
     const navigate = useNavigate();
 
     React.useEffect(() => {
-        if (status === 'idle') {
+        // if (status === 'idle') {
             dispatch(getTags());
-        }
-    }, [status, dispatch]);
+        // }
+    }, []);
 
     const handleNewTag = async (e) => {
         e.preventDefault();

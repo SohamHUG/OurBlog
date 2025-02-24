@@ -1,12 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-export const searchPhotos = createAsyncThunk('users/searchPhotos', async () => {
-    let url = 'https://jsonplaceholder.typicode.com/photos';
-    const response = await fetch(url);
-    const data = await response.json();
-    return data;
-})
-
 export const uploadProfilPic = createAsyncThunk(
     'photo/uploadProfilPic',
     async (file,) => {
@@ -50,7 +43,7 @@ export const uploadArticlePic = createAsyncThunk(
         }
 
         const data = await response.json();
-        return data.url;
+        return data;
 
     }
 );
@@ -61,6 +54,7 @@ export const uploadImagesAndUpdateContent = createAsyncThunk(
         const imgRegex = /<img[^>]+src="([^">]+)"/g;
         const images = [];
         let match;
+        const imagesId = [];
 
         while ((match = imgRegex.exec(content)) !== null) {
             images.push(match[1]);
@@ -75,13 +69,16 @@ export const uploadImagesAndUpdateContent = createAsyncThunk(
                 formData.append('articleFile', blob);
 
                 const response = await dispatch(uploadArticlePic(formData));
-                const finalImageUrl = response.payload;
-
+                // console.log(response)
+                const finalImageUrl = response.payload.url;
+                imagesId.push(response.payload.publicId)
                 updatedContent = updatedContent.replace(imageUrl, finalImageUrl);
             }
         }
 
-        return updatedContent;
+        // console.log(imagesId)
+
+        return {updatedContent, imagesId};
     }
 );
 
@@ -112,7 +109,6 @@ export const deleteProfilPic = createAsyncThunk(
 const photosSlice = createSlice({
     name: 'photos',
     initialState: {
-        items: [],
         status: 'idle',
         error: null,
     },
@@ -122,18 +118,6 @@ const photosSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(searchPhotos.pending, (state) => {
-                state.status = 'loading';
-                state.error = null;
-            })
-            .addCase(searchPhotos.fulfilled, (state, action) => {
-                state.status = 'succeeded';
-                state.items = action.payload;
-            })
-            .addCase(searchPhotos.rejected, (state, action) => {
-                state.status = 'failed';
-                state.error = action.error.message;
-            })
             .addCase(uploadProfilPic.pending, (state) => {
                 state.status = 'loading';
                 state.error = null;

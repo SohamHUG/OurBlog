@@ -73,7 +73,7 @@ const UpdateArticlePage = () => {
 
     const confirmDeleteArticle = async () => {
         try {
-            await dispatch(deleteArticle(id)).unwrap();
+            await dispatch(deleteArticle(parseInt(id))).unwrap();
             closeModalConfirm();
             navigate('/')
         } catch (error) {
@@ -96,7 +96,7 @@ const UpdateArticlePage = () => {
         setErrorMessage("");
 
         try {
-            const updatedContent = await dispatch(uploadImagesAndUpdateContent({ content: formData.content })).unwrap();
+            const { updatedContent } = await dispatch(uploadImagesAndUpdateContent({ content: formData.content })).unwrap();
             const updatedFormData = { ...formData, content: updatedContent };
 
             const articleUp = await dispatch(updateArticle({ id: post.id, articleData: updatedFormData })).unwrap();

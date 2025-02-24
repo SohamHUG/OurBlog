@@ -1,8 +1,5 @@
 import * as React from 'react';
 import * as Redux from 'react-redux';
-import { Navigate, NavLink } from 'react-router-dom';
-import { selectCategories, selectCategoriesStatus, selectCategoriesError } from '../../store/selectors';
-import { fetchCategories, createCategory, deleteCategory } from '../../store/slice/categoriesSlice';
 import { getAllUsers, resetUsers } from '../../store/slice/userSlice';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -17,6 +14,7 @@ const UsersList = () => {
     const navigate = useNavigate();
 
     React.useEffect(() => {
+        dispatch(resetUsers())
         dispatch(getAllUsers())
     }, [dispatch]);
 
@@ -48,7 +46,7 @@ const UsersList = () => {
                         </thead>
                         <tbody>
                             {users.map((user) => (
-                                <tr onClick={() => onClickRow(user.user_id || user.id)} key={user.user_id || user.id} className="clickable-row">
+                                <tr onClick={() => onClickRow(user.user_id)} key={user.user_id} className="clickable-row">
                                     <td className="avatar-container">
 
                                         {user.profil_picture ? (

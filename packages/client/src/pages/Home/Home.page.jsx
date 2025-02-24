@@ -11,7 +11,7 @@ import './Home.scss';
 import { getArticles, setSortBy, resetAllPosts } from '../../store/slice/articleSlice';
 import { useNavigate, NavLink } from 'react-router-dom';
 import ScrollToTopButton from '../../components/ScrollToTopButton/ScrollToTopButton';
-import { getPopularUsers } from '../../store/slice/userSlice';
+import { getPopularUsers, resetUsers } from '../../store/slice/userSlice';
 import InfiniteScroll from '../../components/InfiniteScroll/InfiniteScroll';
 
 const HomePage = () => {
@@ -28,11 +28,12 @@ const HomePage = () => {
     const page = Redux.useSelector((state) => state.articles.allPosts.page)
 
     React.useEffect(() => {
-        if (usersStatus === 'succeeded' || users.length === 0) {
-            dispatch(getPopularUsers());
-        }
+        // if (usersStatus === 'succeeded' || users.length === 0) {
+        dispatch(resetUsers())
+        dispatch(getPopularUsers());
+        // }
 
-    }, [dispatch, usersStatus, users]);
+    }, [dispatch]);
 
     // console.log(posts)
 
@@ -79,6 +80,7 @@ const HomePage = () => {
                             Publiez votre article !
                         </button>
                     </div>
+                    {/* {error && <p className='alert'>{error}</p>} */}
                     <PostsList
                         posts={posts}
                     />

@@ -74,6 +74,7 @@ const usersSlice = createSlice({
     reducers: {
         resetUsers: (state) => {
             state.users = [];
+            state.status = 'idle'
         },
         resetProfil: (state) => {
             state.profil = null;

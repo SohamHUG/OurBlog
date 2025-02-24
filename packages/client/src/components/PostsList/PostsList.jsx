@@ -12,6 +12,7 @@ import Modal from "../Modal/Modal";
 const PostsList = ({ posts }) => {
     const location = useLocation();
     const user = Redux.useSelector((state) => state.auth.user);
+    const status = Redux.useSelector((state) => state.articles.allPosts.status)
     const dispatch = Redux.useDispatch();
 
     const [openModalConfirm, setOpenModalConfirm] = React.useState(false);
@@ -27,10 +28,14 @@ const PostsList = ({ posts }) => {
         setOpenModalConfirm(false);
     };
 
-    const confirmDeleteArticle = () => {
+    const confirmDeleteArticle = async () => {
         if (articleToDelete) {
-            dispatch(deleteArticle(articleToDelete));
-            closeModalConfirm();
+            try {
+                await dispatch(deleteArticle(articleToDelete)).unwrap();
+                closeModalConfirm();
+            } catch (error) {
+                console.error(error.message)
+            }
         }
     };
 
@@ -104,6 +109,7 @@ const PostsList = ({ posts }) => {
                     validButton='Oui, je suis sûr'
                     cancelButton='Annuler'
                     open={openModalConfirm}
+                    isLoading={status === 'loading'}
                     cancel={closeModalConfirm}
                     valid={confirmDeleteArticle}
                 />

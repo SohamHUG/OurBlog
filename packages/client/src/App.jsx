@@ -26,6 +26,7 @@ import CategoriesList from './pages/AdminDashboard/CategoriesList';
 import UsersList from './pages/AdminDashboard/UsersList';
 import UserPageAdmin from './pages/AdminDashboard/UserPageAdmin';
 import TagsList from './pages/AdminDashboard/TagsList';
+import ContactPage from './pages/Contact/Contact.page';
 
 function App() {
 
@@ -58,6 +59,7 @@ function App() {
                     <Route path={'/search'} element={<SearchResultsPage />} />
                     <Route path={'/article/:id'} element={<Article />} />
                     <Route path={'/profil/:id'} element={<ProfilPage />} />
+                    <Route path={'/contact'} element={<ContactPage />} />
                     <Route
                         path="/admin"
                         element={

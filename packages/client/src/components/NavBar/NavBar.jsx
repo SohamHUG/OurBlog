@@ -73,8 +73,6 @@ const NavBar = () => {
         }
     };
 
-
-
     const toggleMenu = () => {
         setMenuActive(!menuActive);
     };

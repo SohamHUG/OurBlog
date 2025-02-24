@@ -14,7 +14,7 @@ const ArticleForm = ({
     handleContentChange,
     handleTagsChange,
     handleSubmit,
-    errorMessage
+    errorMessage,
 }) => {
     const dispatch = Redux.useDispatch();
     const categories = Redux.useSelector(selectCategories);
@@ -42,7 +42,7 @@ const ArticleForm = ({
     return (
         <div className="article-form-container">
 
-            { user && user.is_verified === 0 &&
+            {user && user.is_verified === 0 &&
                 <>
                     <span className='alert'>Si vous souhaitez publier un article, merci de verifier votre adresse email.</span><br />
                     <small><NavLink to={'/profil'} style={{ textDecoration: 'underline' }} className={'link'}>Voir mon profil</NavLink></small>
@@ -50,7 +50,7 @@ const ArticleForm = ({
             }
 
             <form onSubmit={handleSubmit}>
-                {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+
 
                 <div className='duo-container'>
                     <div>
@@ -94,11 +94,7 @@ const ArticleForm = ({
                     <div>
                         <label>Contenu* :</label>
                         <small>La première image du contenu sera utilisé comme miniature</small>
-                        {status === 'loading' &&
-                            <span>
-                                <CircularProgress size="25px" />
-                            </span>
-                        }
+
 
                         <RichTextEditor value={formData.content} onChange={handleContentChange} />
 
@@ -106,9 +102,18 @@ const ArticleForm = ({
                     </div>
                 }
 
-                <button type="submit" disabled={!isFormValid}>
-                    Publier
-                </button>
+                <div className='form-footer'>
+                    {status === 'loading' &&
+                        <span>
+                            <CircularProgress />
+                        </span>
+                    }
+                    {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+                    <button type="submit" disabled={!isFormValid}>
+                        Publier
+                    </button>
+                </div>
+
             </form>
         </div>
     );
