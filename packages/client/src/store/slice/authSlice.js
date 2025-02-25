@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { deleteUser, updateUser } from './userSlice';
 import { deleteProfilPic } from './photoSlice';
 
-const BASE_URL = 'http://localhost:3000/auth';
+const API_URL = import.meta.env.VITE_API_URL;
 
 const handleResponse = async (response) => {
     if (!response.ok) {
@@ -13,7 +13,7 @@ const handleResponse = async (response) => {
 };
 
 export const registerUser = createAsyncThunk('auth/registerUser', async (userData) => {
-    const response = await fetch(`${BASE_URL}/register`, {
+    const response = await fetch(`${API_URL}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(userData),
@@ -23,7 +23,7 @@ export const registerUser = createAsyncThunk('auth/registerUser', async (userDat
 });
 
 export const loginUser = createAsyncThunk('auth/loginUser', async (credentials) => {
-    const response = await fetch(`${BASE_URL}/login`, {
+    const response = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(credentials),
@@ -37,7 +37,7 @@ export const sendEmailConfirm = createAsyncThunk(
     'auth/sendEmailConfirm',
     async (_, { rejectWithValue }) => {
         try {
-            const response = await fetch(`${BASE_URL}/confirm-email`, {
+            const response = await fetch(`${API_URL}/auth/confirm-email`, {
                 method: 'POST',
                 credentials: 'include',
             });
@@ -52,7 +52,7 @@ export const sendContact = createAsyncThunk(
     'auth/sendContact',
     async (formContact, { rejectWithValue }) => {
         try {
-            const response = await fetch(`${BASE_URL}/contact`, {
+            const response = await fetch(`${API_URL}/auth/contact`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formContact),
@@ -69,7 +69,7 @@ export const logout = createAsyncThunk(
     'auth/logout',
     async (_, { rejectWithValue }) => {
         try {
-            const response = await fetch(`${BASE_URL}/logout`, {
+            const response = await fetch(`${API_URL}/auth/logout`, {
                 method: 'GET',
                 credentials: 'include',
             });
@@ -82,7 +82,7 @@ export const logout = createAsyncThunk(
 
 export const getMe = createAsyncThunk('user/getMe', async (_, { rejectWithValue }) => {
     try {
-        const response = await fetch(`http://localhost:3000/users/me`, {
+        const response = await fetch(`${API_URL}/users/me`, {
             method: 'GET',
             credentials: 'include',
         });
@@ -135,9 +135,10 @@ const authSlice = createSlice({
                 state.status = 'loading';
                 state.error = null;
             })
-            .addCase(loginUser.fulfilled, (state) => {
+            .addCase(loginUser.fulfilled, (state, action) => {
                 state.status = 'idle';
                 state.userConnected = true;
+                // console.log(action)
                 localStorage.setItem('user', JSON.stringify(true));
             })
             .addCase(loginUser.rejected, (state, action) => {
@@ -192,10 +193,8 @@ const authSlice = createSlice({
             .addCase(getMe.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = 'Session expirée, reconnectez-vous';
-                // console.log(action)
-                // state.error = action.error.message
                 state.user = null;
-                // localStorage.removeItem('user');
+                localStorage.removeItem('user');
             })
             .addCase(deleteUser.fulfilled, (state, action) => {
                 if (state.userConnected && state.user.user_id === action.meta.arg) {

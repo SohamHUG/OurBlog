@@ -6,9 +6,10 @@ import { deleteComment } from "../../store/slice/commentSlice";
 import { NavLink, useLocation } from "react-router-dom";
 import DeleteIcon from '@mui/icons-material/Delete';
 import './CommentsList.scss'
+import { selectUser } from "../../store/selectors";
 
 const CommentsList = ({ comments }) => {
-    const user = useSelector((state) => state.auth.user);
+    const user = useSelector(selectUser);
     const dispatch = useDispatch();
     const location = useLocation()
     const [openModalConfirm, setOpenModalConfirm] = useState(false);

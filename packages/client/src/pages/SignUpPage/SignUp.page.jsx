@@ -4,14 +4,16 @@ import { loginUser, registerUser, setErrorMessage } from '../../store/slice/auth
 import { useNavigate, Navigate } from 'react-router-dom';
 import Modal from '../../components/Modal/Modal';
 import UserForm from '../../components/UserForm/UserForm';
+import { selectAuthError, selectAuthStatus, selectUser } from '../../store/selectors';
 
 const SignUpPage = () => {
-    const { user } = Redux.useSelector((state) => state.auth);
+    const user = Redux.useSelector(selectUser);
     const dispatch = Redux.useDispatch();
     const navigate = useNavigate();
     const [openModal, setOpenModal] = React.useState(false)
     // const [errorMessage, setErrorMessage] = React.useState('');
-    const { status, error } = Redux.useSelector((state) => state.auth);
+    const status = Redux.useSelector(selectAuthStatus);
+    const error = Redux.useSelector(selectAuthError);
     const [formUser, setFormUser] = React.useState({
         firstName: '',
         lastName: '',
@@ -22,9 +24,9 @@ const SignUpPage = () => {
         password2: '',
     });
 
-    React.useEffect(() =>{
+    React.useEffect(() => {
         dispatch(setErrorMessage(null))
-    },[])
+    }, [])
 
     // console.log(status)
 
@@ -55,7 +57,7 @@ const SignUpPage = () => {
         // setErrorMessage(null)
         try {
             await dispatch(registerUser(formUser)).unwrap();
-            setOpenModal(true); 
+            setOpenModal(true);
         } catch (error) {
             console.error(error.message);
             // setErrorMessage("Une erreur est survenue lors de l'inscription.");

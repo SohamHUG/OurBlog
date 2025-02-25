@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as Redux from 'react-redux';
-import { selectCategories, selectCategoriesStatus, selectCategoriesError } from '../../store/selectors/index';
+import { selectCategories, selectCategoriesStatus, selectCategoriesError, selectUser } from '../../store/selectors/index';
 import { fetchCategories } from '../../store/slice/categoriesSlice';
 import RichTextEditor from '../RichTextEditor/RichTextEditor';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -15,13 +15,13 @@ const ArticleForm = ({
     handleTagsChange,
     handleSubmit,
     errorMessage,
+    isLoading
 }) => {
     const dispatch = Redux.useDispatch();
     const categories = Redux.useSelector(selectCategories);
     const CategoriesStatus = Redux.useSelector(selectCategoriesStatus);
     const error = Redux.useSelector(selectCategoriesError);
-    const status = Redux.useSelector((state) => state.photos.status)
-    const user = Redux.useSelector((state) => state.auth.user)
+    const user = Redux.useSelector(selectUser)
 
 
     const isFormValid = formData.title.trim() !== "" &&
@@ -103,7 +103,7 @@ const ArticleForm = ({
                 }
 
                 <div className='form-footer'>
-                    {status === 'loading' &&
+                    {isLoading &&
                         <span>
                             <CircularProgress />
                         </span>

@@ -8,6 +8,13 @@ import {
     selectCategories,
     selectCategoriesStatus,
     selectCategoriesError,
+    selectCategoryArticles,
+    selectCategoryArticlesStatus,
+    selectTags,
+    selectTagsStatus,
+    selectFilters,
+    selectCategoryArticlesHasMore,
+    selectCategoryArticlesPage,
 } from '../../store/selectors';
 import { fetchCategories, getTags } from '../../store/slice/categoriesSlice';
 import {
@@ -26,13 +33,13 @@ const CategoryPage = () => {
         (cat) => cat.id === Number(categoryId)
     );
     const status = Redux.useSelector(selectCategoriesStatus);
-    const posts = Redux.useSelector((state) => state.articles.categoryPosts.items);
-    const postsStatus = Redux.useSelector((state) => state.articles.categoryPosts.status);
-    const tags = Redux.useSelector((state) => state.categories.tags);
-    const tagsStatus = Redux.useSelector((state) => state.categories.tagStatus);
-    const filters = Redux.useSelector((state) => state.articles.filters);
-    const hasMore = Redux.useSelector((state) => state.articles.categoryPosts.hasMore);
-    const page = Redux.useSelector((state) => state.articles.categoryPosts.page)
+    const posts = Redux.useSelector(selectCategoryArticles);
+    const postsStatus = Redux.useSelector(selectCategoryArticlesStatus);
+    const tags = Redux.useSelector(selectTags);
+    const tagsStatus = Redux.useSelector(selectTagsStatus);
+    const filters = Redux.useSelector(selectFilters);
+    const hasMore = Redux.useSelector(selectCategoryArticlesHasMore);
+    const page = Redux.useSelector((selectCategoryArticlesPage))
     const [selectedTags, setSelectedTags] = useState([]);
 
     useEffect(() => {

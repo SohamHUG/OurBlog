@@ -4,9 +4,11 @@ import { sendContact, setErrorMessage } from "../../store/slice/authSlice";
 import Modal from "../../components/Modal/Modal";
 import { useNavigate } from "react-router-dom";
 import CircularProgress from '@mui/material/CircularProgress';
+import { selectAuthError, selectAuthStatus } from "../../store/selectors";
 
 const ContactPage = () => {
-    const { status, error } = useSelector((state) => state.auth)
+    const status = useSelector(selectAuthStatus)
+    const error = useSelector((selectAuthError))
     const dispatch = useDispatch();
     const navigate = useNavigate()
     const [openModal, setOpenModal] = useState(false);
@@ -78,8 +80,8 @@ const ContactPage = () => {
                     value={formContact.message}
                     onChange={handleChange}
                 />
-                {status === 'loading' && 
-                    <CircularProgress/>
+                {status === 'loading' &&
+                    <CircularProgress />
                 }
                 <button type="submit">Envoyer</button>
             </form>

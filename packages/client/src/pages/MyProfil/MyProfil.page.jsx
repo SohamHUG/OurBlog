@@ -11,19 +11,21 @@ import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import { getComments } from '../../store/slice/commentSlice';
 import CommentsList from '../../components/CommentsList/CommentsList';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { selectAuthError, selectAuthStatus, selectComments, selectPhotosStatus, selectUser, selectUsersError, selectUsersStatus } from '../../store/selectors';
 
 
 const MyProfilPage = () => {
-    const { user } = Redux.useSelector((state) => state.auth);
+    const user = Redux.useSelector(selectUser);
     const dispatch = Redux.useDispatch();
     const navigate = useNavigate();
     const [openModalInfo, setOpenModalInfo] = React.useState(false);
     const [openModalConfirm, setOpenModalConfirm] = React.useState(false);
-    const { status, error } = Redux.useSelector((state) => state.users);
-    const statusUpload = Redux.useSelector((state) => state.photos.status)
-    const statusEmail = Redux.useSelector((state) => state.auth.status);
-    const errorEmail = Redux.useSelector((state) => state.auth.error);
-    const comments = Redux.useSelector((state) => state.comments.comments)
+    const status = Redux.useSelector(selectUsersStatus);
+    const error = Redux.useSelector(selectUsersError);
+    const statusUpload = Redux.useSelector(selectPhotosStatus)
+    const statusEmail = Redux.useSelector(selectAuthStatus);
+    const errorEmail = Redux.useSelector(selectAuthError);
+    const comments = Redux.useSelector(selectComments)
     const [formUser, setFormUser] = React.useState({
         firstName: user.first_name || '',
         lastName: user.last_name || '',
@@ -40,7 +42,7 @@ const MyProfilPage = () => {
     React.useEffect(() => {
         dispatch(setErrorMessage(null))
         dispatch(setStatus('idle'))
-    },[])
+    }, [])
 
     React.useEffect(() => {
         if (user) {

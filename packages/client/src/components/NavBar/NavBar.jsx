@@ -8,7 +8,7 @@ import LoginForm from "../LoginForm/LoginForm";
 import { logout, openModalLogin, closeModalLogin } from "../../store/slice/authSlice";
 import { toggleDarkMode } from "../../store/slice/themeSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { selectDarkMode } from "../../store/selectors";
+import { selectDarkMode, selectNavResults, selectUser } from "../../store/selectors";
 import Menu from "../Menu/Menu";
 import { useNavigate } from 'react-router-dom';
 import debounce from 'lodash.debounce';
@@ -23,11 +23,11 @@ const NavBar = () => {
     const [menuActive, setMenuActive] = React.useState(false);
     const searchRef = React.useRef(null);
     const menuRef = React.useRef(null);
-    const user = useSelector((state) => state.auth.user);
+    const user = useSelector(selectUser);
     const { modalLogin } = useSelector((state) => state.auth);
     const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = React.useState('');
-    const searchResults = useSelector((state) => state.search.navResults);
+    const searchResults = useSelector(selectNavResults);
 
     const debouncedSearch = React.useMemo(
         () => debounce((query) => dispatch(fetchSearchResultsNav({ query })), 300),

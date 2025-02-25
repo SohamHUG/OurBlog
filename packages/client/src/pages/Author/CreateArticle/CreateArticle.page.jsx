@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as Redux from 'react-redux';
-import { selectCategories, selectCategoriesStatus, selectCategoriesError } from '../../../store/selectors/index.js';
+import { selectPhotosStatus, selectArticleError, selectArticleStatus } from '../../../store/selectors/index.js';
 import { fetchCategories } from '../../../store/slice/categoriesSlice.js';
 import { createArticle } from '../../../store/slice/articleSlice.js';
 import RichTextEditor from '../../../components/RichTextEditor/RichTextEditor.jsx';
@@ -13,7 +13,9 @@ import { uploadImagesAndUpdateContent } from '../../../store/slice/photoSlice.js
 
 const CreateArticlePage = () => {
     const dispatch = Redux.useDispatch();
-    const articleError = Redux.useSelector((state) => state.articles.error)
+    const articleError = Redux.useSelector(selectArticleError)
+    const articleStatus = Redux.useSelector(selectArticleStatus)
+    const statusPhoto = Redux.useSelector(selectPhotosStatus)
     const [openModal, setOpenModal] = React.useState(false);
     const [newId, setNewId] = React.useState(null);
     const navigate = useNavigate();
@@ -70,7 +72,7 @@ const CreateArticlePage = () => {
             setOpenModal(true);
         } catch (error) {
             if (!articleError) {
-                setErrorMessage("Une erreur s'est produite lors de la modification de votre article.");
+                setErrorMessage("Une erreur s'est produite lors de la création de votre article.");
             }
         }
 
@@ -105,6 +107,10 @@ const CreateArticlePage = () => {
                 handleTagsChange={handleTagsChange}
                 handleSubmit={handleSubmit}
                 errorMessage={articleError || errorMessage}
+            isLoading={
+                articleStatus === 'loading' ||
+                statusPhoto === 'loading'
+            }
             />
 
             {openModal &&

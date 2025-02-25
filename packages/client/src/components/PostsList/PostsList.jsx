@@ -8,11 +8,12 @@ import { NavLink, useLocation } from "react-router-dom";
 import { deleteArticle } from "../../store/slice/articleSlice";
 import DeleteIcon from '@mui/icons-material/Delete';
 import Modal from "../Modal/Modal";
+import { selectArticleStatus, selectUser } from "../../store/selectors";
 
 const PostsList = ({ posts }) => {
     const location = useLocation();
-    const user = Redux.useSelector((state) => state.auth.user);
-    const status = Redux.useSelector((state) => state.articles.allPosts.status)
+    const user = Redux.useSelector(selectUser);
+    const status = Redux.useSelector(selectArticleStatus)
     const dispatch = Redux.useDispatch();
 
     const [openModalConfirm, setOpenModalConfirm] = React.useState(false);

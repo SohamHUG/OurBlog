@@ -1,9 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const fetchSearchResults = createAsyncThunk(
     "search/fetchSearchResults",
     async ({ query }) => {
-        const response = await fetch(`http://localhost:3000/search?q=${query}`);
+        const response = await fetch(`${API_URL}/search?q=${query}`);
         return response.json();
     }
 );
@@ -11,7 +13,7 @@ export const fetchSearchResults = createAsyncThunk(
 export const fetchSearchResultsNav = createAsyncThunk(
     "search/fetchSearchResultsNav",
     async ({ query }) => {
-        const response = await fetch(`http://localhost:3000/search?q=${query}&limit=true`);
+        const response = await fetch(`${API_URL}/search?q=${query}&limit=true`);
         return response.json();
     }
 );

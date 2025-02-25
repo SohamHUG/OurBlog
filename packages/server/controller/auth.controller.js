@@ -17,13 +17,6 @@ export const register = async (req, res) => {
             return res.status(400).json({ message: "Cet email est déja utilisé", });
         }
 
-        // if (firstName.length <= 0 || lastName.length <= 0) {
-        //     firstName = null;
-        //     lastName = null;
-        // } else {
-        //     roleId = 3; //Author
-        // }
-
         const hash = bcrypt.hashSync(password, 10);
 
         const newUser = await saveUser({
@@ -131,19 +124,21 @@ export const loginUser = async (req, res) => {
             httpOnly: true,
             secure: true,
             sameSite: 'strict', // Limite les cookies aux mêmes origines
-            // maxAge: 3600000, // 1 heure
-            maxAge: 10 * 1000, // 10 sec
+            maxAge: 3600000, // 1 heure
+            // maxAge: 10 * 1000, // 10 sec
         });
 
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
             secure: true,
             sameSite: 'strict', // Limite les cookies aux mêmes origines
-            // maxAge: 7 * 24 * 60 * 60 * 1000, // 7 jours
-            maxAge: 60 * 1000, // 10 sec
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 jours
+            // maxAge: 60 * 1000, // 10 sec
         });
 
-        await updateUserById(user[0].id, { refresh_token: refreshToken });
+        const userData = await updateUserById(user[0].id, { refresh_token: refreshToken });
+
+        // console.log(userData)
 
         return res.status(200).json({ message: "Connexion réussi !" });
 

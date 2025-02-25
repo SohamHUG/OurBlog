@@ -10,10 +10,7 @@ export const createArticle = async (req, res) => {
         const user = req.user.user_id;
 
         // console.log(content)
-        if (!title || title.trim() === "" ||
-            !category || category.trim() === "" ||
-            !content || content.replace(/<[^>]+>/g, '').trim() === "") {
-
+        if (!content || content.replace(/<[^>]+>/g, '').trim() === "") {
             return res.status(400).json({ message: "Tous les champs obligatoires doivent être remplis." });
         }
 
@@ -53,7 +50,7 @@ export const createArticle = async (req, res) => {
         // console.log(imagesId)
 
 
-        const article = await saveArticle(user, category, title, sanitizedContent, imagesId);
+        const article = await saveArticle(user, category, title, sanitizedContent);
 
         // enregistre les publicId des images en db 
         if (imagesId && imagesId.length > 0) {
@@ -95,9 +92,7 @@ export const updateArticle = async (req, res) => {
 
         // console.log(content)
 
-        if (!title || title.trim() === "" ||
-            !category ||
-            !content || content.replace(/<[^>]+>/g, '').trim() === "") {
+        if (!content || content.replace(/<[^>]+>/g, '').trim() === "") {
 
             return res.status(400).json({ message: "Tous les champs obligatoires doivent être remplis." });
         }
@@ -145,6 +140,10 @@ export const updateArticle = async (req, res) => {
             disallowedTagsMode: 'discard',
         });
 
+        if (imagesId && imagesId.length > 0) {
+            await saveArticleImagesId(article.id, imagesId)
+        }
+        
         const updateArticle = {
             title: title,
             category_id: category,

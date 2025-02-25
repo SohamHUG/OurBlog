@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-const BASE_URL = 'http://localhost:3000/users';
+const API_URL = import.meta.env.VITE_API_URL;
 
 const handleResponse = async (response) => {
     if (!response.ok) {
@@ -12,7 +12,7 @@ const handleResponse = async (response) => {
 
 export const getPopularUsers = createAsyncThunk('user/getPopularUsers', async (_, { rejectWithValue }) => {
     try {
-        const response = await fetch(`${BASE_URL}/popular`, {
+        const response = await fetch(`${API_URL}/users/popular`, {
             method: 'GET',
         });
         return handleResponse(response).then((data) => data.users);
@@ -23,7 +23,7 @@ export const getPopularUsers = createAsyncThunk('user/getPopularUsers', async (_
 
 export const getAllUsers = createAsyncThunk('user/getAllUsers', async (_, { rejectWithValue }) => {
     try {
-        const response = await fetch(`http://localhost:3000/admin/users`, {
+        const response = await fetch(`${API_URL}/admin/users`, {
             method: 'GET',
             credentials: 'include',
         });
@@ -35,7 +35,7 @@ export const getAllUsers = createAsyncThunk('user/getAllUsers', async (_, { reje
 
 export const getProfil = createAsyncThunk('user/getProfil', async (id, { rejectWithValue }) => {
     try {
-        const response = await fetch(`${BASE_URL}/${id}`, {
+        const response = await fetch(`${API_URL}/users/${id}`, {
             method: 'GET',
             credentials: 'include',
         });
@@ -46,7 +46,7 @@ export const getProfil = createAsyncThunk('user/getProfil', async (id, { rejectW
 });
 
 export const updateUser = createAsyncThunk('user/updateUser', async ({ id, userData }) => {
-    const response = await fetch(`${BASE_URL}/update/${id}`, {
+    const response = await fetch(`${API_URL}/users/update/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(userData),
@@ -56,7 +56,7 @@ export const updateUser = createAsyncThunk('user/updateUser', async ({ id, userD
 });
 
 export const deleteUser = createAsyncThunk('user/deleteUser', async (id) => {
-    const response = await fetch(`${BASE_URL}/${id}`, {
+    const response = await fetch(`${API_URL}/users/${id}`, {
         method: 'DELETE',
         credentials: 'include',
     });

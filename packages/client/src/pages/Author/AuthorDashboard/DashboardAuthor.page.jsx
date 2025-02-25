@@ -6,17 +6,17 @@ import ScrollToTopButton from '../../../components/ScrollToTopButton/ScrollToTop
 import InfiniteScroll from '../../../components/InfiniteScroll/InfiniteScroll';
 import { NavLink, useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { selectAuthorArticles, selectAuthorArticlesHasMore, selectAuthorArticlesPage, selectAuthorArticlesStatus, selectUser } from '../../../store/selectors';
 
 
 const DashBoardAuthor = () => {
-    const user = Redux.useSelector((state) => state.auth.user);
-    const posts = Redux.useSelector((state) => state.articles.authorPosts.items);
-    const status = Redux.useSelector((state) => state.articles.authorPosts.status);
+    const user = Redux.useSelector(selectUser);
+    const posts = Redux.useSelector(selectAuthorArticles);
+    const status = Redux.useSelector(selectAuthorArticlesStatus);
     const dispatch = Redux.useDispatch();
     const navigate = useNavigate();
-    // const [page, setPage] = React.useState(1);
-    const hasMore = Redux.useSelector((state) => state.articles.authorPosts.hasMore)
-    const page = Redux.useSelector((state) => state.articles.authorPosts.page)
+    const hasMore = Redux.useSelector(selectAuthorArticlesHasMore)
+    const page = Redux.useSelector(selectAuthorArticlesPage)
 
     // console.log(status)
     React.useEffect(() => {
@@ -54,7 +54,6 @@ const DashBoardAuthor = () => {
 
     return (
         <section>
-
             {posts && posts.length > 0 ?
                 <div style={center}>
                     <div style={header}>
@@ -81,12 +80,6 @@ const DashBoardAuthor = () => {
 
                 </div>
             }
-
-            {/* <InfiniteScroll
-                context="author"
-                isLoading={status === 'loading'}
-                hasMore={hasMore}
-            /> */}
         </section>
     );
 };

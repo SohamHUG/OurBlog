@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-const BASE_URL = 'http://localhost:3000/comments';
+const API_URL = import.meta.env.VITE_API_URL;
 
 const handleResponse = async (response) => {
     if (!response.ok) {
@@ -11,7 +11,7 @@ const handleResponse = async (response) => {
 };
 
 export const createComment = createAsyncThunk('comments/createComment', async ({ comment, id }) => {
-    const response = await fetch(`${BASE_URL}/${id}`, {
+    const response = await fetch(`${API_URL}/comments/${id}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ comment }),
@@ -21,7 +21,7 @@ export const createComment = createAsyncThunk('comments/createComment', async ({
 });
 
 export const deleteComment = createAsyncThunk('comments/deleteComment', async (id) => {
-    const response = await fetch(`${BASE_URL}/${id}`, {
+    const response = await fetch(`${API_URL}/comments/${id}`, {
         method: 'DELETE',
         credentials: 'include',
     });
@@ -33,7 +33,7 @@ export const getComments = createAsyncThunk(
     async (filters, { rejectWithValue }) => {
 
         try {
-            const response = await fetch(`${BASE_URL}?${new URLSearchParams(filters)}`);
+            const response = await fetch(`${API_URL}/comments?${new URLSearchParams(filters)}`);
 
             return handleResponse(response)
         } catch (error) {

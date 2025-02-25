@@ -3,7 +3,7 @@ import * as Redux from 'react-redux';
 import PostsList from "../../components/PostsList/PostsList";
 import SideList from '../../components/SideList/SideList';
 import CategoriesNav from '../../components/CategoriesNav/CategoriesNav';
-import { selectUsersStatus, selectUsersError, selectUsers, selectPosts } from '../../store/selectors';
+// import { selectUsersStatus, selectUsersError, selectUsers, selectPosts } from '../../store/selectors';
 import { openModalLogin } from '../../store/slice/authSlice';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import KeyboardArrowUpRoundedIcon from '@mui/icons-material/KeyboardArrowUpRounded';
@@ -13,19 +13,20 @@ import { useNavigate, NavLink } from 'react-router-dom';
 import ScrollToTopButton from '../../components/ScrollToTopButton/ScrollToTopButton';
 import { getPopularUsers, resetUsers } from '../../store/slice/userSlice';
 import InfiniteScroll from '../../components/InfiniteScroll/InfiniteScroll';
+import { selectAllArticles, selectAllArticlesError, selectAllArticlesHasMore, selectAllArticlesPage, selectAllArticlesStatus, selectFilters, selectUser, selectUsersList, selectUsersStatus } from '../../store/selectors';
 
 const HomePage = () => {
-    const filters = Redux.useSelector((state) => state.articles.filters)
+    const filters = Redux.useSelector(selectFilters)
     const dispatch = Redux.useDispatch();
     const navigate = useNavigate()
-    const status = Redux.useSelector((state) => state.articles.allPosts.status);
-    const error = Redux.useSelector((state) => state.articles.allPosts.error);
-    const users = Redux.useSelector(((state) => state.users.users));
-    const usersStatus = Redux.useSelector(((state) => state.users.status));
-    const { user } = Redux.useSelector((state) => state.auth);
-    const posts = Redux.useSelector((state) => state.articles.allPosts.items);
-    const hasMore = Redux.useSelector((state) => state.articles.allPosts.hasMore)
-    const page = Redux.useSelector((state) => state.articles.allPosts.page)
+    const status = Redux.useSelector(selectAllArticlesStatus);
+    const error = Redux.useSelector(selectAllArticlesError);
+    const users = Redux.useSelector(selectUsersList);
+    const usersStatus = Redux.useSelector(selectUsersStatus);
+    const user = Redux.useSelector(selectUser);
+    const posts = Redux.useSelector(selectAllArticles);
+    const hasMore = Redux.useSelector(selectAllArticlesHasMore)
+    const page = Redux.useSelector(selectAllArticlesPage)
 
     React.useEffect(() => {
         // if (usersStatus === 'succeeded' || users.length === 0) {

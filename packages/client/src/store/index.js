@@ -20,10 +20,8 @@ const store = configureStore({
         search: searchReducer,
     },
 
-    // middleware: (getDefaultMiddleware) =>
-    //     getDefaultMiddleware({
-    //         serializableCheck: false, // Désactive le middleware qui vérifie la sérialisation
-    //     }),
+    devTools: import.meta.env.MODE !== "production",
+    
 });
 
 export default store;

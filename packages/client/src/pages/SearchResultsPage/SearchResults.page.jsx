@@ -5,11 +5,12 @@ import PostContentResum from '../../components/PostContent/PostContentResum';
 import './SearchResultsPage.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchSearchResults } from '../../store/slice/searchSlice';
+import { selectResults, selectUser } from '../../store/selectors';
 
 const SearchResultsPage = () => {
     const location = useLocation();
-    const results = useSelector((state) => state.search.results)
-    const user = useSelector((state) => state.auth.user)
+    const results = useSelector(selectResults)
+    const user = useSelector(selectUser)
     const dispatch = useDispatch()
 
     const query = new URLSearchParams(location.search).get('q');

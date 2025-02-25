@@ -70,8 +70,8 @@ export const refreshTokenMiddleware = async (req, res, next) => {
                 httpOnly: true,
                 secure: true, 
                 sameSite: 'strict', // Limite les cookies aux mêmes origines
-                // maxAge: 3600000, // 1 heure
-                maxAge: 60 * 1000, // 10 sec
+                maxAge: 3600000, // 1 heure
+                // maxAge: 60 * 1000, // 60 sec
             });
 
             req.cookies.accessToken = newAccessToken;

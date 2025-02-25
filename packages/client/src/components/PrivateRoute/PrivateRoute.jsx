@@ -3,31 +3,20 @@ import { Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getMe } from '../../store/slice/authSlice';
 import CircularProgress from '@mui/material/CircularProgress';
+import { selectUser, selectUserConnected } from '../../store/selectors';
 
 const PrivateRoute = ({ children, roles }) => {
-    const user = useSelector((state) => state.auth.user);
-    const userConnected = useSelector((state) => state.auth.userConnected);
+    const user = useSelector(selectUser);
+    const userConnected = useSelector((selectUserConnected));
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // if (userConnected) {
-        //     dispatch(getMe()).finally(() => setLoading(false));
-        // } else {
-        //     setLoading(false);
-        // }
-
-        const verifUser = async () => {
-            if (userConnected) {
-                try {
-                    await dispatch(getMe()).unwrap()
-                    setLoading(false)
-                } catch (error) {
-                    setLoading(false);
-                }
-            }
+        if (userConnected) {
+            dispatch(getMe()).finally(() => setLoading(false));
+        } else {
+            setLoading(false);
         }
-        verifUser();
     }, [userConnected, dispatch]);
 
     if (loading) {

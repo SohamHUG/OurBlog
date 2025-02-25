@@ -11,21 +11,23 @@ import CommentsList from '../../components/CommentsList/CommentsList'
 import PostsLists from '../../components/PostsList/PostsList'
 import InfiniteScroll from '../../components/InfiniteScroll/InfiniteScroll';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { selectAuthorArticles, selectAuthorArticlesHasMore, selectAuthorArticlesPage, selectAuthorArticlesStatus, selectComments, selectPhotosStatus, selectProfil, selectUsersError, selectUsersStatus } from '../../store/selectors';
 
 const UserPageAdmin = () => {
-    const user = Redux.useSelector((state) => state.users.profil);
+    const user = Redux.useSelector(selectProfil);
     const { id } = useParams()
     const dispatch = Redux.useDispatch();
     const navigate = useNavigate();
     const [openModalInfo, setOpenModalInfo] = React.useState(false);
     const [openModalConfirm, setOpenModalConfirm] = React.useState(false);
-    const { status, error } = Redux.useSelector((state) => state.users);
-    const statusPhoto = Redux.useSelector((state) => state.photos.status)
-    const posts = Redux.useSelector((state) => state.articles.authorPosts.items)
-    const statusPosts = Redux.useSelector((state) => state.articles.authorPosts.status)
-    const hasMore = Redux.useSelector((state) => state.articles.authorPosts.hasMore)
-    const page = Redux.useSelector((state) => state.articles.authorPosts.page)
-    const comments = Redux.useSelector((state) => state.comments.comments)
+    const status = Redux.useSelector(selectUsersStatus);
+    const error = Redux.useSelector(selectUsersError);
+    const statusPhoto = Redux.useSelector(selectPhotosStatus)
+    const posts = Redux.useSelector(selectAuthorArticles)
+    const statusPosts = Redux.useSelector(selectAuthorArticlesStatus)
+    const hasMore = Redux.useSelector(selectAuthorArticlesHasMore)
+    const page = Redux.useSelector(selectAuthorArticlesPage)
+    const comments = Redux.useSelector(selectComments)
     const [formUser, setFormUser] = React.useState({
         firstName: '',
         lastName: '',

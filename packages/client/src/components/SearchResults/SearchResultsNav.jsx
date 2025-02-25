@@ -3,6 +3,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import './SearchResultsNav.scss'
 import { useDispatch, useSelector } from "react-redux";
 import { clearNavSearch, clearSearch } from "../../store/slice/searchSlice";
+import { selectUser } from "../../store/selectors";
 
 const SearchResultsNav = ({ results, searchRef, clearSearch }) => {
     // const isFocused = searchRef.current === document.activeElement;
@@ -10,7 +11,7 @@ const SearchResultsNav = ({ results, searchRef, clearSearch }) => {
     //     return null;
     // }
     const dispatch = useDispatch()
-    const user = useSelector((state) => state.auth.user)
+    const user = useSelector(selectUser)
 
     const onClickItem = () => {
         // dispatch(clearNavSearch());

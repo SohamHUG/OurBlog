@@ -7,12 +7,16 @@ import { uploadImagesAndUpdateContent } from '../../../store/slice/photoSlice.js
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Modal from "../../../components/Modal/Modal.jsx";
+import { selectArticle, selectArticleError, selectArticleStatus, selectPhotosStatus, selectUser } from '../../../store/selectors/index.js';
 
 
 const UpdateArticlePage = () => {
     const { id } = useParams();
-    const { user } = useSelector((state) => state.auth);
-    const { post, status, error } = useSelector((state) => state.articles)
+    const user = useSelector(selectUser);
+    const article = useSelector(selectArticle)
+    const status = useSelector(selectArticleStatus)
+    const photoStatus = useSelector(selectPhotosStatus)
+    const error = useSelector(selectArticleError)
     const [errorMessage, setErrorMessage] = React.useState("");
     const [openModalConfirm, setOpenModalConfirm] = React.useState(false);
     const dispatch = useDispatch();
@@ -34,12 +38,12 @@ const UpdateArticlePage = () => {
     });
 
     React.useEffect(() => {
-        if (status === 'succeeded' && post) {
+        if (status === 'succeeded' && article) {
             setFormData({
-                title: post.title || '',
-                content: post.content,
-                category: post.category_id || '',
-                tags: post.tags ? post.tags.split(', ') : [],
+                title: article.title || '',
+                content: article.content,
+                category: article.category_id || '',
+                tags: article.tags ? article.tags.split(', ') : [],
             })
             // handleContentChange(post.content)
         }
@@ -99,7 +103,7 @@ const UpdateArticlePage = () => {
             const { updatedContent } = await dispatch(uploadImagesAndUpdateContent({ content: formData.content })).unwrap();
             const updatedFormData = { ...formData, content: updatedContent };
 
-            const articleUp = await dispatch(updateArticle({ id: post.id, articleData: updatedFormData })).unwrap();
+            const articleUp = await dispatch(updateArticle({ id: article.id, articleData: updatedFormData })).unwrap();
             navigate(`/article/${articleUp.article.id}`);
 
         } catch (error) {
@@ -115,17 +119,17 @@ const UpdateArticlePage = () => {
         return <div>Loading...</div>;
     }
 
-    if (status === 'failed') {
-        return <Navigate to="/not-allowed" />;
+    if (status === 'failed' && !article) {
+        return <Navigate to="/nope" />;
     }
 
-    if (post && user && (post.user_id !== user.user_id && user.role_name !== 'admin')) {
+    if (article && user && (article.user_id !== user.user_id && user.role_name !== 'admin')) {
         return <Navigate to="/not-allowed" />;
     }
 
     return (
         <>
-            {status === 'succeeded' && post &&
+            {article &&
                 <section>
                     <div className='header'
                         style={{
@@ -137,7 +141,7 @@ const UpdateArticlePage = () => {
                         }}
                     >
                         <ArrowBackIcon className='link back-btn' onClick={goBack} />
-                        <h2 style={{ textAlign: 'center', flex: '1' }}>Modifier l'article : {post.title}</h2>
+                        <h2 style={{ textAlign: 'center', flex: '1' }}>Modifier l'article : {article.title}</h2>
                         <DeleteIcon className="delete-btn" onClick={() => toggleModalConfirm()} />
                     </div>
                     <ArticleForm
@@ -147,6 +151,10 @@ const UpdateArticlePage = () => {
                         handleTagsChange={handleTagsChange}
                         handleSubmit={handleSubmit}
                         errorMessage={error || errorMessage}
+                        isLoading={
+                            status=== 'loading' ||
+                            photoStatus === 'loading'
+                        }
                     />
                     {openModalConfirm && (
                         <Modal

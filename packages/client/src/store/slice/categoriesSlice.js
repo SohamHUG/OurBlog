@@ -1,16 +1,22 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const fetchCategories = createAsyncThunk('categories/searchCategories', async () => {
-    let url = 'http://localhost:3000/categories';
+    let url = `${API_URL}/categories`;
 
     const response = await fetch(url);
+
+    if (!response.ok) {
+        throw new Error("Erreur lors du chargement des catégories.");
+    }
     const data = await response.json();
     return data.data;
 });
 
 export const createCategory = createAsyncThunk('categories/createCategory', async (name, { rejectWithValue }) => {
     try {
-        const response = await fetch('http://localhost:3000/admin/create-category', {
+        const response = await fetch(`${API_URL}/admin/create-category`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', },
             body: JSON.stringify({ name }),
@@ -30,7 +36,7 @@ export const createCategory = createAsyncThunk('categories/createCategory', asyn
 
 export const deleteCategory = createAsyncThunk('categories/deleteCategory', async (id, { rejectWithValue }) => {
     try {
-        const response = await fetch(`http://localhost:3000/admin/delete-category/${id}`, {
+        const response = await fetch(`${API_URL}/admin/delete-category/${id}`, {
             method: 'DELETE',
             credentials: 'include',
         });
@@ -48,11 +54,11 @@ export const deleteCategory = createAsyncThunk('categories/deleteCategory', asyn
 });
 
 export const getTags = createAsyncThunk(
-    "categories/getPosts",
+    "categories/getTags",
     async (filters, { rejectWithValue }) => {
 
         try {
-            const response = await fetch(`http://localhost:3000/tags?${new URLSearchParams(filters)}`);
+            const response = await fetch(`${API_URL}/tags?${new URLSearchParams(filters)}`);
 
             if (!response.ok) {
                 throw new Error("Erreur lors du chargement des posts.");
@@ -67,7 +73,7 @@ export const getTags = createAsyncThunk(
 
 export const deleteTag = createAsyncThunk('categories/deleteTag', async (id, { rejectWithValue }) => {
     try {
-        const response = await fetch(`http://localhost:3000/admin/delete-tag/${id}`, {
+        const response = await fetch(`${API_URL}/admin/delete-tag/${id}`, {
             method: 'DELETE',
             credentials: 'include',
         });

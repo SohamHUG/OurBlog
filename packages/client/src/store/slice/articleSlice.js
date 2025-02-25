@@ -1,11 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const getArticles = createAsyncThunk(
     "articles/getArticles",
     async (filters, { rejectWithValue }) => {
         try {
             // console.log(filters)
-            const response = await fetch(`http://localhost:3000/articles?${new URLSearchParams(filters)}`);
+            const response = await fetch(`${API_URL}/articles?${new URLSearchParams(filters)}`);
             if (!response.ok) {
                 throw new Error("Erreur lors du chargement des posts.");
             }
@@ -18,7 +20,7 @@ export const getArticles = createAsyncThunk(
 
 export const getArticle = createAsyncThunk("articles/getArticle", async (id, { rejectWithValue }) => {
     try {
-        const response = await fetch(`http://localhost:3000/articles/${id}`);
+        const response = await fetch(`${API_URL}/articles/${id}`);
         if (!response.ok) throw new Error("Erreur lors du chargement du post.");
         return await response.json();
     } catch (error) {
@@ -28,7 +30,7 @@ export const getArticle = createAsyncThunk("articles/getArticle", async (id, { r
 
 export const createArticle = createAsyncThunk("articles/createArticle", async (articleData, { rejectWithValue }) => {
     try {
-        const response = await fetch("http://localhost:3000/articles/create-article", {
+        const response = await fetch(`${API_URL}/articles/create-article`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(articleData),
@@ -36,6 +38,7 @@ export const createArticle = createAsyncThunk("articles/createArticle", async (a
         });
         if (!response.ok) {
             const errorData = await response.json();
+            // console.log(errorData)
             return rejectWithValue(errorData.message);
         }
         return await response.json();
@@ -46,7 +49,7 @@ export const createArticle = createAsyncThunk("articles/createArticle", async (a
 
 export const updateArticle = createAsyncThunk("articles/updateArticle", async ({ id, articleData }, { rejectWithValue }) => {
     try {
-        const response = await fetch(`http://localhost:3000/articles/update/${id}`, {
+        const response = await fetch(`${API_URL}/articles/update/${id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(articleData),
@@ -64,7 +67,7 @@ export const updateArticle = createAsyncThunk("articles/updateArticle", async ({
 
 export const deleteArticle = createAsyncThunk("articles/deleteArticle", async (id, { rejectWithValue }) => {
     try {
-        const response = await fetch(`http://localhost:3000/articles/delete/${id}`, {
+        const response = await fetch(`${API_URL}/articles/delete/${id}`, {
             method: "DELETE",
             credentials: "include",
         });
@@ -83,10 +86,10 @@ export const deleteArticle = createAsyncThunk("articles/deleteArticle", async (i
 const articlesSlice = createSlice({
     name: "articles",
     initialState: {
-        allPosts: { items: [], status: "idle", page: 1, hasMore: true, error: null },
-        categoryPosts: { items: [], status: "idle", page: 1, hasMore: true, error: null },
-        authorPosts: { items: [], status: "idle", page: 1, hasMore: true, error: null },
-        post: null,
+        allArticles: { items: [], status: "idle", page: 1, hasMore: true, error: null },
+        categoryArticles: { items: [], status: "idle", page: 1, hasMore: true, error: null },
+        authorArticles: { items: [], status: "idle", page: 1, hasMore: true, error: null },
+        article: null,
         status: 'idle',
         error: null,
         filters: { tags: [], sortBy: "famous" },
@@ -98,22 +101,27 @@ const articlesSlice = createSlice({
         setSortBy: (state, action) => {
             state.filters.sortBy = action.payload;
         },
+        setError: (state, action) => {
+            state.error = action.payload;
+        },
         resetCategoryPosts: (state) => {
-            state.categoryPosts = { items: [], status: "idle", page: 1, hasMore: true, error: null };
+            state.categoryArticles = { items: [], status: "idle", page: 1, hasMore: true, error: null };
         },
         resetAuthorPosts: (state) => {
-            state.authorPosts = { items: [], status: "idle", page: 1, hasMore: true, error: null };
+            state.authorArticles = { items: [], status: "idle", page: 1, hasMore: true, error: null };
         },
         resetAllPosts: (state, action) => {
             // console.log(action)
-            state.allPosts = { items: [], status: "idle", page: 1, hasMore: true, error: null };
+            state.allArticles = { items: [], status: "idle", page: 1, hasMore: true, error: null };
         },
         incrementPage: (state, action) => {
-            // console.log(state.allPosts.page)
+            // console.log(state.allArticles.page)
             // console.log(action)
-            if (action.payload.context === 'all') state.allPosts.page += 1;
-            else if (action.payload.context === 'category') state.categoryPosts.page += 1;
-            else if (action.payload.context === 'author') state.authorPosts.page += 1;
+            const { context } = action.payload;
+            // console.log(context)
+            if (context === 'all' && state.allArticles.hasMore) state.allArticles.page += 1;
+            else if (context === 'category' && state.categoryArticles.hasMore) state.categoryArticles.page += 1;
+            else if (context === 'author' && state.authorArticles.hasMore) state.authorArticles.page += 1;
         }
     },
     extraReducers: (builder) => {
@@ -121,128 +129,132 @@ const articlesSlice = createSlice({
             // GET POSTS
             .addCase(getArticles.pending, (state, action) => {
                 const { context } = action.meta.arg;
-                if (context === "category") state.categoryPosts.status = "loading";
-                else if (context === "author") state.authorPosts.status = "loading";
-                else if (context === "all") state.allPosts.status = "loading";
+                if (context === "category") state.categoryArticles.status = "loading";
+                else if (context === "author") state.authorArticles.status = "loading";
+                else if (context === "all") state.allArticles.status = "loading";
             })
             .addCase(getArticles.fulfilled, (state, action) => {
                 const { context } = action.meta.arg;
                 const newPosts = action.payload.articles;
                 if (context === "category") {
-                    // console.log(newPosts)
-                    newPosts.forEach(post => {
-                        if (!state.categoryPosts.items.find(existingPost => existingPost.id === post.id)) {
-                            state.categoryPosts.items.push(post);
-                        }
-                    });
-                    state.categoryPosts.status = "succeeded";
-                    if (newPosts.length < 10) state.categoryPosts.hasMore = false;
-                    else state.categoryPosts.hasMore = true;
+                    const existingIds = new Set(state.categoryArticles.items.map(post => post.id));
+
+                    const uniqueNewPosts = newPosts.filter(post => !existingIds.has(post.id));
+                    state.categoryArticles.items.push(...uniqueNewPosts);
+
+                    state.categoryArticles.status = "succeeded";
+                    if (newPosts.length < 10) state.categoryArticles.hasMore = false;
+                    else state.categoryArticles.hasMore = true;
                 } else if (context === "author") {
-                    newPosts.forEach(post => {
-                        if (!state.authorPosts.items.find(existingPost => existingPost.id === post.id)) {
-                            state.authorPosts.items.push(post);
-                        }
-                    });
-                    // state.authorPosts.items = newPosts
-                    state.authorPosts.status = "succeeded";
-                    if (newPosts.length < 10) state.authorPosts.hasMore = false;
-                    else state.authorPosts.hasMore = true;
+
+                    const existingIds = new Set(state.authorArticles.items.map(post => post.id));
+
+                    const uniqueNewPosts = newPosts.filter(post => !existingIds.has(post.id));
+                    state.authorArticles.items.push(...uniqueNewPosts);
+
+                    state.authorArticles.status = "succeeded";
+                    if (newPosts.length < 10) state.authorArticles.hasMore = false;
+                    else state.authorArticles.hasMore = true;
                 } else if (context === "all") {
-                    // console.log(newPosts)
-                    newPosts.forEach(post => {
-                        if (!state.allPosts.items.find(existingPost => existingPost.id === post.id)) {
-                            state.allPosts.items.push(post);
-                        }
-                    });
-                    state.allPosts.status = "succeeded";
-                    if (newPosts.length < 10) state.allPosts.hasMore = false;
-                    else state.allPosts.hasMore = true;
+
+                    const existingIds = new Set(state.allArticles.items.map(post => post.id));
+
+                    const uniqueNewPosts = newPosts.filter(post => !existingIds.has(post.id));
+                    state.allArticles.items.push(...uniqueNewPosts);
+
+                    state.allArticles.status = "succeeded";
+                    if (newPosts.length < 10) state.allArticles.hasMore = false;
+                    else state.allArticles.hasMore = true;
                 }
             })
             .addCase(getArticles.rejected, (state, action) => {
                 const { context } = action.meta.arg;
                 if (context === "category") {
-                    state.categoryPosts.status = "failed";
-                    state.categoryPosts.error = action.payload;
+                    state.categoryArticles.status = "failed";
+                    state.categoryArticles.error = action.payload;
                 } else if (context === "author") {
-                    state.authorPosts.status = "failed";
-                    state.authorPosts.error = action.payload;
+                    state.authorArticles.status = "failed";
+                    state.authorArticles.error = action.payload;
                 } else if (context === "all") {
-                    state.allPosts.status = "failed";
-                    state.allPosts.error = action.payload;
+                    state.allArticles.status = "failed";
+                    state.allArticles.error = action.payload;
                 }
             })
 
             // GET SINGLE POST
             .addCase(getArticle.pending, (state) => {
                 state.status = 'loading';
-                state.post = null;
+                state.article = null;
             })
             .addCase(getArticle.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                state.post = action.payload.article;
+                state.article = action.payload.article;
             })
             .addCase(getArticle.rejected, (state, action) => {
                 state.status = 'failed';
-                state.post = null;
+                state.article = null;
                 state.error = action.error.message
             })
 
             // CREATE POST
             .addCase(createArticle.pending, (state) => {
-                state.allPosts.status = "loading";
+                state.status = "loading";
             })
             .addCase(createArticle.fulfilled, (state, action) => {
-                state.allPosts.status = "succeeded";
+                state.status = "succeeded";
                 if (state.filters.sortBy === 'recent') {
-                    state.allPosts.items.unshift(action.payload.article);
-                } else if (!state.allPosts.hasMore) {
-                    state.allPosts.items.push(action.payload.article);
+                    state.allArticles.items.unshift(action.payload.article);
+                } else if (!state.allArticles.hasMore) {
+                    state.allArticles.items.push(action.payload.article);
                 }
-                // state.allPosts.items.unshift(action.payload.article);
+                // state.allArticles.items.unshift(action.payload.article);
             })
             .addCase(createArticle.rejected, (state, action) => {
-                state.allPosts.status = "failed";
-                // state.allPosts.error = action.payload;
-                state.error = action.error.message
+                state.status = "failed";
+                // state.allArticles.error = action.payload;
+                // state.error = action.error.message
+                state.error = action.payload || action.error.message;
             })
 
             // UPDATE POST
             .addCase(updateArticle.pending, (state) => {
-                state.allPosts.status = "loading";
+                state.status = "loading";
             })
             .addCase(updateArticle.fulfilled, (state, action) => {
-                state.allPosts.status = "succeeded";
+                state.status = "succeeded";
                 const updatedPost = action.payload.article;
-                state.allPosts.items = state.allPosts.items.map((post) =>
+                state.allArticles.items = state.allArticles.items.map((post) =>
+                    post.id === updatedPost.id ? updatedPost : post
+                );
+                state.categoryArticles.items = state.categoryArticles.items.map((post) =>
+                    post.id === updatedPost.id ? updatedPost : post
+                );
+                state.authorArticles.items = state.authorArticles.items.map((post) =>
                     post.id === updatedPost.id ? updatedPost : post
                 );
             })
             .addCase(updateArticle.rejected, (state, action) => {
-                state.allPosts.status = "failed";
-                state.allPosts.error = action.payload;
-                state.error = action.error.message
+                state.status = "failed";
+                // state.allArticles.error = action.payload;
+                state.error =  action.payload || action.error.message;
             })
 
             // DELETE POST
             .addCase(deleteArticle.pending, (state) => {
-                state.allPosts.status = "loading";
+                state.status = "loading";
             })
             .addCase(deleteArticle.fulfilled, (state, action) => {
-                state.allPosts.status = "succeeded";
-                state.authorPosts.status = "succeeded";
-                state.categoryPosts.status = "succeeded";
+                state.status = "succeeded";
 
-                state.allPosts.items = state.allPosts.items.filter((post) => post.id !== action.meta.arg);
+                state.allArticles.items = state.allArticles.items.filter((post) => post.id !== action.meta.arg);
 
-                state.authorPosts.items = state.authorPosts.items.filter((post) => post.id !== action.meta.arg);
+                state.authorArticles.items = state.authorArticles.items.filter((post) => post.id !== action.meta.arg);
 
-                state.categoryPosts.items = state.categoryPosts.items.filter((post) => post.id !== action.meta.arg);
+                state.categoryArticles.items = state.categoryArticles.items.filter((post) => post.id !== action.meta.arg);
             })
             .addCase(deleteArticle.rejected, (state, action) => {
-                state.allPosts.status = "failed";
-                state.allPosts.error = action.error.message || "Une erreur est survenue";
+                state.status = "failed";
+                state.error = action.payload || action.error.message;
             });
     },
 });

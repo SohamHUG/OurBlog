@@ -10,7 +10,7 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import Switch from "@mui/material/Switch";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { useDispatch, useSelector } from "react-redux";
-import { selectDarkMode } from "../../store/selectors";
+import { selectDarkMode, selectUser } from "../../store/selectors";
 import { toggleDarkMode } from "../../store/slice/themeSlice";
 import { openModalLogin, logout } from "../../store/slice/authSlice";
 
@@ -19,7 +19,7 @@ const Menu = ({ menuActive, menuRef }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate()
     const darkMode = useSelector(selectDarkMode);
-    const user = useSelector((state) => state.auth.user);
+    const user = useSelector(selectUser);
 
     const handleToggleDarkMode = () => {
         dispatch(toggleDarkMode());

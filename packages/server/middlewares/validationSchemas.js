@@ -5,6 +5,7 @@ export const validateSchema = (schema) => async (req, res, next) => {
     } catch (err) {
         // console.log(err.errors)
         if (err.name === 'ValidationError') {
+            // console.log(err.errors)
             return res.status(400).json({ message: err.errors });
         }
 

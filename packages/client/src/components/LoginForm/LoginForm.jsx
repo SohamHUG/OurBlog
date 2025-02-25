@@ -2,12 +2,15 @@ import * as React from 'react';
 import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { getMe, loginUser } from '../../store/slice/authSlice';
+import { CircularProgress } from '@mui/material';
+import { selectAuthError, selectAuthStatus } from '../../store/selectors';
 
 const LoginForm = ({ closeModal }) => {
     const navigate = useNavigate();
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
-    const { status, error } = useSelector((state) => state.auth);
+    const status = useSelector(selectAuthStatus);
+    const error = useSelector(selectAuthError)
     const dispatch = useDispatch();
 
     const handleRegisterClick = () => {
@@ -102,8 +105,10 @@ const LoginForm = ({ closeModal }) => {
                         </span>
                     </p>
                     <div className='modal-footer'>
+                        {status === "loading" && <span><CircularProgress /></span>}
                         <button type='submit'>
                             Se connecter
+
                         </button>
                     </div>
 

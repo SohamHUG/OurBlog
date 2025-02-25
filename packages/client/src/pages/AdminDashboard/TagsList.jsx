@@ -1,15 +1,15 @@
 import * as React from 'react';
 import * as Redux from 'react-redux';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { selectCategories, selectCategoriesStatus, selectCategoriesError } from '../../store/selectors';
+import { selectCategories, selectCategoriesStatus, selectCategoriesError, selectTags, selectTagsStatus } from '../../store/selectors';
 import { fetchCategories, createCategory, deleteCategory, getTags, deleteTag } from '../../store/slice/categoriesSlice';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 const TagsList = () => {
     const dispatch = Redux.useDispatch();
-    const tags = Redux.useSelector((state) => state.categories.tags);
-    const status = Redux.useSelector((state) => state.categories.tagStatus);
+    const tags = Redux.useSelector(selectTags);
+    const status = Redux.useSelector(selectTagsStatus);
     const error = Redux.useSelector(selectCategoriesError);
     const [newTag, setNewTag] = React.useState('')
     const navigate = useNavigate();
@@ -20,21 +20,21 @@ const TagsList = () => {
         // }
     }, []);
 
-    const handleNewTag = async (e) => {
-        e.preventDefault();
-        try {
-            await dispatch(createCategory(newCategory)).unwrap()
-            setNewTag('')
-        } catch (error) {
-            console.error(error.message)
-        }
-    }
+    // const handleNewTag = async (e) => {
+    //     e.preventDefault();
+    //     try {
+    //         await dispatch(createCategory(newCategory)).unwrap()
+    //         setNewTag('')
+    //     } catch (error) {
+    //         console.error(error.message)
+    //     }
+    // }
 
-    const handleChangeNewTag = async (e) => {
-        e.preventDefault();
-        setNewTag(e.target.value)
+    // const handleChangeNewTag = async (e) => {
+    //     e.preventDefault();
+    //     setNewTag(e.target.value)
 
-    }
+    // }
 
     const handleRemoveTag = (id) => {
         // dispatch(deleteCategory(id));

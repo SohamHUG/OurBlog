@@ -1,7 +1,7 @@
 import db from '../config/db.js';
 import { v2 as cloudinary } from 'cloudinary';
 
-export const saveArticle = async (user, category, title, content, imagesId) => {
+export const saveArticle = async (user, category, title, content) => {
     return new Promise((resolve, reject) => {
         const sql = 'INSERT INTO article (user_id, category_id, title, content) VALUES (?,?,?,?)';
 

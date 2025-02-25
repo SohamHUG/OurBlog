@@ -6,11 +6,12 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
+import { selectUsersList, selectUsersStatus } from '../../store/selectors';
 
 const UsersList = () => {
     const dispatch = Redux.useDispatch();
-    const users = Redux.useSelector((state) => state.users.users);
-    const status = Redux.useSelector((state) => state.users.status);
+    const users = Redux.useSelector(selectUsersList);
+    const status = Redux.useSelector(selectUsersStatus);
     const navigate = useNavigate();
 
     React.useEffect(() => {

@@ -1,11 +1,13 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const uploadProfilPic = createAsyncThunk(
     'photo/uploadProfilPic',
     async (file,) => {
 
         // console.log(file)
-        const url = `http://localhost:3000/upload/profil-picture`;
+        const url = `${API_URL}/upload/profil-picture`;
 
         const response = await fetch(url, {
             method: 'POST',
@@ -29,7 +31,7 @@ export const uploadArticlePic = createAsyncThunk(
     async (file,) => {
 
         // console.log(file)
-        const url = `http://localhost:3000/upload/article-files`;
+        const url = `${API_URL}/upload/article-files`;
 
         const response = await fetch(url, {
             method: 'POST',
@@ -86,7 +88,7 @@ export const deleteProfilPic = createAsyncThunk(
     'user/uploadProfilPic',
     async (id) => {
 
-        const url = `http://localhost:3000/upload/profil-picture/${id}`;
+        const url = `${API_URL}/upload/profil-picture/${id}`;
 
         const response = await fetch(url, {
             method: 'DELETE',
