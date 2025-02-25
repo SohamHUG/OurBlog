@@ -23,11 +23,15 @@ export const refreshTokenMiddleware = async (req, res, next) => {
     } catch (error) {
         // console.log('AccessToken expiré ou invalide, vérification du RefreshToken...');
 
+        // console.log('la')
+
         if (!refreshToken) {
             res.clearCookie('accessToken');
             res.clearCookie('refreshToken');
             return res.status(401).json({ message: 'Non autorisé, veuillez vous reconnecter' });
         }
+
+        // console.log('')
 
         try {
             const verifyRefreshToken = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET)
@@ -66,9 +70,11 @@ export const refreshTokenMiddleware = async (req, res, next) => {
                 httpOnly: true,
                 secure: true, 
                 sameSite: 'strict', // Limite les cookies aux mêmes origines
-                maxAge: 3600000, // 1 heure
-                // maxAge: 30 * 1000, // 10 sec
+                // maxAge: 3600000, // 1 heure
+                maxAge: 60 * 1000, // 10 sec
             });
+
+            req.cookies.accessToken = newAccessToken;
 
             // res.cookie('refreshToken', newRefreshToken, {
             //     httpOnly: true,

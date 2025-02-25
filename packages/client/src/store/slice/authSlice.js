@@ -109,7 +109,7 @@ const authSlice = createSlice({
             state.modalLogin = false;
         },
         logoutUser: (state) => {
-            state.user = null;
+            // state.user = null;
         },
         setErrorMessage: (state, action) => {
             state.error = action.payload;
@@ -173,6 +173,7 @@ const authSlice = createSlice({
             .addCase(logout.fulfilled, (state) => {
                 state.status = 'idle';
                 state.userConnected = null;
+                state.user = null;
                 localStorage.removeItem('user');
             })
             .addCase(logout.rejected, (state, action) => {
@@ -194,7 +195,7 @@ const authSlice = createSlice({
                 // console.log(action)
                 // state.error = action.error.message
                 state.user = null;
-                localStorage.removeItem('user');
+                // localStorage.removeItem('user');
             })
             .addCase(deleteUser.fulfilled, (state, action) => {
                 if (state.userConnected && state.user.user_id === action.meta.arg) {

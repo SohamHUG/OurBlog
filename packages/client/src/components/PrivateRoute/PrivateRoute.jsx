@@ -11,11 +11,23 @@ const PrivateRoute = ({ children, roles }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (userConnected) {
-            dispatch(getMe()).finally(() => setLoading(false));
-        } else {
-            setLoading(false);
+        // if (userConnected) {
+        //     dispatch(getMe()).finally(() => setLoading(false));
+        // } else {
+        //     setLoading(false);
+        // }
+
+        const verifUser = async () => {
+            if (userConnected) {
+                try {
+                    await dispatch(getMe()).unwrap()
+                    setLoading(false)
+                } catch (error) {
+                    setLoading(false);
+                }
+            }
         }
+        verifUser();
     }, [userConnected, dispatch]);
 
     if (loading) {

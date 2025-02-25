@@ -40,9 +40,10 @@ function App() {
     React.useEffect(() => {
         if (userConnected) {
             dispatch(getMe());
-        } else {
-            dispatch(logoutUser())
-        }
+        } 
+        // else {
+        //     dispatch(logoutUser())
+        // }
     }, [dispatch, userConnected]);
 
     return (
