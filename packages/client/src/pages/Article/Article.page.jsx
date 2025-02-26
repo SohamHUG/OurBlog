@@ -27,6 +27,7 @@ const ArticlePage = () => {
 
     React.useEffect(() => {
         dispatch(getArticle(id));
+        
     }, [id, dispatch]);
 
     React.useEffect(() => {

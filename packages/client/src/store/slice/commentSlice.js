@@ -50,7 +50,9 @@ const commentSlice = createSlice({
         error: null,
     },
     reducers: {
-
+        resetComment: (state, action) => {
+            state.comments = [];
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -95,4 +97,5 @@ const commentSlice = createSlice({
     },
 });
 
+export const { resetComment } = commentSlice.actions;
 export default commentSlice.reducer;
