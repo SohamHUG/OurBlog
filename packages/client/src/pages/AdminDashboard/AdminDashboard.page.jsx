@@ -7,7 +7,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CategoryIcon from "@mui/icons-material/Category";
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import AbcIcon from '@mui/icons-material/Abc';
-import './AdminDashboard.scss';
+import './AdminDashBoard.scss';
 
 const AdminDashboard = () => {
     const navigate = useNavigate();
