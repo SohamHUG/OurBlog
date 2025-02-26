@@ -1,5 +1,5 @@
 import { deleteUserById, findAllUsers, findByCredentials, findPopularUsers, findUserById, updateUserById } from "../models/user.model.js";
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import jwt from "jsonwebtoken";
 import { sendConfirmationEmail, sendInfoEmail } from "../utils/index.js";
 import { findAllRoles } from "../models/roles.model.js";

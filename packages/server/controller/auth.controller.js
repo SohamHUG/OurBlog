@@ -1,6 +1,6 @@
 import { findUserById, findByCredentials, saveUser, updateUserById } from "../models/user.model.js";
 import jwt from "jsonwebtoken";
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { sendConfirmationEmail, sendInfoEmail } from "../utils/index.js";
 import dotenv from 'dotenv';
 

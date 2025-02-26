@@ -1,5 +1,4 @@
 import db from '../config/db.js';
-import bcrypt from 'bcrypt';
 
 export const saveUser = async (userData) => {
     const { firstName, lastName, pseudo, email, roleId, hash } = userData;
