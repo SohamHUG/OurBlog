@@ -6,7 +6,7 @@ import { getArticles, resetArticles } from '../../store/slice/articleSlice';
 import PostsList from '../../components/PostsList/PostsList';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import './ProfilPage.scss'
+import './ProfilPage.scss';
 import InfiniteScroll from '../../components/InfiniteScroll/InfiniteScroll';
 import { selectAuthorArticles, selectAuthorArticlesHasMore, selectAuthorArticlesPage, selectAuthorArticlesStatus, selectProfil, selectUsersStatus } from '../../store/selectors';
 

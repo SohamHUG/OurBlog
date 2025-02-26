@@ -6,7 +6,7 @@ import RichTextEditor from '../RichTextEditor/RichTextEditor';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { NavLink, useNavigate } from 'react-router-dom';
 import CircularProgress from '@mui/material/CircularProgress';
-import './ArticleForm.scss'
+import './ArticleForm.scss';
 
 const ArticleForm = ({
     formData,

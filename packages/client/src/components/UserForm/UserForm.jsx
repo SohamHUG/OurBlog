@@ -1,6 +1,6 @@
 import * as React from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
-import './UserForm.scss'
+import './UserForm.scss';
 import { useLocation } from 'react-router-dom';
 import ProfilPictureUpload from './ProfilPictureUpload';
 import ConfirmEmailPassword from './ConfirmEmailPassword';

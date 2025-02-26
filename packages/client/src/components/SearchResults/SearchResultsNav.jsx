@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import './SearchResultsNav.scss'
+import './SearchResultsNav.scss';
 import { useDispatch, useSelector } from "react-redux";
 import { clearNavSearch, clearSearch } from "../../store/slice/searchSlice";
 import { selectUser } from "../../store/selectors";

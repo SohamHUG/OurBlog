@@ -5,10 +5,13 @@ const ConfirmEmail = () => {
     const [status, setStatus] = useState('loading');
     const { token } = useParams(); 
 
+    const API_URL = import.meta.env.VITE_API_URL;
+
+
     useEffect(() => {
         const confirmEmail = async () => {
             try {
-                const response = await fetch(`http://localhost:3000/auth/confirm/${token}`);
+                const response = await fetch(`${API_URL}/auth/confirm/${token}`);
                 if (response.ok) {
                     setStatus('success');
                 } else {

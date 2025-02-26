@@ -5,7 +5,7 @@ import { getArticle } from '../../store/slice/articleSlice';
 import PostContent from '../../components/PostContent/PostContent';
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import './Article.scss'
+import './Article.scss';
 import { createComment, getComments } from '../../store/slice/commentSlice';
 import CommentsList from '../../components/CommentsList/CommentsList';
 import EastIcon from "@mui/icons-material/East";

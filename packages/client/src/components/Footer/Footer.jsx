@@ -1,5 +1,5 @@
 import { NavLink, useLocation } from "react-router-dom";
-import './Footer.scss'
+import './Footer.scss';
 import EmailIcon from '@mui/icons-material/Email';
 
 const Footer = () => {
