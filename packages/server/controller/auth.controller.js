@@ -123,7 +123,7 @@ export const loginUser = async (req, res) => {
         res.cookie('accessToken', accessToken, {
             httpOnly: true,
             secure: true,
-            sameSite: 'strict', // Limite les cookies aux mêmes origines
+            sameSite: 'None', // Limite les cookies aux mêmes origines
             maxAge: 3600000, // 1 heure
             // maxAge: 10 * 1000, // 10 sec
         });
@@ -131,7 +131,7 @@ export const loginUser = async (req, res) => {
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
             secure: true,
-            sameSite: 'strict', // Limite les cookies aux mêmes origines
+            sameSite: 'None', // Limite les cookies aux mêmes origines
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 jours
             // maxAge: 60 * 1000, // 10 sec
         });
