@@ -8,7 +8,7 @@ import { openModalLogin } from '../../store/slice/authSlice';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import KeyboardArrowUpRoundedIcon from '@mui/icons-material/KeyboardArrowUpRounded';
 import './Home.scss';
-import { getArticles, setSortBy, resetAllPosts } from '../../store/slice/articleSlice';
+import { getArticles, setSortBy, resetArticles } from '../../store/slice/articleSlice';
 import { useNavigate, NavLink } from 'react-router-dom';
 import ScrollToTopButton from '../../components/ScrollToTopButton/ScrollToTopButton';
 import { getPopularUsers, resetUsers } from '../../store/slice/userSlice';
@@ -29,10 +29,11 @@ const HomePage = () => {
     const page = Redux.useSelector(selectAllArticlesPage)
 
     React.useEffect(() => {
-        // if (usersStatus === 'succeeded' || users.length === 0) {
-        dispatch(resetUsers())
-        dispatch(getPopularUsers());
-        // }
+        if (usersStatus === 'succeeded' || users.length === 0) {
+            dispatch(resetUsers())
+            // dispatch(resetArticles({context: 'all'}));
+            dispatch(getPopularUsers());
+        }
 
     }, [dispatch]);
 
@@ -50,7 +51,9 @@ const HomePage = () => {
     const handleSortChange = (event) => {
         const sortBy = event.target.value;
         dispatch(setSortBy(sortBy));
-        dispatch(resetAllPosts({ context: "all" }));
+        // dispatch(resetAllPosts({ context: "all" }));
+        dispatch(resetArticles({ context: 'all' }));
+
     };
 
     const handlePublishPost = () => {

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as Redux from 'react-redux';
-import { getArticles, resetAllPosts, resetAuthorPosts } from '../../../store/slice/articleSlice';
+import { getArticles, resetArticles } from '../../../store/slice/articleSlice';
 import PostsList from '../../../components/PostsList/PostsList';
 import ScrollToTopButton from '../../../components/ScrollToTopButton/ScrollToTopButton';
 import InfiniteScroll from '../../../components/InfiniteScroll/InfiniteScroll';
@@ -20,7 +20,7 @@ const DashBoardAuthor = () => {
 
     // console.log(status)
     React.useEffect(() => {
-        dispatch(resetAuthorPosts())
+        dispatch(resetArticles({ context: 'author' }))
     }, [dispatch])
 
     React.useEffect(() => {

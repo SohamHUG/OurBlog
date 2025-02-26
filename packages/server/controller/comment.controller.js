@@ -42,8 +42,8 @@ export const deleteComment = async (req, res) => {
 
         if (
             comment[0].user_id !== user.user_id &&
-            req.user.role_id !== 4 &&
-            req.user.role_id !== 2
+            user.role_id !== 4 &&
+            user.role_id !== 2
         ) {
             return res.status(403).json({ message: "Vous n'êtes pas autorisé" });
         }

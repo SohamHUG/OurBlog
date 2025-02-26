@@ -21,7 +21,7 @@ import {
     getArticles,
     setTagsFilter,
     setSortBy,
-    resetCategoryPosts,
+    resetArticles,
 } from '../../store/slice/articleSlice';
 import './CategoryPage.scss';
 
@@ -49,7 +49,7 @@ const CategoryPage = () => {
 
         if (category && category.name) {
             dispatch(getTags({ category: category.name }));
-            dispatch(resetCategoryPosts())
+            dispatch(resetArticles({ context: 'category' }))
         }
 
     }, [status, dispatch, category]);
@@ -87,7 +87,7 @@ const CategoryPage = () => {
 
     useEffect(() => {
         // setPage(1);
-        dispatch(resetCategoryPosts());
+        dispatch(resetArticles({ context: 'category' }));
     }, [filters.sortBy, selectedTags, dispatch]);
 
     return (

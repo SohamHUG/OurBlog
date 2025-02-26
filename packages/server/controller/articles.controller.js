@@ -2,6 +2,7 @@ import { deleteArticleById, findAllArticles, findArticleById, getImagesIdsByArti
 import { findTagByName, findTags, saveTag, linkArticleToTag, deleteArticleTags } from "../models/tags.model.js";
 import sanitizeHtml from 'sanitize-html';
 import { v2 as cloudinary } from 'cloudinary';
+import { sanitizeContent } from "../utils/index.js";
 
 
 export const createArticle = async (req, res) => {
@@ -9,52 +10,19 @@ export const createArticle = async (req, res) => {
         const { title, category, content, tags, imagesId } = req.body
         const user = req.user.user_id;
 
+        const sanitizedContent = sanitizeContent(content)
+
         // console.log(content)
-        if (!content || content.replace(/<[^>]+>/g, '').trim() === "") {
+        if (!sanitizedContent || sanitizedContent.replace(/<[^>]+>/g, '').trim() === "") {
             return res.status(400).json({ message: "Tous les champs obligatoires doivent être remplis." });
         }
 
-        const sanitizedContent = sanitizeHtml(content, {
-            allowedTags: [
-                'p', 'h1', 'h2', 'strong', 'em', 'u', 'a', 'ul', 'ol', 'li', 'br', 'img', 'blockquote', 'span', 's'
-            ],
-            allowedAttributes: {
-                a: ['href', 'target', 'rel', 'class', 'style'],
-                img: ['src', 'alt', 'class', 'style', 'width'],
-                span: ['class', 'style'],
-                strong: ['class', 'style'],
-                p: ['class', 'style'],
-                u: ['class', 'style'],
-                ul: ['class', 'style'],
-                ol: ['class', 'style'],
-                s: ['class', 'style'],
-                h1: ['class', 'style'],
-                h2: ['class', 'style'],
-                em: ['class', 'style'],
-                li: ['class', 'style', 'data-list'],
-                blockquote: ['class', 'style'],
-            },
-            allowedStyles: {
-                '*': {
-                    // Limiter les styles autorisés
-                    'color': [/^#([0-9a-f]{3}){1,2}$/i, /^rgb\(/, /^rgba\(/, /^(red)$/i], // Autorise uniquement les couleurs valides
-                    'font-size': [/^\d+(px|em|rem|%)$/], // Évite les valeurs arbitraires
-                    'text-align': [/^(left|right|center|justify)$/],
-                    'font-weight': [/^(normal|bold|lighter|bolder|[1-9]00)$/],
-                    'text-decoration': [/^(none|underline|line-through|overline)$/],
-                }
-            },
-            disallowedTagsMode: 'discard',
-        });
-
         // console.log(imagesId)
-
 
         const article = await saveArticle(user, category, title, sanitizedContent);
 
         // enregistre les publicId des images en db 
         if (imagesId && imagesId.length > 0) {
-            // const imageValues = imagesId.map(img => [article.id, img]);
             await saveArticleImagesId(article.id, imagesId)
         }
 
@@ -90,13 +58,6 @@ export const updateArticle = async (req, res) => {
         const { title, category, content, tags, imagesId } = req.body
         const user = req.user.user_id;
 
-        // console.log(content)
-
-        if (!content || content.replace(/<[^>]+>/g, '').trim() === "") {
-
-            return res.status(400).json({ message: "Tous les champs obligatoires doivent être remplis." });
-        }
-
         const article = await findArticleById(id);
 
         if (!article || article.length <= 0) {
@@ -107,43 +68,15 @@ export const updateArticle = async (req, res) => {
             return res.status(403).json({ message: "Vous n'êtes pas autorisé" });
         }
 
-        const sanitizedContent = sanitizeHtml(content, {
-            allowedTags: [
-                'p', 'h1', 'h2', 'strong', 'em', 'u', 'a', 'ul', 'ol', 'li', 'br', 'img', 'blockquote', 'span', 's'
-            ],
-            allowedAttributes: {
-                a: ['href', 'target', 'rel', 'class', 'style'],
-                img: ['src', 'alt', 'class', 'style', 'width'],
-                span: ['class', 'style'],
-                strong: ['class', 'style'],
-                p: ['class', 'style'],
-                u: ['class', 'style'],
-                ul: ['class', 'style'],
-                ol: ['class', 'style'],
-                s: ['class', 'style'],
-                h1: ['class', 'style'],
-                h2: ['class', 'style'],
-                em: ['class', 'style'],
-                li: ['class', 'style', 'data-list'],
-                blockquote: ['class', 'style'],
-            },
-            allowedStyles: {
-                '*': {
-                    // Limiter les styles autorisés
-                    'color': [/^#([0-9a-f]{3}){1,2}$/i, /^rgb\(/, /^rgba\(/, /^(red)$/i], // Autorise uniquement les couleurs valides
-                    'font-size': [/^\d+(px|em|rem|%)$/], // Évite les valeurs arbitraires
-                    'text-align': [/^(left|right|center|justify)$/],
-                    'font-weight': [/^(normal|bold|lighter|bolder|[1-9]00)$/],
-                    'text-decoration': [/^(none|underline|line-through|overline)$/],
-                }
-            },
-            disallowedTagsMode: 'discard',
-        });
+        const sanitizedContent = sanitizeContent(content)
+        if (!sanitizedContent || sanitizedContent.replace(/<[^>]+>/g, '').trim() === "") {
+            return res.status(400).json({ message: "Tous les champs obligatoires doivent être remplis." });
+        }
 
         if (imagesId && imagesId.length > 0) {
             await saveArticleImagesId(article.id, imagesId)
         }
-        
+
         const updateArticle = {
             title: title,
             category_id: category,
@@ -227,7 +160,7 @@ export const deleteArticle = async (req, res) => {
             return res.status(404).json({ message: "Article introuvable" });
         }
 
-        if (article.user_id !== user.user_id && req.user.role_id !== 4) {
+        if (article.user_id !== user.user_id && user.role_id !== 4) {
             return res.status(403).json({ message: "Vous n'êtes pas autorisé" });
         }
 

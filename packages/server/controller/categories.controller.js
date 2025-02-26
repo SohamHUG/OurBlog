@@ -41,7 +41,7 @@ export const deleteCategory = async (req, res) => {
         const categoryId = req.params.id
         await deleteCategoryById(categoryId)
 
-        return res.status(201).json({ message: "category deleted !" })
+        return res.status(200).json({ message: "category deleted !" })
     } catch (err) {
         console.error(err);
         return res.status(500).json({ message: "Erreur interne du serveur." });

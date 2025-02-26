@@ -5,7 +5,7 @@ import { deleteProfilPic } from '../../store/slice/photoSlice';
 import Modal from '../../components/Modal/Modal';
 import UserForm from '../../components/UserForm/UserForm';
 import { getProfil, updateUser, deleteUser, resetProfil } from '../../store/slice/userSlice';
-import { getArticles, resetAuthorPosts } from '../../store/slice/articleSlice';
+import { getArticles, resetArticles } from '../../store/slice/articleSlice';
 import { getComments } from '../../store/slice/commentSlice';
 import CommentsList from '../../components/CommentsList/CommentsList'
 import PostsLists from '../../components/PostsList/PostsList'
@@ -40,7 +40,7 @@ const UserPageAdmin = () => {
     React.useEffect(() => {
         dispatch(resetProfil())
         dispatch(getProfil(id))
-        dispatch(resetAuthorPosts());
+        dispatch(resetArticles({ context: 'author' }));
         dispatch(getComments({
             userId: id
         }))

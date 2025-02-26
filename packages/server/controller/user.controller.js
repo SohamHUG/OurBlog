@@ -14,7 +14,6 @@ export const getMine = async (req, res) => {
 
         const { refresh_token, role_id, ...userData } = user; // filtre les infos "sensibles"
 
-
         return res.status(201).json({ user: userData });
     } catch (err) {
         console.error(err)

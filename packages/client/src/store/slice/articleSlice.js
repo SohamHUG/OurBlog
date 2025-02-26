@@ -104,21 +104,15 @@ const articlesSlice = createSlice({
         setError: (state, action) => {
             state.error = action.payload;
         },
-        resetCategoryPosts: (state) => {
-            state.categoryArticles = { items: [], status: "idle", page: 1, hasMore: true, error: null };
-        },
-        resetAuthorPosts: (state) => {
-            state.authorArticles = { items: [], status: "idle", page: 1, hasMore: true, error: null };
-        },
-        resetAllPosts: (state, action) => {
-            // console.log(action)
-            state.allArticles = { items: [], status: "idle", page: 1, hasMore: true, error: null };
-        },
-        incrementPage: (state, action) => {
-            // console.log(state.allArticles.page)
+        resetArticles: (state, action) => {
             // console.log(action)
             const { context } = action.payload;
-            // console.log(context)
+            if (context === 'all') state.allArticles = { items: [], status: "idle", page: 1, hasMore: true, error: null };
+            else if (context === 'category') state.categoryArticles = { items: [], status: "idle", page: 1, hasMore: true, error: null };
+            else if (context === 'author') state.authorArticles = { items: [], status: "idle", page: 1, hasMore: true, error: null };
+        },
+        incrementPage: (state, action) => {
+            const { context } = action.payload;
             if (context === 'all' && state.allArticles.hasMore) state.allArticles.page += 1;
             else if (context === 'category' && state.categoryArticles.hasMore) state.categoryArticles.page += 1;
             else if (context === 'author' && state.authorArticles.hasMore) state.authorArticles.page += 1;
@@ -204,15 +198,13 @@ const articlesSlice = createSlice({
                 state.status = "succeeded";
                 if (state.filters.sortBy === 'recent') {
                     state.allArticles.items.unshift(action.payload.article);
-                } else if (!state.allArticles.hasMore) {
+                } else if (state.filters.sortBy === 'famous' && !state.allArticles.hasMore) {
                     state.allArticles.items.push(action.payload.article);
                 }
                 // state.allArticles.items.unshift(action.payload.article);
             })
             .addCase(createArticle.rejected, (state, action) => {
                 state.status = "failed";
-                // state.allArticles.error = action.payload;
-                // state.error = action.error.message
                 state.error = action.payload || action.error.message;
             })
 
@@ -235,8 +227,7 @@ const articlesSlice = createSlice({
             })
             .addCase(updateArticle.rejected, (state, action) => {
                 state.status = "failed";
-                // state.allArticles.error = action.payload;
-                state.error =  action.payload || action.error.message;
+                state.error = action.payload || action.error.message;
             })
 
             // DELETE POST
@@ -259,5 +250,5 @@ const articlesSlice = createSlice({
     },
 });
 
-export const { setTagsFilter, setSortBy, resetCategoryPosts, resetAuthorPosts, resetAllPosts, incrementPage } = articlesSlice.actions;
+export const { setTagsFilter, setSortBy, resetArticles, incrementPage } = articlesSlice.actions;
 export default articlesSlice.reducer;

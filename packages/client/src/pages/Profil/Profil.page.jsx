@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as Redux from 'react-redux';
 import { useNavigate, Navigate, useParams } from 'react-router-dom';
 import { getProfil, resetProfil } from '../../store/slice/userSlice';
-import { getArticles, resetAuthorPosts } from '../../store/slice/articleSlice';
+import { getArticles, resetArticles } from '../../store/slice/articleSlice';
 import PostsList from '../../components/PostsList/PostsList';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -24,7 +24,7 @@ const ProfilPage = () => {
     React.useEffect(() => {
         dispatch(resetProfil())
         dispatch(getProfil(id))
-        dispatch(resetAuthorPosts());
+        dispatch(resetArticles({ context: 'author' }));
     }, [dispatch, id])
 
     React.useEffect(() => {
