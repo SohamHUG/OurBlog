@@ -150,8 +150,20 @@ export const loginUser = async (req, res) => {
 
 export const logOutUser = async (req, res) => {
     try {
-        res.clearCookie('accessToken');
-        res.clearCookie('refreshToken');
+        // res.clearCookie('accessToken');
+        // res.clearCookie('refreshToken');
+
+        res.clearCookie('accessToken', {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'None'
+        });
+
+        res.clearCookie('refreshToken', {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'None'
+        });
         // await updateUserById(req.user.user_id, { refresh_token: null });
 
         res.status(200).json({ message: 'Logout successful' });
