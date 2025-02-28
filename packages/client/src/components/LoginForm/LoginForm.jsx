@@ -24,7 +24,7 @@ const LoginForm = ({ closeModal }) => {
         e.preventDefault();
         try {
             await dispatch(loginUser({ email, password })).unwrap();
-            dispatch(getMe());
+            await dispatch(getMe()).unwrap();
             closeModal();
         } catch (error) {
             console.error(error.message);

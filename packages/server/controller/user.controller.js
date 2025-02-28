@@ -90,7 +90,7 @@ export const updateUser = async (req, res) => {
         }
 
         if (pseudo.length < 2) {
-            return res.status(400).json({ message: "Pseudo requis", });
+            return res.status(400).json({ message: "Le pseudo doit contenir deux caractères minimum", });
         }
 
         const userLog = await findByCredentials(email);
@@ -196,8 +196,17 @@ export const deleteUser = async (req, res) => {
         }
 
         if (parseInt(id) === user.user_id) {
-            res.clearCookie('accessToken');
-            res.clearCookie('refreshToken');
+            res.clearCookie('accessToken', {
+                httpOnly: true,
+                secure: true,
+                sameSite: 'None'
+            });
+
+            res.clearCookie('refreshToken', {
+                httpOnly: true,
+                secure: true,
+                sameSite: 'None'
+            });
         }
 
         await deleteUserById(id);

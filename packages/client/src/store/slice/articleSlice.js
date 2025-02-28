@@ -104,6 +104,11 @@ const articlesSlice = createSlice({
         setError: (state, action) => {
             state.error = action.payload;
         },
+        resetArticle: (state, action ) => {
+            state.article = null;
+            state.status = 'idle';
+            state.error = null;
+        },
         resetArticles: (state, action) => {
             // console.log(action)
             const { context } = action.payload;
@@ -250,5 +255,5 @@ const articlesSlice = createSlice({
     },
 });
 
-export const { setTagsFilter, setSortBy, resetArticles, incrementPage } = articlesSlice.actions;
+export const { setTagsFilter, setSortBy, resetArticles, incrementPage, resetArticle } = articlesSlice.actions;
 export default articlesSlice.reducer;

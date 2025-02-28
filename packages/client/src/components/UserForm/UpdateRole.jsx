@@ -8,12 +8,14 @@ const UpdateRole = ({
     handleChange
 }) => {
     const [status, setStatus] = useState('loading');
-    const [roles, setRoles] = useState([])
+    const [roles, setRoles] = useState([]);
+    const API_URL = import.meta.env.VITE_API_URL;
+
 
     useEffect(() => {
-        const confirmEmail = async () => {
+        const getRoles = async () => {
 
-            const response = await fetch(`http://localhost:3000/admin/roles`, {
+            const response = await fetch(`${API_URL}/admin/roles`, {
                 method: "GET",
                 credentials: "include",
             });
@@ -28,7 +30,7 @@ const UpdateRole = ({
         };
 
         if (status === 'loading') {
-            confirmEmail();
+            getRoles();
         }
 
     }, [status]);

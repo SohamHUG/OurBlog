@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { deleteArticle, getArticle, updateArticle } from '../../../store/slice/articleSlice.js';
+import { deleteArticle, getArticle, resetArticle, updateArticle } from '../../../store/slice/articleSlice.js';
 import ArticleForm from '../../../components/ArticleForm/ArticleForm.jsx';
 import { uploadImagesAndUpdateContent } from '../../../store/slice/photoSlice.js';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -25,8 +25,9 @@ const UpdateArticlePage = () => {
     const goBack = () => navigate(-1);
 
     React.useEffect(() => {
+        dispatch(resetArticle())
         dispatch(getArticle(id));
-    }, [id, dispatch]);
+    }, [id]);
 
     // console.log(status)
 
@@ -47,7 +48,7 @@ const UpdateArticlePage = () => {
             })
             // handleContentChange(post.content)
         }
-    }, [status]);
+    }, [status, article]);
 
     // console.log(post.content)
 

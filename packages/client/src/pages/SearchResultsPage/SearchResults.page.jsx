@@ -36,11 +36,13 @@ const SearchResultsPage = () => {
                         key={result.id + Math.random()}
                         className="result-card"
                         to={
-                            result.type === 'article' ?
+                            result.type === "article" ?
                                 `/article/${result.id}`
-                                : user && user.role_name === 'admin' ?
-                                    `/admin/user/${result.id}`
-                                    : `/profil/${result.id}`
+                                : result.type === "category" ?
+                                    `/category/${result.id}`
+                                    : user && user.role_name === 'admin' ?
+                                        `/admin/user/${result.id}`
+                                        : `/profil/${result.id}`
                         }
                     >
                         {result.type === 'user' && (

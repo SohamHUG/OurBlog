@@ -46,8 +46,17 @@ export const refreshTokenMiddleware = async (req, res, next) => {
             const user = await findUserById(verifyRefreshToken.id)
             // console.log(user)
             if (!user || user.refresh_token !== refreshToken) {
-                res.clearCookie('accessToken');
-                res.clearCookie('refreshToken');
+                res.clearCookie('accessToken', {
+                    httpOnly: true,
+                    secure: true,
+                    sameSite: 'None'
+                });
+
+                res.clearCookie('refreshToken', {
+                    httpOnly: true,
+                    secure: true,
+                    sameSite: 'None'
+                });
                 return res.status(401).json({ message: 'RefreshToken invalide ou utilisateur inexistant' });
             }
 
@@ -68,7 +77,7 @@ export const refreshTokenMiddleware = async (req, res, next) => {
 
             res.cookie('accessToken', newAccessToken, {
                 httpOnly: true,
-                secure: true, 
+                secure: true,
                 sameSite: 'None', // Limite les cookies aux mêmes origines
                 maxAge: 3600000, // 1 heure
                 // maxAge: 60 * 1000, // 60 sec

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate, Link, NavLink, useLocation, Navigate } from 'react-router-dom';
-import { getArticle } from '../../store/slice/articleSlice';
+import { getArticle, resetArticle } from '../../store/slice/articleSlice';
 import PostContent from '../../components/PostContent/PostContent';
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -26,9 +26,16 @@ const ArticlePage = () => {
     const [comment, setComment] = React.useState('')
 
     React.useEffect(() => {
+        dispatch(resetArticle())
         dispatch(getArticle(id));
         
-    }, [id, dispatch]);
+    }, [id]);
+
+    // React.useEffect(() => {
+    //     dispatch(getArticle(id));
+        
+    // }, [id, dispatch]);
+
 
     React.useEffect(() => {
         if (article) {

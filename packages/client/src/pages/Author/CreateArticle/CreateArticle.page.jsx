@@ -107,10 +107,10 @@ const CreateArticlePage = () => {
                 handleTagsChange={handleTagsChange}
                 handleSubmit={handleSubmit}
                 errorMessage={articleError || errorMessage}
-            isLoading={
-                articleStatus === 'loading' ||
-                statusPhoto === 'loading'
-            }
+                isLoading={
+                    articleStatus === 'loading' ||
+                    statusPhoto === 'loading'
+                }
             />
 
             {openModal &&
