@@ -32,20 +32,17 @@ const UpdateArticlePage = () => {
 
     React.useEffect(() => {
         dispatch(resetArticle())
-        if (status === 'idle') {
-            setFormData({
-                title: '',
-                content: '',
-                category: '',
-                tags: [],
-            })
-            dispatch(getArticle(id));
-        }
+        setFormData({
+            title: '',
+            content: '',
+            category: '',
+            tags: [],
+        })
+        dispatch(getArticle(id));
+    }, [id]);
 
-    }, [id, status, dispatch]);
-
-    console.log(article)
-    console.log(formData)
+    // console.log(article)
+    // console.log(formData)
 
     React.useEffect(() => {
 
@@ -155,18 +152,20 @@ const UpdateArticlePage = () => {
                         <h2 style={{ textAlign: 'center', flex: '1' }}>Modifier l'article : {article.title}</h2>
                         <DeleteIcon className="delete-btn" onClick={() => toggleModalConfirm()} />
                     </div>
-                    <ArticleForm
-                        formData={formData}
-                        handleChange={handleChange}
-                        handleContentChange={handleContentChange}
-                        handleTagsChange={handleTagsChange}
-                        handleSubmit={handleSubmit}
-                        errorMessage={error || errorMessage}
-                        isLoading={
-                            status === 'loading' ||
-                            photoStatus === 'loading'
-                        }
-                    />
+                    <div key={id}>
+                        <ArticleForm
+                            formData={formData}
+                            handleChange={handleChange}
+                            handleContentChange={handleContentChange}
+                            handleTagsChange={handleTagsChange}
+                            handleSubmit={handleSubmit}
+                            errorMessage={error || errorMessage}
+                            isLoading={
+                                status === 'loading' ||
+                                photoStatus === 'loading'
+                            }
+                        />
+                    </div>
                     {openModalConfirm && (
                         <Modal
                             title="Êtes-vous sûr ?"
