@@ -22,7 +22,7 @@ app.use(cors({
     credentials: true // Autoriser l'envoi de cookie (JWT par exemple)
 }));
 
-console.log(FRONTEND_URL)
+console.log(process.env.FRONTEND_URL)
 
 app.use(cookieParser());
 
