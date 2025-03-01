@@ -32,21 +32,35 @@ const UpdateArticlePage = () => {
 
     React.useEffect(() => {
         dispatch(resetArticle())
-        setFormData({
-            title: '',
-            content: '',
-            category: '',
-            tags: [],
-        })
-        dispatch(getArticle(id));
+        // setFormData({
+        //     title: '',
+        //     content: '',
+        //     category: '',
+        //     tags: [],
+        // })
+        // dispatch(getArticle(id));
     }, [id]);
+
+    React.useEffect(() => {
+        if (status === 'idle') {
+            setFormData({
+                title: '',
+                content: '',
+                category: '',
+                tags: [],
+            })
+            dispatch(getArticle(id));
+        }
+
+
+    }, [status]);
 
     // console.log(article)
     // console.log(formData)
 
     React.useEffect(() => {
 
-        if (status === 'succeeded' && article) {
+        if (article) {
             setFormData({
                 title: article.title || '',
                 content: article.content || '',
@@ -55,9 +69,9 @@ const UpdateArticlePage = () => {
             })
             // handleContentChange(post.content)
         }
-    }, [status, article,]);
+    }, [article, setFormData]);
 
-    // console.log(post.content)
+    // console.log(article)
 
     const handleTagsChange = (e) => {
         const input = e.target.value;
@@ -152,20 +166,18 @@ const UpdateArticlePage = () => {
                         <h2 style={{ textAlign: 'center', flex: '1' }}>Modifier l'article : {article.title}</h2>
                         <DeleteIcon className="delete-btn" onClick={() => toggleModalConfirm()} />
                     </div>
-                    <div key={id}>
-                        <ArticleForm
-                            formData={formData}
-                            handleChange={handleChange}
-                            handleContentChange={handleContentChange}
-                            handleTagsChange={handleTagsChange}
-                            handleSubmit={handleSubmit}
-                            errorMessage={error || errorMessage}
-                            isLoading={
-                                status === 'loading' ||
-                                photoStatus === 'loading'
-                            }
-                        />
-                    </div>
+                    <ArticleForm
+                        formData={formData}
+                        handleChange={handleChange}
+                        handleContentChange={handleContentChange}
+                        handleTagsChange={handleTagsChange}
+                        handleSubmit={handleSubmit}
+                        errorMessage={error || errorMessage}
+                        isLoading={
+                            status === 'loading' ||
+                            photoStatus === 'loading'
+                        }
+                    />
                     {openModalConfirm && (
                         <Modal
                             title="Êtes-vous sûr ?"
