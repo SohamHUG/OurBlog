@@ -15,7 +15,7 @@ const port = process.env.PORT;
 const app = express();
 
 app.use(cors({
-    origin: process.env.FRONTEND_URL.trim(), // Origine autorisée (frontend)
+    origin: process.env.FRONTEND_URL, // Origine autorisée (frontend)
     // origin: 'http://localhost:5173', // Origine autorisée (frontend)
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'PUT'], // Méthodes autorisées
     allowedHeaders: ['Content-Type'], // En-têtes autorisés
