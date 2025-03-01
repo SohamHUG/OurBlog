@@ -26,7 +26,7 @@ const UpdateArticlePage = () => {
 
     React.useEffect(() => {
         dispatch(resetArticle())
-        dispatch(getArticle(id));
+        // dispatch(getArticle(id)).unwrap();
     }, [id]);
 
     // console.log(status)
@@ -39,6 +39,10 @@ const UpdateArticlePage = () => {
     });
 
     React.useEffect(() => {
+        if (status === 'idle ') {
+            dispatch(getArticle(id)).unwrap();
+        }
+
         if (status === 'succeeded' && article) {
             setFormData({
                 title: article.title || '',
@@ -153,7 +157,7 @@ const UpdateArticlePage = () => {
                         handleSubmit={handleSubmit}
                         errorMessage={error || errorMessage}
                         isLoading={
-                            status=== 'loading' ||
+                            status === 'loading' ||
                             photoStatus === 'loading'
                         }
                     />
