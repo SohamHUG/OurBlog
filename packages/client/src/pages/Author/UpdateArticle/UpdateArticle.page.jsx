@@ -39,9 +39,10 @@ const UpdateArticlePage = () => {
             tags: [],
         })
         dispatch(getArticle(id));
-    }, [id, dispatch]);
+    }, [id]);
 
     console.log(article)
+    console.log(formData)
 
     React.useEffect(() => {
 
