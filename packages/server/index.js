@@ -22,21 +22,21 @@ app.use(cors({
     credentials: true // Autoriser l'envoi de cookie (JWT par exemple)
 }));
 
-app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', process.env.FRONTEND_URL.trim());
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PATCH,DELETE,PUT');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
-    next();
-});
+// app.use((req, res, next) => {
+//     res.setHeader('Access-Control-Allow-Origin', process.env.FRONTEND_URL.trim());
+//     res.setHeader('Access-Control-Allow-Credentials', 'true');
+//     res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PATCH,DELETE,PUT');
+//     res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+//     next();
+// });
 
 
-app.use((req, res, next) => {
-    res.on('finish', () => {
-        console.log('En-têtes de la réponse :', res.getHeaders());
-    });
-    next();
-});
+// app.use((req, res, next) => {
+//     res.on('finish', () => {
+//         console.log('En-têtes de la réponse :', res.getHeaders());
+//     });
+//     next();
+// });
 // console.log(process.env.FRONTEND_URL)
 
 app.use(cookieParser());

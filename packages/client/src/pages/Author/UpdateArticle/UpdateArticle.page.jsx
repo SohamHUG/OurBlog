@@ -23,14 +23,6 @@ const UpdateArticlePage = () => {
     const navigate = useNavigate();
 
     const goBack = () => navigate(-1);
-
-    React.useEffect(() => {
-        dispatch(resetArticle())
-        // dispatch(getArticle(id)).unwrap();
-    }, [id]);
-
-    // console.log(status)
-
     const [formData, setFormData] = React.useState({
         title: '',
         content: '',
@@ -39,9 +31,19 @@ const UpdateArticlePage = () => {
     });
 
     React.useEffect(() => {
-        if (status === 'idle ') {
-            dispatch(getArticle(id)).unwrap();
-        }
+        dispatch(resetArticle())
+        setFormData({
+            title: '',
+            content: '',
+            category: '',
+            tags: [],
+        })
+        dispatch(getArticle(id));
+    }, [id, dispatch]);
+
+    // console.log(status)
+
+    React.useEffect(() => {
 
         if (status === 'succeeded' && article) {
             setFormData({
@@ -52,7 +54,7 @@ const UpdateArticlePage = () => {
             })
             // handleContentChange(post.content)
         }
-    }, [status, article]);
+    }, [status, article,]);
 
     // console.log(post.content)
 
