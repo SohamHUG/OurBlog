@@ -32,14 +32,17 @@ const UpdateArticlePage = () => {
 
     React.useEffect(() => {
         dispatch(resetArticle())
-        setFormData({
-            title: '',
-            content: '',
-            category: '',
-            tags: [],
-        })
-        dispatch(getArticle(id));
-    }, [id]);
+        if (status === 'idle') {
+            setFormData({
+                title: '',
+                content: '',
+                category: '',
+                tags: [],
+            })
+            dispatch(getArticle(id));
+        }
+
+    }, [id, status, dispatch]);
 
     console.log(article)
     console.log(formData)
