@@ -41,7 +41,7 @@ const UpdateArticlePage = () => {
         dispatch(getArticle(id));
     }, [id, dispatch]);
 
-    // console.log(status)
+    console.log(article)
 
     React.useEffect(() => {
 
