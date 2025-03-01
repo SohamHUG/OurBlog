@@ -15,14 +15,29 @@ const port = process.env.PORT;
 const app = express();
 
 app.use(cors({
-    origin: process.env.FRONTEND_URL.trim(), // Origine autorisée (frontend)
+    origin: [process.env.FRONTEND_URL.trim()], // Origine autorisée (frontend)
     // origin: 'http://localhost:5173', // Origine autorisée (frontend)
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'PUT'], // Méthodes autorisées
     allowedHeaders: ['Content-Type'], // En-têtes autorisés
     credentials: true // Autoriser l'envoi de cookie (JWT par exemple)
 }));
 
-console.log(process.env.FRONTEND_URL)
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', process.env.FRONTEND_URL.trim());
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PATCH,DELETE,PUT');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+    next();
+});
+
+
+app.use((req, res, next) => {
+    res.on('finish', () => {
+        console.log('En-têtes de la réponse :', res.getHeaders());
+    });
+    next();
+});
+// console.log(process.env.FRONTEND_URL)
 
 app.use(cookieParser());
 
