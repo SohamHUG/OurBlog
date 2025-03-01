@@ -42,7 +42,7 @@ const UpdateArticlePage = () => {
         if (status === 'succeeded' && article) {
             setFormData({
                 title: article.title || '',
-                content: article.content,
+                content: article.content || '',
                 category: article.category_id || '',
                 tags: article.tags ? article.tags.split(', ') : [],
             })
