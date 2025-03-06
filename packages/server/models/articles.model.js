@@ -14,34 +14,13 @@ export const saveArticle = async (user, category, title, content) => {
             const articleId = result.insertId;
 
             try {
-                // if (imagesId && imagesId.length > 0) {
-                // const imageSql = 'INSERT INTO article_image (article_id,public_id) VALUES ?';
-
-                // const imageValues = imagesId.map(img => [articleId, img]);
-
-                // db.query(imageSql, [imageValues], (imgErr) => {
-                //     if (imgErr) {
-                //         reject(imgErr);
-                //         return;
-                //     }
-                // });
-                // }
+            
 
                 const article = await findArticleById(articleId);
                 resolve(article);
             } catch (error) {
                 reject(error);
             }
-
-            // try {
-            //     const article = await findArticleById(result.insertId)
-            //     resolve(article);
-            // } catch (error) {
-            //     reject(error)
-            // }
-
-            // console.log(result.insertId)
-
         })
     })
 }

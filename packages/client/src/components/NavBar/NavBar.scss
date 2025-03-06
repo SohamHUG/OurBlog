@@ -124,6 +124,10 @@ header {
 
             // }
 
+            .avatar {
+                flex-shrink: 0;
+            }
+
             .default-avatar {
                 font-size: 2.5em;
             }

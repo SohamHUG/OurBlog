@@ -14,7 +14,7 @@ export const createArticle = async (req, res) => {
 
         // console.log(content)
         if (!sanitizedContent || sanitizedContent.replace(/<[^>]+>/g, '').trim() === "") {
-            return res.status(400).json({ message: "Tous les champs obligatoires doivent être remplis." });
+            return res.status(400).json({ message: "Le contenu doit contenir du texte." });
         }
 
         // console.log(imagesId)
@@ -70,7 +70,7 @@ export const updateArticle = async (req, res) => {
 
         const sanitizedContent = sanitizeContent(content)
         if (!sanitizedContent || sanitizedContent.replace(/<[^>]+>/g, '').trim() === "") {
-            return res.status(400).json({ message: "Tous les champs obligatoires doivent être remplis." });
+            return res.status(400).json({ message: "Le contenu doit contenir du texte." });
         }
 
         if (imagesId && imagesId.length > 0) {

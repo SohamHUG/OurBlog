@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import jwt from "jsonwebtoken";
 import { sendConfirmationEmail, sendInfoEmail } from "../utils/index.js";
 import { findAllRoles } from "../models/roles.model.js";
+import { v2 as cloudinary } from 'cloudinary';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -191,6 +192,13 @@ export const deleteUser = async (req, res) => {
     const { id } = req.params;
     const user = req.user;
     try {
+
+        const userToDelete = await findUserById(id);
+
+        if (!userToDelete) {
+            return res.status(404).json({ message: "Utilisateur introuvable." });
+        }
+
         if (parseInt(id) !== user.user_id && req.user.role_id !== 4) {
             return res.status(403).json({ message: "Vous n'êtes pas autorisé" });
         }
@@ -207,6 +215,10 @@ export const deleteUser = async (req, res) => {
                 secure: true,
                 sameSite: 'None'
             });
+        }
+        
+        if (userToDelete.profil_picture_public_id) {
+            await cloudinary.uploader.destroy(userToDelete.profil_picture_public_id);
         }
 
         await deleteUserById(id);

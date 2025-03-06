@@ -51,7 +51,6 @@ const HomePage = () => {
     const handleSortChange = (event) => {
         const sortBy = event.target.value;
         dispatch(setSortBy(sortBy));
-        // dispatch(resetAllPosts({ context: "all" }));
         dispatch(resetArticles({ context: 'all' }));
 
     };

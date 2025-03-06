@@ -64,9 +64,10 @@ const SignUpPage = () => {
         }
     };
 
-    const closeModal = () => {
+    const closeModal = async () => {
+
+        await dispatch(loginUser({ email: formUser.email, password: formUser.password })).unwrap();
         setOpenModal(false);
-        dispatch(loginUser({ email: formUser.email, password: formUser.password }));
         navigate('/');
     }
 

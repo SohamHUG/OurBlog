@@ -109,7 +109,9 @@ const ArticleForm = ({
                         </span>
                     }
                     {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-                    <button type="submit" disabled={!isFormValid}>
+                    <button type="submit"
+                    // disabled={!isFormValid}
+                    >
                         Publier
                     </button>
                 </div>

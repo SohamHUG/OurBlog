@@ -1,11 +1,11 @@
 import db from '../config/db.js';
 
 export const saveUser = async (userData) => {
-    const { firstName, lastName, pseudo, email, roleId, hash } = userData;
+    const { firstName, lastName, pseudo, email, hash } = userData;
 
     return new Promise((resolve, reject) => {
-        const sql = 'INSERT INTO user (first_name, last_name, pseudo, email, role_id, password) VALUES (?, ?, ?, ?, ?, ?)';
-        db.query(sql, [firstName, lastName, pseudo, email, roleId, hash], async (err, result) => {
+        const sql = 'INSERT INTO user (first_name, last_name, pseudo, email, password) VALUES (?, ?, ?, ?, ?)';
+        db.query(sql, [firstName, lastName, pseudo, email, hash], async (err, result) => {
             if (err) {
                 reject(err)
             }
@@ -96,7 +96,6 @@ export const findPopularUsers = async () => {
                 user.profil_picture_public_id,
                 COUNT(DISTINCT comment.id) AS total_comments
             FROM user 
-            INNER JOIN role ON user.role_id = role.id
             INNER JOIN article ON user.id = article.user_id
             LEFT JOIN comment ON article.id = comment.article_id
             GROUP BY user.id

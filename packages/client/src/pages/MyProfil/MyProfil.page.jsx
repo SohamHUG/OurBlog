@@ -75,9 +75,10 @@ const MyProfilPage = () => {
                 const formData = new FormData();
                 formData.append('profilPicture', profilPicture);
                 await dispatch(uploadProfilPic(formData)).unwrap();
-            } else if (previewImage === null) {
-                await dispatch(updateUser({ id: user.user_id, userData: { ...formUser, deleteProfilPicture: true } })).unwrap();
             }
+            //  else if (previewImage === null) {
+            //     await dispatch(updateUser({ id: user.user_id, userData: { ...formUser, deleteProfilPicture: true } })).unwrap();
+            // }
 
             await dispatch(updateUser({ id: user.user_id, userData: formUser })).unwrap();
             setOpenModalInfo(true)

@@ -115,7 +115,7 @@ const UpdateArticlePage = () => {
             !formData.category ||
             !formData.content.replace(/<[^>]+>/g, '').trim()) {
 
-            setErrorMessage("Veuillez remplir tous les champs obligatoires (titre, catégorie, contenu)");
+            setErrorMessage("Veuillez remplir tous les champs obligatoires (titre, catégorie, contenu avec du texte)");
             return;
         }
 

@@ -9,7 +9,7 @@ dotenv.config();
 export const register = async (req, res) => {
     try {
         let { firstName, lastName, pseudo, email, password } = req.body;
-        let roleId = 1; //User
+        // let roleId = 1; //User
 
         const emailAlreadyExist = await findByCredentials(email);
 
@@ -24,7 +24,7 @@ export const register = async (req, res) => {
             lastName,
             pseudo,
             email,
-            roleId,
+            // roleId,
             hash
         });
 
@@ -32,7 +32,7 @@ export const register = async (req, res) => {
 
         await sendConfirmationEmail(email, confirmationToken);
 
-        return res.status(201).json({ message: "User created", newUser });
+        return res.status(201).json({ message: "User created" });
     } catch (err) {
         console.error(err);
         return res.status(500).json({ message: "Erreur interne du serveur." });
@@ -105,7 +105,7 @@ export const loginUser = async (req, res) => {
         const { email, password } = req.body;
         const user = await findByCredentials(email);
 
-        if (!user || user.length <= 0) {
+        if (!user && user.length <= 0) {
             return res.status(401).json({ message: "Email ou mot de passe incorrect", });
         }
         // console.log(user);
