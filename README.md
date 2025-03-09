@@ -29,6 +29,11 @@ cp .env.example .env
     * REFRESH_TOKEN_SECRET
     * JWT_EXPIRATION
     * REFRESH_TOKEN_EXPIRATION
+    * EMAIL_USER
+    * EMAIL_PASSWORD
+    * CLOUDINARY_CLOUD_NAME
+    * CLOUDINARY_API_KEY
+    * CLOUDINARY_API_SECRET
 
 3. **Installer les dépendances**
 ```bash
